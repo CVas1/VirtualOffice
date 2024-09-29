@@ -43,17 +43,7 @@ namespace EasyBuildSystem.Examples.Bases.Scripts.TopDown
         {
             m_Animator.SetFloat("Speed", m_Agent.velocity.magnitude);
 
-#if EBS_INPUT_SYSTEM_SUPPORT
-            if (UnityEngine.InputSystem.Mouse.current.leftButton.isPressed)
-            {
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(UnityEngine.InputSystem.Mouse.current.position.ReadValue().x,
-                    UnityEngine.InputSystem.Mouse.current.position.ReadValue().y, 0f)), out RaycastHit hit, Mathf.Infinity))
-                {
-                    m_Agent.destination = hit.point;
-                }
-            }
-#else
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKey(KeyCode.Mouse0))
             {
                 if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f)), 
                     out RaycastHit hit, Mathf.Infinity))
@@ -61,7 +51,6 @@ namespace EasyBuildSystem.Examples.Bases.Scripts.TopDown
                     m_Agent.destination = hit.point;
                 }
             }
-#endif
         }
     }
 }

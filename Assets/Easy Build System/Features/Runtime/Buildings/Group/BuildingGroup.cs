@@ -16,6 +16,9 @@ using EasyBuildSystem.Features.Runtime.Extensions;
 using EasyBuildSystem.Features.Runtime.Buildings.Part;
 using EasyBuildSystem.Features.Runtime.Buildings.Part.Conditions;
 using EasyBuildSystem.Features.Runtime.Buildings.Manager;
+using Unity.AI.Navigation;
+using Unity.VisualScripting;
+using UnityEngine.AI;
 
 namespace EasyBuildSystem.Features.Runtime.Buildings.Group
 {
@@ -98,6 +101,7 @@ namespace EasyBuildSystem.Features.Runtime.Buildings.Group
             if (transform.Find(ORIGIN_TRANSFORM_NAME) == null)
             {
                 m_OriginalTransform = new GameObject(ORIGIN_TRANSFORM_NAME).transform;
+                m_OriginalTransform.AddComponent<NavMeshSurface>();
                 m_OriginalTransform.SetParent(transform);
             }
             else

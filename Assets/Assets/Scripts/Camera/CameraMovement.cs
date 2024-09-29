@@ -15,11 +15,12 @@ public class CameraMovement : MonoBehaviour
     private Vector3 dragOrigin;
 
     [SerializeField] private CinemachineFreeLook virtualCamera;
-    [SerializeField] private Camera mainCamera;
+    private Camera mainCamera;
 
     void Start()
     {
         CinemachineCore.GetInputAxis = GetAxisCustom;
+        mainCamera = Camera.main;
     }
 
     public float GetAxisCustom(string axisName)
@@ -37,7 +38,14 @@ public class CameraMovement : MonoBehaviour
         }
         else if (axisName == "Mouse Y")
         {
-            return -UnityEngine.Input.GetAxis("Mouse ScrollWheel") * (1/Time.deltaTime) * zoomSpeed;
+            if (Input.GetMouseButton(1))
+            {
+                return -UnityEngine.Input.GetAxis("Mouse Y") * (1/Time.deltaTime) * zoomSpeed;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         return UnityEngine.Input.GetAxis(axisName);
