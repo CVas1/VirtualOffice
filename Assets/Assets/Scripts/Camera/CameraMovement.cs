@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -5,91 +6,54 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 10.0f;
-    [SerializeField] private float rotSpeed = 10.0f;
-    [SerializeField] private float zoomSpeed = 10.0f;
+    public float mouseSensitivity = 100f;
+    public float moveSpeed = 5f;
+    public float sprintMultiplier = 2f;
 
-    [SerializeField] private float minXRotaion = 20;
-    [SerializeField] private float maxXRotaion = 90;
-
-    private Vector3 dragOrigin;
-
-    [SerializeField] private CinemachineFreeLook virtualCamera;
-    private Camera mainCamera;
+    float xRotation = 0f;
+    float yRotation = 0f;
 
     void Start()
     {
-        CinemachineCore.GetInputAxis = GetAxisCustom;
-        mainCamera = Camera.main;
+        // Lock and hide the cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // Initialize rotation
+        Vector3 rot = transform.localRotation.eulerAngles;
+        xRotation = rot.x;
+        yRotation = rot.y;
     }
 
-    public float GetAxisCustom(string axisName)
-    {
-        if (axisName == "Mouse X")
-        {
-            if (Input.GetMouseButton(1))
-            {
-                return -UnityEngine.Input.GetAxis("Mouse X");
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        else if (axisName == "Mouse Y")
-        {
-            if (Input.GetMouseButton(1))
-            {
-                return -UnityEngine.Input.GetAxis("Mouse Y") * (1/Time.deltaTime) * zoomSpeed;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-        return UnityEngine.Input.GetAxis(axisName);
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        Vector3 moveDirection = new Vector3(0, 0, 0);
+        HandleMouseLook();
+        HandleMovement();
+    }
 
-        // Get the forward and right vectors relative to the camera's orientation
-        Vector3 cameraForward = mainCamera.transform.forward;
-        Vector3 cameraRight = mainCamera.transform.right;
+    void HandleMouseLook()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // Flatten the forward and right vectors so the movement stays horizontal
-        cameraForward.y = 0;
-        cameraRight.y = 0;
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        cameraForward.Normalize();
-        cameraRight.Normalize();
+        yRotation += mouseX;
 
-        // Handle movement input
-        if (Input.GetKey(KeyCode.W))
-        {
-            moveDirection += cameraForward;
-        }
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+    }
 
-        if (Input.GetKey(KeyCode.S))
-        {
-            moveDirection -= cameraForward;
-        }
+    void HandleMovement()
+    {
+        float speed = moveSpeed;
+        if (Input.GetKey(KeyCode.LeftShift))
+            speed *= sprintMultiplier;
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            moveDirection -= cameraRight;
-        }
+        float moveX = Input.GetAxis("Horizontal"); // A/D
+        float moveZ = Input.GetAxis("Vertical"); // W/S
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            moveDirection += cameraRight;
-        }
-
-        // Normalize the direction and move the object
-        moveDirection.Normalize();
-        transform.Translate(moveDirection * movementSpeed * Time.deltaTime, Space.World);
+        Vector3 move = transform.right * moveX + transform.forward * moveZ;
+        transform.position += move * speed * Time.deltaTime;
     }
 }
