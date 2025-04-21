@@ -27,6 +27,20 @@ public class PlayerMovement : MonoBehaviour
     {
         MovePlayer();
         LookAround();
+        //iff press tab change cursor state
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
     }
 
     void MovePlayer()
