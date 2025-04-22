@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8021599493051039523}
   - component: {fileID: 6434338896872253833}
   - component: {fileID: 3376357466118343322}
-  - component: {fileID: 3749566736081054969}
   m_Layer: 0
   m_Name: DoorFrame_03
   m_TagString: Untagged
@@ -51,7 +50,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: DoorFrame_03
     m_Type: Door
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: 2f23108c84478394a90c3e759ab64e39, type: 3}
     m_Identifier: 8441c7e59ee94d8bb4f257b517e8cfdc
   m_ModelSettings:
     m_Models:
@@ -142,23 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f932fe7cadce954ab063e2f6b8c8890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Obstacle: {fileID: 3749566736081054969}
---- !u!208 &3749566736081054969
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5642865727239398978}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.55500007, y: 1.13, z: 0.099553175}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 1.13, z: 0}
-  m_TimeToStationary: 0.5
+  m_Obstacle: {fileID: 0}
 --- !u!1001 &2914073523358360439
 PrefabInstance:
   m_ObjectHideFlags: 0

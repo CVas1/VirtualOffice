@@ -50,7 +50,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: DoorWall3_13
     m_Type: Wall
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: 88df6d1452b4a434aa3d8017430e8714, type: 3}
     m_Identifier: c6ae325089ca4a55a9725a67e33ce54b
   m_ModelSettings:
     m_Models:

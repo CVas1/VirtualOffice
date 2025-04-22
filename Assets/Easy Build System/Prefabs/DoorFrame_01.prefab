@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: DoorFrame_01
     m_Type: Door
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: 6fcebd963b41c9d43b110df16160ad57, type: 3}
     m_Identifier: 77da30e3037b413397b4130a29dda2a4
   m_ModelSettings:
     m_Models:

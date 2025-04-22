@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: StreetDoorFrame_01
     m_Type: Door
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: 19ff309a19968fc42ba240c7f3432989, type: 3}
     m_Identifier: 3287598240c44b44b4d7a240c90f2b5d
   m_ModelSettings:
     m_Models:

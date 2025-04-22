@@ -213,7 +213,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: Floor6_01
     m_Type: Floor
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: f3264ce9feb24ec4797fdf5cdaf56c28, type: 3}
     m_Identifier: 23cb6a93f57b4a3391dcc01bea865924
   m_ModelSettings:
     m_Models:

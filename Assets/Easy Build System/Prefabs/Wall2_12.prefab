@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: Wall2_12
     m_Type: Wall
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: c7d1378a45e03cd4d85c8002fa7022ed, type: 3}
     m_Identifier: 8915c4c2bc134848ba23e519b0395349
   m_ModelSettings:
     m_Models:
