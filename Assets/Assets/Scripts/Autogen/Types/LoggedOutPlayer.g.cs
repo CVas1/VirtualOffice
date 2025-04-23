@@ -21,37 +21,32 @@ namespace SpacetimeDB.Types
         public string Name;
         [DataMember(Name = "color")]
         public string Color;
-        [DataMember(Name = "room_id")]
-        public uint RoomId;
-        [DataMember(Name = "last_position")]
-        public DbVector3 LastPosition;
-        [DataMember(Name = "last_rotation")]
-        public float LastRotation;
+        [DataMember(Name = "last_disconnect_time")]
+        public ulong LastDisconnectTime;
+        [DataMember(Name = "total_play_time")]
+        public ulong TotalPlayTime;
 
         public LoggedOutPlayer(
             SpacetimeDB.Identity Identity,
             uint PlayerId,
             string Name,
             string Color,
-            uint RoomId,
-            DbVector3 LastPosition,
-            float LastRotation
+            ulong LastDisconnectTime,
+            ulong TotalPlayTime
         )
         {
             this.Identity = Identity;
             this.PlayerId = PlayerId;
             this.Name = Name;
             this.Color = Color;
-            this.RoomId = RoomId;
-            this.LastPosition = LastPosition;
-            this.LastRotation = LastRotation;
+            this.LastDisconnectTime = LastDisconnectTime;
+            this.TotalPlayTime = TotalPlayTime;
         }
 
         public LoggedOutPlayer()
         {
             this.Name = "";
             this.Color = "";
-            this.LastPosition = new();
         }
     }
 }

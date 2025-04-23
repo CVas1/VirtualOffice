@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.VoiceRecorder;
 using EasyBuildSystem.Features.Runtime.Buildings.Manager;
 using UnityEngine;
 using SpacetimeDB;
@@ -15,12 +17,14 @@ namespace Assets.Scripts
 
         public static uint CurrentRoomId { get; private set; } = 0;
         private SubscriptionHandle currentRoomSub;
+        private SubscriptionHandle currentChatSub;
+        private SubscriptionHandle currentVoiceSub;
 
         public static GameManager Instance { get; private set; }
         public static Identity LocalIdentity { get; private set; }
         public static DbConnection Conn { get; private set; }
 
-        public Dictionary<uint, PlayerController> Players = new Dictionary<uint, PlayerController>();
+        public Dictionary<Identity, PlayerController> Players = new Dictionary<Identity, PlayerController>();
         public List<GameRoom> Rooms = new List<GameRoom>();
 
         public (string, string, float)? RoomToJoin = null;
@@ -69,6 +73,12 @@ namespace Assets.Scripts
             Conn.Db.RoomEntity.OnInsert += OnBuildingInsert;
             Conn.Db.RoomEntity.OnUpdate += OnBuildingUpdate;
             Conn.Db.RoomEntity.OnDelete += OnBuildingDelete;
+            Conn.Db.ChatMessage.OnInsert += OnChatMessageInsert;
+            Conn.Db.VoiceClip.OnInsert += OnVoiceClipInsert;
+            Conn.Db.VoiceClip.OnUpdate += OnVoiceClipUpdate;
+
+            // Conn.Db.ChatMessage.OnUpdate += OnChatMessageUpdate;
+            // Conn.Db.ChatMessage.OnDelete += OnChatMessageDelete;
 
             conn.Db.GameRoom.OnInsert += OnGameRoomInsert;
             conn.Db.GameRoom.OnDelete += OnGameRoomDelete;
@@ -147,25 +157,66 @@ namespace Assets.Scripts
             Debug.Log($"Player {player.PlayerId} created in room {player.RoomId}.");
             controller.transform.position =
                 new Vector3(player.LastPosition.X, player.LastPosition.Y, player.LastPosition.Z);
-            bool isLocal = player.Identity.Equals(GameManager.LocalIdentity);
+            bool isLocal = player.Identity.Equals(LocalIdentity);
+
+            if (isLocal)
+            {
+                SubscribeToChat(player.RoomId, player.LastRoomJoinTime);
+                SubscribeToVoice(player.RoomId, player.LastRoomJoinTime);
+            }
+
             controller.Init(player, isLocal);
-            Players[player.PlayerId] = controller;
+            Players[player.Identity] = controller;
+        }
+
+        private void SubscribeToChat(uint roomId, ulong timestamp)
+        {
+            // unsubscribe old
+            if (currentChatSub != null && currentChatSub.IsActive)
+                currentChatSub.Unsubscribe();
+
+            // only get new messages
+            string sql = $"SELECT * FROM chat_message WHERE room_id = {roomId} AND timestamp > {timestamp}";
+            currentChatSub = Conn.SubscriptionBuilder()
+                .Subscribe(new[] { sql });
+        }
+
+        private void SubscribeToVoice(uint roomId, ulong timestamp)
+        {
+            // unsubscribe old
+            if (currentVoiceSub != null && currentVoiceSub.IsActive)
+                currentVoiceSub.Unsubscribe();
+
+            // only get new clips
+            string sql = $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp}";
+            currentVoiceSub = Conn.SubscriptionBuilder()
+                .Subscribe(new[] { sql });
         }
 
         void OnOnlinePlayerDelete(EventContext ctx, OnlinePlayer player)
         {
             Debug.Log($"Player {player.PlayerId} deleted.");
-            if (Players.TryGetValue(player.PlayerId, out PlayerController controller))
+            if (Players.TryGetValue(player.Identity, out PlayerController controller))
             {
                 Destroy(controller.gameObject);
-                Players.Remove(player.PlayerId);
+                Players.Remove(player.Identity);
+            }
+
+            if (player.Identity.Equals(LocalIdentity))
+            {
+                // Unsubscribe from the chat messages
+                if (currentChatSub != null && currentChatSub.IsActive)
+                {
+                    currentChatSub.Unsubscribe();
+                    currentChatSub = null;
+                }
             }
         }
 
         void OnOnlinePlayerUpdate(EventContext ctx, OnlinePlayer oldData, OnlinePlayer newData)
         {
             // Debug.Log($"Player {newData.PlayerId} updated.");
-            if (Players.TryGetValue(newData.PlayerId, out PlayerController controller))
+            if (Players.TryGetValue(newData.Identity, out PlayerController controller))
             {
                 controller.UpdatePlayer(newData);
             }
@@ -199,6 +250,34 @@ namespace Assets.Scripts
             RoomBuildingManager.Instance.DeleteAll();
         }
 
+        void OnChatMessageInsert(EventContext ctx, ChatMessage message)
+        {
+            // Debug.Log($"Chat message: {message.Content} + timestamp: {message.Timestamp}");
+            if (Players.TryGetValue(message.Sender, out PlayerController player))
+            {
+                string username = player.PlayerName;
+                Color color = player.PlayerColor;
+                string messageText = message.Content;
+                ChatManager.Instance.SendChatMessage(username, messageText, color);
+            }
+        }
+
+        void OnVoiceClipInsert(EventContext ctx, VoiceClip clip)
+        {
+            // if (clip.Sender.Equals(LocalIdentity)) return;
+
+            // decode WAV bytes into an AudioClip
+            AudioClip ac = WavUtility.ToAudioClip(clip.AudioData.ToArray(), 0);
+
+            // hand off to the voice manager
+            VoiceChatPlayer.Instance.EnqueueClip(clip.Sender, ac);
+        }
+
+        void OnVoiceClipUpdate(EventContext ctx, VoiceClip clipOld, VoiceClip clipNew)
+        {
+            OnVoiceClipInsert(ctx, clipNew);
+        }
+
         // --------------------------------
         // Public Reducer Invocations
         // --------------------------------
@@ -219,11 +298,6 @@ namespace Assets.Scripts
             {
                 if (ctx.Event.CallerIdentity == ctx.Identity)
                 {
-                    // if (failedStatus.ToString().Contains("ncorrect password"))
-                    // {
-                    //     UIManager.Instance.JoinRoomError("Invalid password.");
-                    // }
-
                     // Get the value "Incorrect password" from the string "Failed("System.Exception: Incorrect password\n...."
                     string errorMessage = failedStatus.ToString();
                     int startIndex = errorMessage.IndexOf(":") + 1;
@@ -246,15 +320,19 @@ namespace Assets.Scripts
                 CurrentRoomId = roomId;
                 UIManager.Instance.OnCloseMenu();
                 RoomBuildingManager.Instance.OnRoomJoin();
+                ChatManager.Instance.ClearChat();
+
                 // Re-subscribe to only the players/entities in this room
                 var newCurrentRoomSub = Conn.SubscriptionBuilder()
-                    // .OnApplied((ctx) => { Debug.Log("Room subscription applied."); })
+                    // .OnApplied((ctx) => { })
                     // .OnError((ctx, ex) => Debug.LogError($"Room subscription error: {ex}"))
                     .Subscribe(new string[]
                     {
                         //write the sql query to get the room id & player id is not mine
                         "SELECT * FROM online_player WHERE room_id = " + roomId,
-                        "SELECT * FROM room_entity WHERE room_id = " + roomId
+                        "SELECT * FROM room_entity WHERE room_id = " + roomId,
+                        // "SELECT * FROM chat_message WHERE room_id = " + roomId + " AND timestamp > " +
+                        // (ulong)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
                     });
                 if (currentRoomSub != null && currentRoomSub.IsActive)
                 {
@@ -312,6 +390,11 @@ namespace Assets.Scripts
         public void SaveBuildingData(string data)
         {
             Conn.Reducers.SaveEntity(CurrentRoomId, data);
+        }
+
+        public void SendChatMessage(string message, bool shout = false)
+        {
+            Conn.Reducers.SendMessage(message, shout);
         }
 
         public uint GetOnlinePlayerCount()

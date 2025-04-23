@@ -1,5 +1,6 @@
 using System;
 using SpacetimeDB.Types;
+using TankAndHealerStudioAssets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -14,13 +15,14 @@ namespace Assets.Scripts
         [SerializeField] private GameObject ShadowPanel;
         [SerializeField] private GameObject BackButton;
         [SerializeField] private GameObject QuitButton;
+        [SerializeField] private UltimateChatBox ChatPanel;
 
         [Header("Main Menu")] [SerializeField] private GameObject mainMenuPanel;
 
         [Header("Select Room")] [SerializeField]
         private GameObject selectRoomPanel;
 
-        [SerializeField] private Transform scrollViewContent;
+        [SerializeField] private GameObject scrollViewContent;
         [SerializeField] private GameObject selectRoomButtonPrefab;
 
         [Header("Join Room")] [SerializeField] private GameObject joinRoomPanel;
@@ -152,6 +154,7 @@ namespace Assets.Scripts
 
         public void OnClickBackToMainMenu()
         {
+            ChatPanel.Disable();
             QuitButton.SetActive(false);
             BackButton.SetActive(true);
             ShadowPanel.SetActive(true);
@@ -164,6 +167,7 @@ namespace Assets.Scripts
 
         public void OnCloseMenu()
         {
+            ChatPanel.Enable();
             QuitButton.SetActive(true);
             BackButton.SetActive(false);
             ShadowPanel.SetActive(false);
@@ -193,16 +197,26 @@ namespace Assets.Scripts
             createRoomPanel.SetActive(false);
             joinRoomPanel.SetActive(false);
 
-            foreach (Transform child in scrollViewContent)
+            foreach (Transform child in scrollViewContent.transform)
             {
                 Destroy(child.gameObject);
             }
+
+            RectTransform scrollRect = scrollViewContent.transform as RectTransform;
+            GridLayoutGroup gridLayoutGroup = scrollViewContent.GetComponent<GridLayoutGroup>();
+
+            float height = gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom +
+                           gridLayoutGroup.cellSize.y * GameManager.Instance.Rooms.Count +
+                           gridLayoutGroup.spacing.y * (GameManager.Instance.Rooms.Count - 1);
+
+            // Set the scroll view height
+            scrollRect.sizeDelta = new Vector2(scrollRect.sizeDelta.x, height);
 
             int x = 0;
             foreach (var room in GameManager.Instance.Rooms)
             {
                 x++;
-                GameObject roomButton = Instantiate(selectRoomButtonPrefab, scrollViewContent);
+                GameObject roomButton = Instantiate(selectRoomButtonPrefab, scrollViewContent.transform);
 
                 // set each room padding
                 RectTransform rectTransform = roomButton.GetComponent<RectTransform>();

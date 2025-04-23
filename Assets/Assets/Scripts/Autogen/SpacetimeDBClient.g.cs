@@ -20,6 +20,7 @@ namespace SpacetimeDB.Types
     {
         public RemoteTables(DbConnection conn)
         {
+            AddTable(ChatMessage = new(conn));
             AddTable(GameRoom = new(conn));
             AddTable(GameRoomSecret = new(conn));
             AddTable(LoggedOutPlayer = new(conn));
@@ -27,6 +28,7 @@ namespace SpacetimeDB.Types
             AddTable(PlayerCount = new(conn));
             AddTable(PlayerRoomPosition = new(conn));
             AddTable(RoomEntity = new(conn));
+            AddTable(VoiceClip = new(conn));
         }
     }
 
@@ -441,6 +443,8 @@ namespace SpacetimeDB.Types
                 "JoinRoom" => BSATNHelpers.Decode<Reducer.JoinRoom>(encodedArgs),
                 "LeaveRoom" => BSATNHelpers.Decode<Reducer.LeaveRoom>(encodedArgs),
                 "SaveEntity" => BSATNHelpers.Decode<Reducer.SaveEntity>(encodedArgs),
+                "SendMessage" => BSATNHelpers.Decode<Reducer.SendMessage>(encodedArgs),
+                "SendVoice" => BSATNHelpers.Decode<Reducer.SendVoice>(encodedArgs),
                 "SetPlayerProfile" => BSATNHelpers.Decode<Reducer.SetPlayerProfile>(encodedArgs),
                 "UpdateLastPosition" => BSATNHelpers.Decode<Reducer.UpdateLastPosition>(encodedArgs),
                 var reducer => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
@@ -470,6 +474,8 @@ namespace SpacetimeDB.Types
                 Reducer.JoinRoom args => Reducers.InvokeJoinRoom(eventContext, args),
                 Reducer.LeaveRoom args => Reducers.InvokeLeaveRoom(eventContext, args),
                 Reducer.SaveEntity args => Reducers.InvokeSaveEntity(eventContext, args),
+                Reducer.SendMessage args => Reducers.InvokeSendMessage(eventContext, args),
+                Reducer.SendVoice args => Reducers.InvokeSendVoice(eventContext, args),
                 Reducer.SetPlayerProfile args => Reducers.InvokeSetPlayerProfile(eventContext, args),
                 Reducer.UpdateLastPosition args => Reducers.InvokeUpdateLastPosition(eventContext, args),
                 _ => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")

@@ -23,6 +23,12 @@ namespace SpacetimeDB.Types
         public string Color;
         [DataMember(Name = "room_id")]
         public uint RoomId;
+        [DataMember(Name = "last_room_join_time")]
+        public ulong LastRoomJoinTime;
+        [DataMember(Name = "last_connect_time")]
+        public ulong LastConnectTime;
+        [DataMember(Name = "total_play_time")]
+        public ulong TotalPlayTime;
         [DataMember(Name = "last_position")]
         public DbVector3 LastPosition;
         [DataMember(Name = "last_rotation")]
@@ -34,6 +40,9 @@ namespace SpacetimeDB.Types
             string Name,
             string Color,
             uint RoomId,
+            ulong LastRoomJoinTime,
+            ulong LastConnectTime,
+            ulong TotalPlayTime,
             DbVector3 LastPosition,
             float LastRotation
         )
@@ -43,6 +52,9 @@ namespace SpacetimeDB.Types
             this.Name = Name;
             this.Color = Color;
             this.RoomId = RoomId;
+            this.LastRoomJoinTime = LastRoomJoinTime;
+            this.LastConnectTime = LastConnectTime;
+            this.TotalPlayTime = TotalPlayTime;
             this.LastPosition = LastPosition;
             this.LastRotation = LastRotation;
         }
