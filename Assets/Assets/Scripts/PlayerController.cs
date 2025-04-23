@@ -26,7 +26,10 @@ namespace Assets.Scripts
         public uint PlayerId { get; private set; }
         public Identity Identity { get; private set; }
 
-        private string playerName;
+        // private string playerName;
+        public string PlayerName { get; private set; }
+        public Color PlayerColor { get; private set; }
+        public ulong RoomJoinTime { get; private set; }
 
         private float lastUpdateTime = 0f; // Tracks the last update time
         private const float updateInterval = 0.125f; // 1/8 seconds
@@ -75,6 +78,7 @@ namespace Assets.Scripts
 
             SetColor(playerData.Color);
             SetName(playerData.Name);
+            RoomJoinTime = playerData.LastRoomJoinTime;
 
             if (isLocalPlayer)
             {
@@ -95,6 +99,7 @@ namespace Assets.Scripts
 
             SetColor(updatedData.Color);
             SetName(updatedData.Name);
+            // RoomJoinTime = updatedData.LastRoomJoinTime;
         }
 
         private void HandleInput()
@@ -135,21 +140,23 @@ namespace Assets.Scripts
 
         private void SetColor(string hexColor)
         {
-            if (meshRenderer == null) return;
             if (ColorUtility.TryParseHtmlString(hexColor, out Color color))
             {
-                meshRenderer.material.color = color;
+                PlayerColor = color;
             }
             else
             {
                 Debug.LogError($"Failed to parse color: {hexColor}");
-                meshRenderer.material.color = Color.white;
+                PlayerColor = Color.gray;
             }
+
+            if (meshRenderer == null) return;
+            meshRenderer.material.color = PlayerColor;
         }
 
         private void SetName(string playerName)
         {
-            this.playerName = playerName;
+            PlayerName = playerName;
         }
 
         private Vector3 ToVector3(DbVector3 dbVec)
