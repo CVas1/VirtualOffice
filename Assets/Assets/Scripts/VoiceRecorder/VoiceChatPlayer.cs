@@ -1,139 +1,137 @@
 using System;
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using SpacetimeDB;
+using System.IO;
+using System.IO.Compression;
 
 namespace Assets.Scripts.VoiceRecorder
 {
     public class VoiceChatPlayer : MonoBehaviour
     {
-        class PlayerState
-        {
-            public readonly Queue<AudioClip> queue = new Queue<AudioClip>();
-            public AudioSource current;
-            public AudioSource next;
-            public bool isPlaying = false;
-        }
+        public int sampleRate = 8000;
+        public int channels = 1;
+        public int maxParallelSources = 10;
 
-        // one VoiceChatPlayer in the scene
-        public static VoiceChatPlayer Instance { get; private set; }
+        private Dictionary<uint, VoiceChatSpeaker> speakers = new Dictionary<uint, VoiceChatSpeaker>();
+        private List<AudioSource> audioSourcePool = new List<AudioSource>();
 
-        [Tooltip("Maximum pitch boost when catching up")]
-        public float maxSpeedup = 1.5f;
-
-        [Tooltip("Crossfade length in seconds")]
-        public float crossfadeTime = 0.05f;
-
-        // track per‐speaker state
-        private readonly Dictionary<Identity, PlayerState> states
-            = new Dictionary<Identity, PlayerState>();
+        public static VoiceChatPlayer Instance;
 
         void Awake()
         {
-            if (Instance != null) Destroy(this);
-            else Instance = this;
-        }
-
-        /// <summary>
-        /// Enqueue a new clip for playback, kicking off playback if needed.
-        /// </summary>
-        public void EnqueueClip(Identity sender, AudioClip clip)
-        {
-            if (!states.TryGetValue(sender, out var st))
+            if (Instance == null)
             {
-                var go = new GameObject($"Voice_{sender}");
-                go.transform.SetParent(transform, false);
-
-                st = new PlayerState
-                {
-                    current = go.AddComponent<AudioSource>(),
-                    next = go.AddComponent<AudioSource>()
-                };
-                // configure both sources the same
-                foreach (var src in new[] { st.current, st.next })
-                {
-                    src.spatialBlend = 0f;
-                    src.loop = false;
-                    src.playOnAwake = false;
-                }
-
-                states[sender] = st;
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
             }
 
-            st.queue.Enqueue(clip);
-
-            if (!st.isPlaying)
-                StartCoroutine(PlayLoop(sender, st));
+            InitializeAudioSourcePool();
         }
 
-        private System.Collections.IEnumerator PlayLoop(Identity sender, PlayerState st)
+        public void EnqueueAudio(byte[] compressedData, uint identity)
         {
-            st.isPlaying = true;
-
-            while (st.queue.Count > 0)
+            if (!speakers.ContainsKey(identity))
             {
-                // fetch next clip
-                var clip = st.queue.Dequeue();
-
-                // if buffer is growing, speed up to catch up
-                float speed = 1f;
-                if (st.queue.Count > 2)
-                    speed = Mathf.Min(maxSpeedup, 1f + st.queue.Count * 0.1f);
-
-                // prepare crossfade: we'll start 'next' just before 'current' ends
-                AudioSource playSrc = st.current;
-                AudioSource prepSrc = st.next;
-
-                prepSrc.clip = clip;
-                prepSrc.pitch = speed;
-                prepSrc.volume = 0f;
-                prepSrc.Play();
-
-                if (!playSrc.isPlaying)
-                {
-                    // no current playing yet: just fade in next
-                    float t = 0f;
-                    while (t < crossfadeTime)
-                    {
-                        prepSrc.volume = t / crossfadeTime;
-                        t += Time.deltaTime;
-                        yield return null;
-                    }
-
-                    prepSrc.volume = 1f;
-                }
-                else
-                {
-                    // schedule crossfade
-                    float startFadeTime = clip.length - crossfadeTime;
-                    // wait until it's time to fade
-                    yield return new WaitForSeconds(startFadeTime / speed);
-                    // then fade out current, fade in next
-                    float t = 0f;
-                    while (t < crossfadeTime)
-                    {
-                        float α = t / crossfadeTime;
-                        prepSrc.volume = α;
-                        playSrc.volume = 1f - α;
-                        t += Time.deltaTime;
-                        yield return null;
-                    }
-
-                    prepSrc.volume = 1f;
-                    playSrc.Stop();
-                }
-
-                // swap sources
-                st.current.volume = 1f;
-                st.current.pitch = speed;
-                (st.current, st.next) = (st.next, st.current);
-
-                // wait for clip to finish if needed
-                float remaining = (clip.length - (st.current.clip == clip ? 0 : crossfadeTime)) / speed;
-                yield return new WaitForSeconds(remaining);
+                speakers[identity] = new VoiceChatSpeaker();
             }
 
-            st.isPlaying = false;
+            // Decompress the data
+            byte[] rawData = Decompress(compressedData);
+            float[] audioSamples = new float[rawData.Length / sizeof(float)];
+            Buffer.BlockCopy(rawData, 0, audioSamples, 0, rawData.Length);
+
+            lock (speakers[identity].audioQueue)
+            {
+                speakers[identity].audioQueue.Enqueue(audioSamples);
+            }
         }
+
+        void Update()
+        {
+            foreach (var speaker in speakers)
+            {
+                if (speaker.Value.audioQueue.Count > 0 && speaker.Value.currentSource == null)
+                {
+                    PlayNextChunk(speaker.Key);
+                }
+            }
+        }
+
+        private void PlayNextChunk(uint identity)
+        {
+            lock (speakers[identity].audioQueue)
+            {
+                if (speakers[identity].audioQueue.Count == 0) return;
+
+                float[] audioSamples = speakers[identity].audioQueue.Dequeue();
+                AudioSource source = GetAvailableAudioSource();
+
+                if (source == null) return;
+
+                AudioClip clip = AudioClip.Create($"VoiceClip_{identity}",
+                    audioSamples.Length / channels,
+                    channels,
+                    sampleRate,
+                    false);
+
+                clip.SetData(audioSamples, 0);
+                source.clip = clip;
+                source.Play();
+
+                speakers[identity].currentSource = source;
+                StartCoroutine(ReleaseAudioSourceAfterPlay(source, identity));
+            }
+        }
+
+        private AudioSource GetAvailableAudioSource()
+        {
+            foreach (AudioSource source in audioSourcePool)
+            {
+                if (!source.isPlaying) return source;
+            }
+
+            return null;
+        }
+
+        private IEnumerator ReleaseAudioSourceAfterPlay(AudioSource source, uint identity)
+        {
+            yield return new WaitWhile(() => source.isPlaying);
+            speakers[identity].currentSource = null;
+        }
+
+        private byte[] Decompress(byte[] data)
+        {
+            using (MemoryStream input = new MemoryStream(data))
+            using (MemoryStream output = new MemoryStream())
+            {
+                using (GZipStream decompressStream = new GZipStream(input, CompressionMode.Decompress))
+                {
+                    decompressStream.CopyTo(output);
+                }
+
+                return output.ToArray();
+            }
+        }
+
+        private void InitializeAudioSourcePool()
+        {
+            for (int i = 0; i < maxParallelSources; i++)
+            {
+                GameObject child = new GameObject($"AudioSource_{i}");
+                child.transform.parent = transform;
+                AudioSource source = child.AddComponent<AudioSource>();
+                audioSourcePool.Add(source);
+            }
+        }
+    }
+
+    public class VoiceChatSpeaker
+    {
+        public Queue<float[]> audioQueue = new Queue<float[]>();
+        public AudioSource currentSource;
     }
 }

@@ -35712,8 +35712,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ee24b97a7d0483e8b66a4b3d5e9ddf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeedup: 1.5
-  crossfadeTime: 0.05
+  sampleRate: 8000
+  channels: 1
+  maxParallelSources: 10
 --- !u!114 &1344316537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35726,8 +35727,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534acca944594db998938d608df62f78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkLength: 2
-  sampleRate: 16000
+  sampleRate: 8000
+  pushToTalkKey: 99
+  chunkInterval: 0.5
 --- !u!1001 &1344844905
 PrefabInstance:
   m_ObjectHideFlags: 0
