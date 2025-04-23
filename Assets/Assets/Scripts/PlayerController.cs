@@ -8,13 +8,11 @@ namespace Assets.Scripts
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
-        [Header("Movement Settings")]
-        public float moveSpeed = 5f;
+        [Header("Movement Settings")] public float moveSpeed = 5f;
         public float mouseSensitivity = 2f;
         public float gravity = -9.81f;
 
-        [Header("References")]
-        public Transform playerCamera;
+        [Header("References")] public Transform playerCamera;
         [SerializeField] private MeshRenderer meshRenderer;
 
         private CharacterController controller;
@@ -22,6 +20,7 @@ namespace Assets.Scripts
         private float xRotation = 0f;
 
         private Vector3 targetPosition;
+        private Quaternion targetRotation;
         private bool isLocalPlayer = false;
 
         public uint PlayerId { get; private set; }
@@ -29,10 +28,12 @@ namespace Assets.Scripts
 
         private string playerName;
 
+        private float lastUpdateTime = 0f; // Tracks the last update time
+        private const float updateInterval = 0.125f; // 1/8 seconds
+
         void Start()
         {
             controller = GetComponent<CharacterController>();
-            Cursor.lockState = CursorLockMode.Locked;
         }
 
         void Update()
@@ -42,26 +43,24 @@ namespace Assets.Scripts
             {
                 HandleInput();
                 LookAround();
+
+                // Update the server with the new position and rotation at most 8 times per second
+                if (Time.time - lastUpdateTime >= updateInterval)
+                {
+                    if (Vector3.Distance(transform.position, targetPosition) > 0.3f ||
+                        Quaternion.Angle(transform.rotation, targetRotation) > 6f)
+                    {
+                        float yaw = transform.rotation.eulerAngles.y;
+                        GameManager.Instance.UpdatePlayerPosition(transform.position, yaw);
+                    }
+
+                    lastUpdateTime = Time.time; // Update the last update time
+                }
             }
             else
             {
-                // Smoothly move toward the target position
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * moveSpeed);
-            }
-
-            // Toggle cursor lock state with Tab
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                if (Cursor.lockState == CursorLockMode.Locked)
-                {
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
-                }
-                else
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                }
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
             }
         }
 
@@ -81,7 +80,8 @@ namespace Assets.Scripts
             {
                 playerCamera.gameObject.SetActive(true);
                 gameObject.name = $"LocalPlayer({playerData.Name})";
-            }else
+            }
+            else
             {
                 playerCamera.gameObject.SetActive(false);
                 gameObject.name = $"RemotePlayer({playerData.Name})";
@@ -91,6 +91,8 @@ namespace Assets.Scripts
         public void UpdatePlayer(OnlinePlayer updatedData)
         {
             targetPosition = ToVector3(updatedData.LastPosition);
+            targetRotation = Quaternion.Euler(0, updatedData.LastRotation, 0);
+
             SetColor(updatedData.Color);
             SetName(updatedData.Name);
         }
@@ -114,10 +116,7 @@ namespace Assets.Scripts
             // Update position on the server
             if (move.sqrMagnitude > 0.01f)
             {
-                Vector3 newPos = transform.position + move.normalized * (moveSpeed * Time.deltaTime);
-                targetPosition = newPos;
-
-                GameManager.Instance.UpdatePlayerPosition(newPos);
+                transform.position += move.normalized * (moveSpeed * Time.deltaTime);
             }
         }
 

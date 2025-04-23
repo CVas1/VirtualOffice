@@ -13,42 +13,27 @@ namespace SpacetimeDB.Types
     [DataContract]
     public sealed partial class RoomEntity
     {
-        [DataMember(Name = "entity_id")]
-        public uint EntityId;
         [DataMember(Name = "room_id")]
         public uint RoomId;
-        [DataMember(Name = "prefab_id")]
-        public string PrefabId;
-        [DataMember(Name = "position")]
-        public DbVector3 Position;
-        [DataMember(Name = "rotation")]
-        public DbVector3 Rotation;
-        [DataMember(Name = "scale")]
-        public DbVector3 Scale;
+        [DataMember(Name = "identity")]
+        public SpacetimeDB.Identity Identity;
+        [DataMember(Name = "data")]
+        public string Data;
 
         public RoomEntity(
-            uint EntityId,
             uint RoomId,
-            string PrefabId,
-            DbVector3 Position,
-            DbVector3 Rotation,
-            DbVector3 Scale
+            SpacetimeDB.Identity Identity,
+            string Data
         )
         {
-            this.EntityId = EntityId;
             this.RoomId = RoomId;
-            this.PrefabId = PrefabId;
-            this.Position = Position;
-            this.Rotation = Rotation;
-            this.Scale = Scale;
+            this.Identity = Identity;
+            this.Data = Data;
         }
 
         public RoomEntity()
         {
-            this.PrefabId = "";
-            this.Position = new();
-            this.Rotation = new();
-            this.Scale = new();
+            this.Data = "";
         }
     }
 }

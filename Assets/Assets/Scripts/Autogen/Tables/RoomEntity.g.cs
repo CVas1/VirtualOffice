@@ -17,31 +17,21 @@ namespace SpacetimeDB.Types
         {
             protected override string RemoteTableName => "room_entity";
 
-            public sealed class EntityIdUniqueIndex : UniqueIndexBase<uint>
-            {
-                protected override uint GetKey(RoomEntity row) => row.EntityId;
-
-                public EntityIdUniqueIndex(RoomEntityHandle table) : base(table) { }
-            }
-
-            public readonly EntityIdUniqueIndex EntityId;
-
-            public sealed class RoomIdIndex : BTreeIndexBase<uint>
+            public sealed class RoomIdUniqueIndex : UniqueIndexBase<uint>
             {
                 protected override uint GetKey(RoomEntity row) => row.RoomId;
 
-                public RoomIdIndex(RoomEntityHandle table) : base(table) { }
+                public RoomIdUniqueIndex(RoomEntityHandle table) : base(table) { }
             }
 
-            public readonly RoomIdIndex RoomId;
+            public readonly RoomIdUniqueIndex RoomId;
 
             internal RoomEntityHandle(DbConnection conn) : base(conn)
             {
-                EntityId = new(this);
                 RoomId = new(this);
             }
 
-            protected override object GetPrimaryKey(RoomEntity row) => row.EntityId;
+            protected override object GetPrimaryKey(RoomEntity row) => row.RoomId;
         }
 
         public readonly RoomEntityHandle RoomEntity;

@@ -25,6 +25,8 @@ namespace SpacetimeDB.Types
         public uint RoomId;
         [DataMember(Name = "last_position")]
         public DbVector3 LastPosition;
+        [DataMember(Name = "last_rotation")]
+        public float LastRotation;
 
         public LoggedOutPlayer(
             SpacetimeDB.Identity Identity,
@@ -32,7 +34,8 @@ namespace SpacetimeDB.Types
             string Name,
             string Color,
             uint RoomId,
-            DbVector3 LastPosition
+            DbVector3 LastPosition,
+            float LastRotation
         )
         {
             this.Identity = Identity;
@@ -41,6 +44,7 @@ namespace SpacetimeDB.Types
             this.Color = Color;
             this.RoomId = RoomId;
             this.LastPosition = LastPosition;
+            this.LastRotation = LastRotation;
         }
 
         public LoggedOutPlayer()

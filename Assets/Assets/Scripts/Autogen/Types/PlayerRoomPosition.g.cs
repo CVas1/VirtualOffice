@@ -21,18 +21,22 @@ namespace SpacetimeDB.Types
         public uint RoomId;
         [DataMember(Name = "last_position")]
         public DbVector3 LastPosition;
+        [DataMember(Name = "last_rotation")]
+        public float LastRotation;
 
         public PlayerRoomPosition(
             string IdentityRoomKey,
             SpacetimeDB.Identity Identity,
             uint RoomId,
-            DbVector3 LastPosition
+            DbVector3 LastPosition,
+            float LastRotation
         )
         {
             this.IdentityRoomKey = IdentityRoomKey;
             this.Identity = Identity;
             this.RoomId = RoomId;
             this.LastPosition = LastPosition;
+            this.LastRotation = LastRotation;
         }
 
         public PlayerRoomPosition()

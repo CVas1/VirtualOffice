@@ -435,13 +435,12 @@ namespace SpacetimeDB.Types
             var encodedArgs = update.ReducerCall.Args;
             return update.ReducerCall.ReducerName switch
             {
-                "AddEntity" => BSATNHelpers.Decode<Reducer.AddEntity>(encodedArgs),
                 "Connect" => BSATNHelpers.Decode<Reducer.Connect>(encodedArgs),
                 "CreateRoom" => BSATNHelpers.Decode<Reducer.CreateRoom>(encodedArgs),
                 "Disconnect" => BSATNHelpers.Decode<Reducer.Disconnect>(encodedArgs),
                 "JoinRoom" => BSATNHelpers.Decode<Reducer.JoinRoom>(encodedArgs),
                 "LeaveRoom" => BSATNHelpers.Decode<Reducer.LeaveRoom>(encodedArgs),
-                "RemoveEntity" => BSATNHelpers.Decode<Reducer.RemoveEntity>(encodedArgs),
+                "SaveEntity" => BSATNHelpers.Decode<Reducer.SaveEntity>(encodedArgs),
                 "SetPlayerProfile" => BSATNHelpers.Decode<Reducer.SetPlayerProfile>(encodedArgs),
                 "UpdateLastPosition" => BSATNHelpers.Decode<Reducer.UpdateLastPosition>(encodedArgs),
                 var reducer => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
@@ -465,13 +464,12 @@ namespace SpacetimeDB.Types
             var eventContext = (ReducerEventContext)context;
             return reducer switch
             {
-                Reducer.AddEntity args => Reducers.InvokeAddEntity(eventContext, args),
                 Reducer.Connect args => Reducers.InvokeConnect(eventContext, args),
                 Reducer.CreateRoom args => Reducers.InvokeCreateRoom(eventContext, args),
                 Reducer.Disconnect args => Reducers.InvokeDisconnect(eventContext, args),
                 Reducer.JoinRoom args => Reducers.InvokeJoinRoom(eventContext, args),
                 Reducer.LeaveRoom args => Reducers.InvokeLeaveRoom(eventContext, args),
-                Reducer.RemoveEntity args => Reducers.InvokeRemoveEntity(eventContext, args),
+                Reducer.SaveEntity args => Reducers.InvokeSaveEntity(eventContext, args),
                 Reducer.SetPlayerProfile args => Reducers.InvokeSetPlayerProfile(eventContext, args),
                 Reducer.UpdateLastPosition args => Reducers.InvokeUpdateLastPosition(eventContext, args),
                 _ => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
