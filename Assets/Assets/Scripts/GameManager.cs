@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.VoiceRecorder;
-using EasyBuildSystem.Features.Runtime.Buildings.Manager;
 using UnityEngine;
 using SpacetimeDB;
 using SpacetimeDB.Types;
-using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -215,7 +213,7 @@ namespace Assets.Scripts
 
         void OnOnlinePlayerUpdate(EventContext ctx, OnlinePlayer oldData, OnlinePlayer newData)
         {
-            // Debug.Log($"Player {newData.PlayerId} updated.");
+            Debug.Log($"Player {newData.PlayerId} updated.");
             if (Players.TryGetValue(newData.Identity, out PlayerController controller))
             {
                 controller.UpdatePlayer(newData);
@@ -228,10 +226,10 @@ namespace Assets.Scripts
                 }
             }
 
-            if (newData.RoomId != CurrentRoomId)
-            {
-                OnOnlinePlayerDelete(ctx, newData);
-            }
+            // if (newData.RoomId != CurrentRoomId)
+            // {
+            //     OnOnlinePlayerDelete(ctx, newData);
+            // }
         }
 
         void OnBuildingInsert(EventContext ctx, RoomEntity roomEntity)
@@ -264,13 +262,11 @@ namespace Assets.Scripts
 
         void OnVoiceClipInsert(EventContext ctx, VoiceClip clip)
         {
-            // if (clip.Sender.Equals(LocalIdentity)) return;
-
-            // decode WAV bytes into an AudioClip
-            AudioClip ac = WavUtility.ToAudioClip(clip.AudioData.ToArray(), 0);
-
-            // hand off to the voice manager
-            VoiceChatPlayer.Instance.EnqueueClip(clip.Sender, ac);
+            if (clip.Sender.Equals(LocalIdentity)) return;
+            if (Players.TryGetValue(clip.Sender, out PlayerController player))
+            {
+                VoiceChatPlayer.Instance.EnqueueAudio(clip.AudioData.ToArray(), player.PlayerId);
+            }
         }
 
         void OnVoiceClipUpdate(EventContext ctx, VoiceClip clipOld, VoiceClip clipNew)
@@ -351,6 +347,7 @@ namespace Assets.Scripts
 
         private void LeaveRoomResult(ReducerEventContext ctx)
         {
+            if (ctx.Event.CallerIdentity != LocalIdentity) return;
             if (ctx.Event.Status is Status.Failed failedStatus)
             {
                 Debug.Log($"Failed to leave room {CurrentRoomId}: {failedStatus}");
@@ -395,6 +392,11 @@ namespace Assets.Scripts
         public void SendChatMessage(string message, bool shout = false)
         {
             Conn.Reducers.SendMessage(message, shout);
+        }
+
+        public void SendVoiceClip(byte[] audioData)
+        {
+            Conn.Reducers.SendVoice(audioData.ToList());
         }
 
         public uint GetOnlinePlayerCount()

@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void SendVoiceHandler(ReducerEventContext ctx, uint roomId, System.Collections.Generic.List<byte> audioData);
+        public delegate void SendVoiceHandler(ReducerEventContext ctx, System.Collections.Generic.List<byte> audioData);
         public event SendVoiceHandler? OnSendVoice;
 
-        public void SendVoice(uint roomId, System.Collections.Generic.List<byte> audioData)
+        public void SendVoice(System.Collections.Generic.List<byte> audioData)
         {
-            conn.InternalCallReducer(new Reducer.SendVoice(roomId, audioData), this.SetCallReducerFlags.SendVoiceFlags);
+            conn.InternalCallReducer(new Reducer.SendVoice(audioData), this.SetCallReducerFlags.SendVoiceFlags);
         }
 
         public bool InvokeSendVoice(ReducerEventContext ctx, Reducer.SendVoice args)
@@ -25,7 +25,6 @@ namespace SpacetimeDB.Types
             if (OnSendVoice == null) return false;
             OnSendVoice(
                 ctx,
-                args.RoomId,
                 args.AudioData
             );
             return true;
@@ -38,17 +37,11 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class SendVoice : Reducer, IReducerArgs
         {
-            [DataMember(Name = "room_id")]
-            public uint RoomId;
             [DataMember(Name = "audio_data")]
             public System.Collections.Generic.List<byte> AudioData;
 
-            public SendVoice(
-                uint RoomId,
-                System.Collections.Generic.List<byte> AudioData
-            )
+            public SendVoice(System.Collections.Generic.List<byte> AudioData)
             {
-                this.RoomId = RoomId;
                 this.AudioData = AudioData;
             }
 
