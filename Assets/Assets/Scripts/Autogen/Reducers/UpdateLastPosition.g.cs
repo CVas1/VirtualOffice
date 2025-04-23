@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void UpdateLastPositionHandler(ReducerEventContext ctx, DbVector3 position);
+        public delegate void UpdateLastPositionHandler(ReducerEventContext ctx, DbVector3 position, float rotation);
         public event UpdateLastPositionHandler? OnUpdateLastPosition;
 
-        public void UpdateLastPosition(DbVector3 position)
+        public void UpdateLastPosition(DbVector3 position, float rotation)
         {
-            conn.InternalCallReducer(new Reducer.UpdateLastPosition(position), this.SetCallReducerFlags.UpdateLastPositionFlags);
+            conn.InternalCallReducer(new Reducer.UpdateLastPosition(position, rotation), this.SetCallReducerFlags.UpdateLastPositionFlags);
         }
 
         public bool InvokeUpdateLastPosition(ReducerEventContext ctx, Reducer.UpdateLastPosition args)
@@ -25,7 +25,8 @@ namespace SpacetimeDB.Types
             if (OnUpdateLastPosition == null) return false;
             OnUpdateLastPosition(
                 ctx,
-                args.Position
+                args.Position,
+                args.Rotation
             );
             return true;
         }
@@ -39,10 +40,16 @@ namespace SpacetimeDB.Types
         {
             [DataMember(Name = "position")]
             public DbVector3 Position;
+            [DataMember(Name = "rotation")]
+            public float Rotation;
 
-            public UpdateLastPosition(DbVector3 Position)
+            public UpdateLastPosition(
+                DbVector3 Position,
+                float Rotation
+            )
             {
                 this.Position = Position;
+                this.Rotation = Rotation;
             }
 
             public UpdateLastPosition()
