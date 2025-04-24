@@ -127,6 +127,8 @@ namespace Assets.Scripts
 
         private void LookAround()
         {
+            // Check if the cursor is locked
+            if(Cursor.lockState != CursorLockMode.Locked) return;
             // Mouse input for looking around
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;

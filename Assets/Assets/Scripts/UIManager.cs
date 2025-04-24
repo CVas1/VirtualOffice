@@ -1,4 +1,7 @@
 using System;
+using EasyBuildSystem.Features.Runtime.Buildings.Manager;
+using EasyBuildSystem.Features.Runtime.Buildings.Part;
+using EasyBuildSystem.Features.Runtime.Buildings.Placer;
 using SpacetimeDB.Types;
 using TankAndHealerStudioAssets;
 using TMPro;
@@ -40,7 +43,13 @@ namespace Assets.Scripts
         private Image connectionStatusImage;
 
         private GameRoom selectedRoom = null;
+        
+        [Header("Build Menu")]
+        [SerializeField] private Button removeButton;
+        [SerializeField] private GameObject buildMenu;
 
+        public Transform buildPartContainer;
+        public GameObject buildPartPrefab;
 
         private void Awake()
         {
@@ -56,7 +65,19 @@ namespace Assets.Scripts
             GameManager.OnConnected += () => SetConnectionStatus(true);
             GameManager.OnDisconnected += () => SetConnectionStatus(false);
 
+        }
+
+        private void Start()
+        {
             OnClickBackToMainMenu();
+            
+            buildMenu.SetActive(false);
+            SetFurnitureContentButtons();
+            removeButton.onClick.AddListener(() =>
+            {
+                BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.DESTROY);
+                SetCursorVisibilty(false);
+            });
         }
 
         public void Update()
@@ -65,6 +86,7 @@ namespace Assets.Scripts
             {
                 QuitRoom();
             }
+            
 
             // Toggle cursor lock state with Tab
             // check if quit button is active
@@ -73,16 +95,20 @@ namespace Assets.Scripts
             {
                 if (Cursor.lockState == CursorLockMode.Locked)
                 {
-                    ToggleCursorLockState(true);
+                    BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.NONE);
+                    SetCursorVisibilty(true);
+                    buildMenu.SetActive(true);
                 }
-                else
+                else 
                 {
-                    ToggleCursorLockState(false);
+                    BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.NONE);
+                    SetCursorVisibilty(false);
+                    buildMenu.SetActive(false);
                 }
             }
         }
 
-        private void ToggleCursorLockState(bool setCursorVisible)
+        private void SetCursorVisibilty(bool setCursorVisible)
         {
             if (Cursor.lockState == CursorLockMode.Locked && setCursorVisible)
             {
@@ -147,9 +173,29 @@ namespace Assets.Scripts
         public void QuitRoom()
         {
             GameManager.Instance.LeaveRoom();
-            ToggleCursorLockState(true);
+            SetCursorVisibilty(true);
             selectedRoom = null;
             OnClickBackToMainMenu();
+        }
+
+        private void SetFurnitureContentButtons()
+        {
+            foreach (BuildingPart buildingPart in BuildingManager.Instance.BuildingPartReferences)
+            {
+                //create build part prefab
+                GameObject buildPartUI = Instantiate(buildPartPrefab, buildPartContainer);
+                buildPartUI.GetComponent<BuildPartUI>().buildingPart = buildingPart;
+                Texture2D texture = buildingPart.GetGeneralSettings.Thumbnail;
+
+                Sprite sprite = Sprite.Create(
+                    texture,
+                    new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f)
+                );
+
+                buildPartUI.GetComponent<Image>().sprite = sprite;
+            
+            }
         }
 
         public void OnClickBackToMainMenu()
@@ -177,7 +223,7 @@ namespace Assets.Scripts
             joinRoomErrorText.gameObject.SetActive(false);
             createRoomPanel.SetActive(false);
 
-            ToggleCursorLockState(false);
+            SetCursorVisibilty(false);
         }
 
         public void OnClickCreateRoomMenu()
