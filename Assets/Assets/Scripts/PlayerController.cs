@@ -46,6 +46,7 @@ namespace Assets.Scripts
             {
                 HandleInput();
                 LookAround();
+                TeleportIfBelowZero();
 
                 // Update the server with the new position and rotation at most 8 times per second
                 if (Time.time - lastUpdateTime >= updateInterval)
@@ -64,6 +65,16 @@ namespace Assets.Scripts
             {
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * moveSpeed);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
+            }
+        }
+        
+        
+        private void TeleportIfBelowZero()
+        {
+            if (transform.position.y < 0)
+            {
+                transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+                velocity = Vector3.zero;
             }
         }
 
