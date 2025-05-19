@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 819513613155616252}
   - component: {fileID: 9044461820796408311}
   - component: {fileID: 5616723443770663761}
+  - component: {fileID: 4442207558796604774}
+  - component: {fileID: 1110941899268626871}
   m_Layer: 0
   m_Name: DoorFrame_04
   m_TagString: Untagged
@@ -128,6 +130,43 @@ MonoBehaviour:
   m_RequireSocket: 0
   m_IgnoreSocket: 0
   m_ShowDebugs: 0
+--- !u!114 &4442207558796604774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6689309015486072771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 047ab9690fee7dd4287b7ed6601f1608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorTransform: {fileID: 1631324076048383736}
+  openAngle: 90
+  duration: 0.5
+  playerTag: Player
+--- !u!65 &1110941899268626871
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6689309015486072771}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.55, y: 1, z: 1.72}
+  m_Center: {x: 0, y: 0.54, z: 0}
 --- !u!1001 &2335965860103712181
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -196,6 +235,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c47850cf384b4461ca276e794a9d0955, type: 3}
+--- !u!4 &1631324076048383736 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3947585429276726093, guid: c47850cf384b4461ca276e794a9d0955,
+    type: 3}
+  m_PrefabInstance: {fileID: 2335965860103712181}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2682968276463275809 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 383041248595255956, guid: c47850cf384b4461ca276e794a9d0955,

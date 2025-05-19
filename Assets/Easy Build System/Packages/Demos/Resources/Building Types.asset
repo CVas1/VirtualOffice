@@ -19,3 +19,5 @@ MonoBehaviour:
   - Stair
   - Other
   - Door
+  - Props
+  - WallProps

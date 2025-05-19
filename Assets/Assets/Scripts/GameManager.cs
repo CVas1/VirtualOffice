@@ -58,6 +58,8 @@ namespace Assets.Scripts
             }
 
             Conn = builder.Build();
+            
+            Application.targetFrameRate = 60;
         }
 
         void OnConnect(DbConnection conn, Identity identity, string token)
@@ -150,7 +152,13 @@ namespace Assets.Scripts
         {
             // Debug.Log($"Player {player.PlayerId} created.");
             if (player.RoomId != CurrentRoomId) return; // Only spawn players in the same room
-
+            
+            //disable camera if exist
+            if (Camera.main != null)
+            {
+                Camera.main.gameObject.SetActive(false);
+            }
+            
             PlayerController controller = Instantiate(playerPrefab).GetComponent<PlayerController>();
             Debug.Log($"Player {player.PlayerId} created in room {player.RoomId}.");
             controller.transform.position =
@@ -198,6 +206,7 @@ namespace Assets.Scripts
             {
                 Destroy(controller.gameObject);
                 Players.Remove(player.Identity);
+                
             }
 
             if (player.Identity.Equals(LocalIdentity))
@@ -208,6 +217,11 @@ namespace Assets.Scripts
                     currentChatSub.Unsubscribe();
                     currentChatSub = null;
                 }
+            }
+            // setactive camera
+            if (Camera.main != null)
+            {
+                Camera.main.gameObject.SetActive(true);
             }
         }
 
@@ -225,11 +239,6 @@ namespace Assets.Scripts
                     OnOnlinePlayerInsert(ctx, newData);
                 }
             }
-
-            // if (newData.RoomId != CurrentRoomId)
-            // {
-            //     OnOnlinePlayerDelete(ctx, newData);
-            // }
         }
 
         void OnBuildingInsert(EventContext ctx, RoomEntity roomEntity)
