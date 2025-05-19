@@ -135,8 +135,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751864339694949994}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.814, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -265,7 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GeneralSettings:
     m_Name: Window2_02
-    m_Type: Foundation
+    m_Type: Window
     m_Thumbnail: {fileID: 2800000, guid: b6f829bdaa4c0924299a435b672d6bb5, type: 3}
     m_Identifier: 07d09cfef3bf46689a37365e74f5e028
   m_ModelSettings:
@@ -273,8 +273,8 @@ MonoBehaviour:
     - {fileID: 1751864339694949994}
     m_ModelIndex: 0
     m_ModelBounds:
-      m_Center: {x: 0, y: 1.075, z: 0.015000284}
-      m_Extent: {x: 0.75, y: 1.075, z: 0.13500002}
+      m_Center: {x: 0, y: 0.66800016, z: 0.015000343}
+      m_Extent: {x: 0.75, y: 0.668, z: 0.13500023}
   m_PreviewSettings:
     m_PreviewElevation: 0
     m_PreviewElevationHeight: 0
