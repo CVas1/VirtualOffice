@@ -5,6 +5,7 @@ using Assets.Scripts.VoiceRecorder;
 using UnityEngine;
 using SpacetimeDB;
 using SpacetimeDB.Types;
+using UnityEngine.Serialization;
 
 namespace Assets.Scripts
 {
@@ -33,7 +34,8 @@ namespace Assets.Scripts
         public static event Action OnRoomLeave;
         // public static event Action OnSubscriptionApplied;
 
-        [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject localPlayerPrefab;
+        [SerializeField] private GameObject remotePlayerPrefab;
 
         private void Start()
         {
@@ -159,19 +161,23 @@ namespace Assets.Scripts
             {
                 Camera.main.gameObject.SetActive(false);
             }
+            bool isLocal = player.Identity.Equals(LocalIdentity);
+            PlayerController controller;
+            if (isLocal)
+            {
+                 controller = Instantiate(localPlayerPrefab).GetComponent<PlayerController>();
+                 SubscribeToChat(player.RoomId, player.LastRoomJoinTime);
+                 SubscribeToVoice(player.RoomId, player.LastRoomJoinTime);
+            }
+            else
+            {
+                controller = Instantiate(remotePlayerPrefab).GetComponent<PlayerController>();
+            }
             
-            PlayerController controller = Instantiate(playerPrefab).GetComponent<PlayerController>();
             Debug.Log($"Player {player.PlayerId} created in room {player.RoomId}.");
             controller.transform.position =
                 new Vector3(player.LastPosition.X, player.LastPosition.Y, player.LastPosition.Z);
-            bool isLocal = player.Identity.Equals(LocalIdentity);
-
-            if (isLocal)
-            {
-                SubscribeToChat(player.RoomId, player.LastRoomJoinTime);
-                SubscribeToVoice(player.RoomId, player.LastRoomJoinTime);
-            }
-
+            
             controller.Init(player, isLocal);
             Players[player.Identity] = controller;
         }
@@ -231,6 +237,8 @@ namespace Assets.Scripts
             Debug.Log($"Player {newData.PlayerId} updated.");
             if (Players.TryGetValue(newData.Identity, out PlayerController controller))
             {
+                // Update the player data if player is not local
+                if (newData.Identity.Equals(LocalIdentity)) return;
                 controller.UpdatePlayer(newData);
             }
             else

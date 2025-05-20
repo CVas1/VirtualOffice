@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using SpacetimeDB;
@@ -5,19 +6,10 @@ using SpacetimeDB.Types;
 
 namespace Assets.Scripts
 {
-    [RequireComponent(typeof(CharacterController))]
+  
     public class PlayerController : MonoBehaviour
     {
-        [Header("Movement Settings")] public float moveSpeed = 5f;
-        public float mouseSensitivity = 2f;
-        public float gravity = -9.81f;
-
-        [Header("References")] public Transform playerCamera;
-        [SerializeField] private MeshRenderer meshRenderer;
-
-        private CharacterController controller;
-        private Vector3 velocity;
-        private float xRotation = 0f;
+        private MeshRenderer meshRenderer;
 
         private Vector3 targetPosition;
         private Quaternion targetRotation;
@@ -26,57 +18,47 @@ namespace Assets.Scripts
         public uint PlayerId { get; private set; }
         public Identity Identity { get; private set; }
 
-        // private string playerName;
         public string PlayerName { get; private set; }
         public Color PlayerColor { get; private set; }
         public ulong RoomJoinTime { get; private set; }
 
-        private float lastUpdateTime = 0f; // Tracks the last update time
-        private const float updateInterval = 0.125f; // 1/8 seconds
+        private float lastUpdateTime = 0f;
+        private const float updateInterval = 0.125f;
 
-        void Start()
+        private void Start()
         {
-            controller = GetComponent<CharacterController>();
+            meshRenderer = GetComponentInChildren<MeshRenderer>();
         }
 
         void Update()
         {
-            // Handle local input
-            if (isLocalPlayer)
+            if (isLocalPlayer && Time.time - lastUpdateTime >= updateInterval)
             {
-                HandleInput();
-                LookAround();
-                TeleportIfBelowZero();
-
-                // Update the server with the new position and rotation at most 8 times per second
-                if (Time.time - lastUpdateTime >= updateInterval)
+                if (Vector3.Distance(transform.position, targetPosition) > 0.3f ||
+                    Quaternion.Angle(transform.rotation, targetRotation) > 6f)
                 {
-                    if (Vector3.Distance(transform.position, targetPosition) > 0.3f ||
-                        Quaternion.Angle(transform.rotation, targetRotation) > 6f)
-                    {
-                        float yaw = transform.rotation.eulerAngles.y;
-                        GameManager.Instance.UpdatePlayerPosition(transform.position, yaw);
-                    }
-
-                    lastUpdateTime = Time.time; // Update the last update time
+                    float yaw = transform.rotation.eulerAngles.y;
+                    GameManager.Instance.UpdatePlayerPosition(transform.position, yaw);
                 }
+
+                lastUpdateTime = Time.time;
             }
             else
             {
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * moveSpeed);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime );
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime );
             }
         }
-        
-        
-        private void TeleportIfBelowZero()
-        {
-            if (transform.position.y < 0)
-            {
-                transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-                velocity = Vector3.zero;
-            }
-        }
+
+
+        // private void TeleportIfBelowZero()
+        // {
+        //     if (transform.position.y < -5f)
+        //     {
+        //         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        //         rb.linearVelocity = Vector3.zero;
+        //     }
+        // }
 
         public void Init(OnlinePlayer playerData, bool isLocal)
         {
@@ -90,65 +72,14 @@ namespace Assets.Scripts
             SetColor(playerData.Color);
             SetName(playerData.Name);
             RoomJoinTime = playerData.LastRoomJoinTime;
-
-            if (isLocalPlayer)
-            {
-                playerCamera.gameObject.SetActive(true);
-                gameObject.name = $"LocalPlayer({playerData.Name})";
-            }
-            else
-            {
-                playerCamera.gameObject.SetActive(false);
-                gameObject.name = $"RemotePlayer({playerData.Name})";
-            }
         }
 
         public void UpdatePlayer(OnlinePlayer updatedData)
         {
             targetPosition = ToVector3(updatedData.LastPosition);
             targetRotation = Quaternion.Euler(0, updatedData.LastRotation, 0);
-
             SetColor(updatedData.Color);
             SetName(updatedData.Name);
-            // RoomJoinTime = updatedData.LastRoomJoinTime;
-        }
-
-        private void HandleInput()
-        {
-            // Movement input
-            float moveX = Input.GetAxis("Horizontal");
-            float moveZ = Input.GetAxis("Vertical");
-
-            Vector3 move = transform.right * moveX + transform.forward * moveZ;
-            controller.Move(move * moveSpeed * Time.deltaTime);
-
-            // Apply gravity
-            if (controller.isGrounded && velocity.y < 0)
-                velocity.y = -2f; // small value to keep grounded
-
-            velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
-
-            // Update position on the server
-            if (move.sqrMagnitude > 0.01f)
-            {
-                transform.position += move.normalized * (moveSpeed * Time.deltaTime);
-            }
-        }
-
-        private void LookAround()
-        {
-            // Check if the cursor is locked
-            if(Cursor.lockState != CursorLockMode.Locked) return;
-            // Mouse input for looking around
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-            playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-            transform.Rotate(Vector3.up * mouseX);
         }
 
         private void SetColor(string hexColor)
@@ -162,7 +93,7 @@ namespace Assets.Scripts
                 Debug.LogError($"Failed to parse color: {hexColor}");
                 PlayerColor = Color.gray;
             }
-
+        
             if (meshRenderer == null) return;
             meshRenderer.material.color = PlayerColor;
         }

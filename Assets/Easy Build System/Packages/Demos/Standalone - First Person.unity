@@ -8101,6 +8101,9 @@ MonoBehaviour:
   - Stair
   - Other
   - Door
+  - Props
+  - WallProps
+  - Window
   m_AreaOfInterestSettings:
     m_AreaOfInterest: 0
     m_AffectBuildingAreas: 1

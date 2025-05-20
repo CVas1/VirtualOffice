@@ -597,6 +597,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   captureFPS: 20
+  OnTextureChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1884883796
 GameObject:
   m_ObjectHideFlags: 0
