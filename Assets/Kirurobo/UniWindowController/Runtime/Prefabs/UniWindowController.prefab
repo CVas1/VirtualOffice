@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2416199871598626842}
   - component: {fileID: 2416199871598626845}
+  - component: {fileID: 4583531406051303828}
+  - component: {fileID: 2556488812348798204}
   m_Layer: 0
   m_Name: UniWindowController
   m_TagString: Untagged
@@ -24,12 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2416199871598626844}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2416199871598626845
 MonoBehaviour:
@@ -44,15 +47,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isTransparent: 0
+  _alphaValue: 1
   _isTopmost: 0
+  _isBottommost: 0
   _isZoomed: 0
+  _shouldFitMonitor: 0
+  _allowDropFiles: 1
   isHitTestEnabled: 1
   hitTestType: 1
   opacityThreshold: 0.1
+  autoSwitchCameraBackground: 1
   forceWindowed: 0
+  currentCamera: {fileID: 0}
   transparentType: 1
   keyColor:
     serializedVersion: 2
     rgba: 65537
   onObject: 1
   pickedColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &4583531406051303828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2416199871598626844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85a51df42d6ed0f45b9804b29d3dfe95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &2556488812348798204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2416199871598626844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06964cc3f09a8434388d525f1344b3fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  captureFPS: 10
