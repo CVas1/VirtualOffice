@@ -29,6 +29,8 @@ namespace Assets.Scripts
 
         public static event Action OnConnected;
         public static event Action OnDisconnected;
+        public static event Action OnRoomJoin;
+        public static event Action OnRoomLeave;
         // public static event Action OnSubscriptionApplied;
 
         [SerializeField] private GameObject playerPrefab;
@@ -59,7 +61,6 @@ namespace Assets.Scripts
 
             Conn = builder.Build();
             
-            Application.targetFrameRate = 60;
         }
 
         void OnConnect(DbConnection conn, Identity identity, string token)
@@ -326,6 +327,7 @@ namespace Assets.Scripts
                 UIManager.Instance.OnCloseMenu();
                 RoomBuildingManager.Instance.OnRoomJoin();
                 ChatManager.Instance.ClearChat();
+                OnRoomJoin?.Invoke();
 
                 // Re-subscribe to only the players/entities in this room
                 var newCurrentRoomSub = Conn.SubscriptionBuilder()
@@ -380,6 +382,7 @@ namespace Assets.Scripts
 
                 Players.Clear();
                 RoomBuildingManager.Instance.OnRoomLeave();
+                OnRoomLeave?.Invoke();
             }
         }
 

@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 6148589399687533222}
   - component: {fileID: 3202560746170763031}
   - component: {fileID: 3158596166715293444}
-  m_Layer: 0
+  - component: {fileID: 7808873325248601952}
+  m_Layer: 10
   m_Name: Projector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,6 +131,19 @@ MonoBehaviour:
   m_RequireSocket: 0
   m_IgnoreSocket: 0
   m_ShowDebugs: 0
+--- !u!114 &7808873325248601952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5949278264897328776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b401330b7cdc4e4db984c233cb403ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectorImageRenderer: {fileID: 7043771661719453295}
 --- !u!1 &9193544085592749609
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +156,7 @@ GameObject:
   - component: {fileID: 1604491582156449544}
   - component: {fileID: 110861078966003836}
   - component: {fileID: 7726971874165878770}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BlackScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -252,6 +266,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImageQuad
       objectReference: {fileID: 0}
+    - target: {fileID: 1050679090594331061, guid: 5dda274a7e859a249af586f59558c357,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416283682859968517, guid: 5dda274a7e859a249af586f59558c357,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 17ea361a8babacd45ab0dfd857c9c373, type: 2}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -280,27 +304,27 @@ PrefabInstance:
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.00000058114523
       objectReference: {fileID: 0}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -180
       objectReference: {fileID: 0}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
@@ -317,6 +341,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5dda274a7e859a249af586f59558c357, type: 3}
+--- !u!23 &7043771661719453295 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5416283682859968517, guid: 5dda274a7e859a249af586f59558c357,
+    type: 3}
+  m_PrefabInstance: {fileID: 3092284444860274282}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8993598977436261440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
@@ -405,6 +435,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Projector_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 1857166883338410442, guid: 19c1c8c281a23443580dbdee291582a7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1857166883338410442, guid: 19c1c8c281a23443580dbdee291582a7,
         type: 3}

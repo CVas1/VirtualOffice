@@ -4,13 +4,20 @@ using UnityEngine.UI;
 
 public class OfficeProjector : MonoBehaviour
 {
+    [SerializeField]
     private Renderer projectorImageRenderer;
     
     
     public void OnClick()
     {
-        Debug.Log("Projector clicked!"); 
-        StartProjection();
+        if(NativeScreenCapture.Instance.isCapturing)
+        {
+            StopProjection();
+        }
+        else
+        {
+            StartProjection();
+        }
     }
     private void StartProjection()
     {
@@ -24,9 +31,8 @@ public class OfficeProjector : MonoBehaviour
     }
     private void OnDestroy()
     {
-        StopProjection();
+        NativeScreenCapture.Instance.OnTextureChanged.RemoveListener(OnTextureChanged);
     }
-    
 
     private void OnTextureChanged(Texture2D arg0)
     {        
@@ -43,9 +49,4 @@ public class OfficeProjector : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        projectorImageRenderer = GetComponent<Renderer>();
-        
-    }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,100 +11,101 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
 
     [DllImport("ScreenCaptureDLL.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern void GetScreenSize(ref int width, ref int height);
+    
+    [DllImport("ScreenCaptureDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern void ReleaseScreenCaptureResources();
 
     private Texture2D screenTex;
-    
     private int screenWidth;
     private int screenHeight;
     private byte[] buffer;
     private GCHandle handle;
     private IntPtr pointer;
-    private bool isCapturing = false;
-    private float captureInterval;
-    private float captureTimer = 0f;
 
     public int captureFPS = 10;
+    private float captureInterval;
+    private Coroutine captureRoutine;
+
+    [NonSerialized] public bool isCapturing = false;
 
     public UnityEvent<Texture2D> OnTextureChanged;
-    void Start()
+
+    private void Start()
     {
-        // Retrieve the current screen dimensions
+        GameManager.OnRoomLeave += StopCapture;
+
+        // Get screen size
         GetScreenSize(ref screenWidth, ref screenHeight);
         Debug.Log("Screen size: " + screenWidth + " x " + screenHeight);
 
-        // Create a Texture2D with the screen dimensions
+        // Init texture and buffer
         screenTex = new Texture2D(screenWidth, screenHeight, TextureFormat.BGRA32, false);
         buffer = new byte[screenWidth * screenHeight * 4];
-
-        // Pin the managed array so we can pass a pointer to the native function
         handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
         pointer = handle.AddrOfPinnedObject();
 
-        captureInterval = 1f / captureFPS;
+        UpdateCaptureInterval();
     }
 
-    void Update()
+    private void OnValidate()
     {
-        captureInterval = 1f / captureFPS;
+        UpdateCaptureInterval();
+    }
 
-        if (!isCapturing) return;
+    private void UpdateCaptureInterval()
+    {
+        captureInterval = 1f / Mathf.Max(1, captureFPS);
+    }
 
-        captureTimer += Time.deltaTime;
-        if (captureTimer >= captureInterval)
+    public void StartCapture()
+    {
+        if (!isCapturing)
         {
-            captureTimer = 0f;
+            isCapturing = true;
+            captureRoutine = StartCoroutine(CaptureLoop());
+        }
+    }
+
+    public void StopCapture()
+    {
+        if (isCapturing)
+        {
+            isCapturing = false;
+            if (captureRoutine != null)
+            {
+                StopCoroutine(captureRoutine);
+                captureRoutine = null;
+            }
+        }
+    }
+
+    private System.Collections.IEnumerator CaptureLoop()
+    {
+        WaitForSeconds wait = new WaitForSeconds(captureInterval);
+
+        while (isCapturing)
+        {
             bool success = CaptureScreen(pointer, screenWidth, screenHeight);
             if (success)
             {
-                // Load the texture data
                 screenTex.LoadRawTextureData(buffer);
-                screenTex.Apply();
-                
-                // Flip the texture vertically
-                FlipTextureVertically(screenTex);
+                screenTex.Apply(); // Minimal Apply call
                 OnTextureChanged?.Invoke(screenTex);
             }
             else
             {
                 Debug.LogError("Screen capture failed!");
             }
+
+            yield return wait;
         }
     }
 
-    // Method to flip a texture vertically
-    private void FlipTextureVertically(Texture2D texture)
-    {
-        Color[] pixels = texture.GetPixels();
-        Color[] pixelsFlipped = new Color[pixels.Length];
-        
-        for (int y = 0; y < screenHeight; y++)
-        {
-            for (int x = 0; x < screenWidth; x++)
-            {
-                pixelsFlipped[x + y * screenWidth] = pixels[x + (screenHeight - y - 1) * screenWidth];
-            }
-        }
-        
-        texture.SetPixels(pixelsFlipped);
-        texture.Apply();
-    }
-
-    public void StartCapture()
-    {
-        isCapturing = true;
-        captureTimer = 0f;
-    }
-
-    public void StopCapture()
-    {
-        isCapturing = false;
-    }
-
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (handle.IsAllocated)
-        {
             handle.Free();
-        }
+        
+        ReleaseScreenCaptureResources();
     }
 }
