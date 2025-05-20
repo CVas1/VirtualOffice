@@ -165,7 +165,7 @@ namespace Assets.Scripts
             PlayerController controller;
             if (isLocal)
             {
-                 controller = Instantiate(localPlayerPrefab).GetComponent<PlayerController>();
+                 controller = Instantiate(localPlayerPrefab).GetComponentInChildren<PlayerController>();
                  SubscribeToChat(player.RoomId, player.LastRoomJoinTime);
                  SubscribeToVoice(player.RoomId, player.LastRoomJoinTime);
             }

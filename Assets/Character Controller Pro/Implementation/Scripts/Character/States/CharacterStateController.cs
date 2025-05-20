@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Lightbug.CharacterControllerPro.Core;
-using Lightbug.CharacterControllerPro.Demo;
 using Lightbug.Utilities;
 
 namespace Lightbug.CharacterControllerPro.Implementation
@@ -31,7 +30,7 @@ namespace Lightbug.CharacterControllerPro.Implementation
 
         [CustomClassDrawer]
         [SerializeField]
-        public MovementReferenceParameters movementReferenceParameters = new MovementReferenceParameters();
+        MovementReferenceParameters movementReferenceParameters = new MovementReferenceParameters();
 
         // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
         // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -323,8 +322,7 @@ namespace Lightbug.CharacterControllerPro.Implementation
         }
 
         void Start()
-        {
-            movementReferenceParameters.externalReference = GameObject.FindWithTag("MainCamera")?.transform;
+        {            
             movementReferenceParameters.Initialize(CharacterActor);
         }
 

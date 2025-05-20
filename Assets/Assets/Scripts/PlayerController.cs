@@ -27,7 +27,8 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            meshRenderer = GetComponentInChildren<MeshRenderer>();
+            meshRenderer = GetComponent<MeshRenderer>();
+           
         }
 
         void Update()
