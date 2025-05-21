@@ -13,6 +13,7 @@ TagManager:
   - Boost
   - WallSlide
   - JumpDown
+  - Chair
   layers:
   - Default
   - TransparentFX

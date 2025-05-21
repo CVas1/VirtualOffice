@@ -8,10 +8,7 @@ namespace Lightbug.CharacterControllerPro.Demo
     [AddComponentMenu("Character Controller Pro/Demo/Character/States/Normal Movement")]
     public class NormalMovement : CharacterState
     {
-
-        [Space(10)]
-
-        public PlanarMovementParameters planarMovementParameters = new PlanarMovementParameters();
+        [Space(10)] public PlanarMovementParameters planarMovementParameters = new PlanarMovementParameters();
 
         public VerticalMovementParameters verticalMovementParameters = new VerticalMovementParameters();
 
@@ -20,28 +17,19 @@ namespace Lightbug.CharacterControllerPro.Demo
         public LookingDirectionParameters lookingDirectionParameters = new LookingDirectionParameters();
 
 
-        [Header("Animation")]
+        [Header("Animation")] [SerializeField] protected string groundedParameter = "Grounded";
 
-        [SerializeField]
-        protected string groundedParameter = "Grounded";
+        [SerializeField] protected string stableParameter = "Stable";
 
-        [SerializeField]
-        protected string stableParameter = "Stable";
+        [SerializeField] protected string verticalSpeedParameter = "VerticalSpeed";
 
-        [SerializeField]
-        protected string verticalSpeedParameter = "VerticalSpeed";
+        [SerializeField] protected string planarSpeedParameter = "PlanarSpeed";
 
-        [SerializeField]
-        protected string planarSpeedParameter = "PlanarSpeed";
+        [SerializeField] protected string horizontalAxisParameter = "HorizontalAxis";
 
-        [SerializeField]
-        protected string horizontalAxisParameter = "HorizontalAxis";
+        [SerializeField] protected string verticalAxisParameter = "VerticalAxis";
 
-        [SerializeField]
-        protected string verticalAxisParameter = "VerticalAxis";
-
-        [SerializeField]
-        protected string heightParameter = "Height";
+        [SerializeField] protected string heightParameter = "Height";
 
 
         // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -49,7 +37,7 @@ namespace Lightbug.CharacterControllerPro.Demo
         // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-        #region Events	
+        #region Events
 
         /// <summary>
         /// Event triggered when the character jumps.
@@ -84,7 +72,9 @@ namespace Lightbug.CharacterControllerPro.Demo
         protected bool wantToCrouch = false;
         protected bool isCrouched = false;
 
-        protected PlanarMovementParameters.PlanarMovementProperties currentMotion = new PlanarMovementParameters.PlanarMovementProperties();
+        protected PlanarMovementParameters.PlanarMovementProperties currentMotion =
+            new PlanarMovementParameters.PlanarMovementProperties();
+
         bool reducedAirControlFlag = false;
         float reducedAirControlInitialTime = 0f;
         float reductionDuration = 0.5f;
@@ -125,9 +115,10 @@ namespace Lightbug.CharacterControllerPro.Demo
 
         public override string GetInfo()
         {
-            return "This state serves as a multi purpose movement based state. It is responsible for handling gravity and jump, walk and run, crouch, " +
-            "react to the different material properties, etc. Basically it covers all the common movements involved " +
-            "in a typical game, from a 3D platformer to a first person walking simulator.";
+            return
+                "This state serves as a multi purpose movement based state. It is responsible for handling gravity and jump, walk and run, crouch, " +
+                "react to the different material properties, etc. Basically it covers all the common movements involved " +
+                "in a typical game, from a 3D platformer to a first person walking simulator.";
         }
 
         void OnTeleport(Vector3 position, Quaternion rotation)
@@ -148,7 +139,6 @@ namespace Lightbug.CharacterControllerPro.Demo
 
         public override void CheckExitTransition()
         {
-
             if (CharacterActions.jetPack.value)
             {
                 CharacterStateController.EnqueueTransition<JetPack>();
@@ -177,7 +167,6 @@ namespace Lightbug.CharacterControllerPro.Demo
         }
 
 
-
         /// <summary>
         /// Reduces the amount of acceleration and deceleration (not grounded state) until the character reaches the apex of the jump 
         /// (vertical velocity close to zero). This can be useful to prevent the character from accelerating/decelerating too quickly (e.g. right after performing a wall jump).
@@ -199,14 +188,18 @@ namespace Lightbug.CharacterControllerPro.Demo
 
                     currentMotion.acceleration = planarMovementParameters.stableGroundedAcceleration;
                     currentMotion.deceleration = planarMovementParameters.stableGroundedDeceleration;
-                    currentMotion.angleAccelerationMultiplier = planarMovementParameters.stableGroundedAngleAccelerationBoost.Evaluate(angleCurrentTargetVelocity);
+                    currentMotion.angleAccelerationMultiplier =
+                        planarMovementParameters.stableGroundedAngleAccelerationBoost.Evaluate(
+                            angleCurrentTargetVelocity);
 
                     break;
 
                 case CharacterActorState.UnstableGrounded:
                     currentMotion.acceleration = planarMovementParameters.unstableGroundedAcceleration;
                     currentMotion.deceleration = planarMovementParameters.unstableGroundedDeceleration;
-                    currentMotion.angleAccelerationMultiplier = planarMovementParameters.unstableGroundedAngleAccelerationBoost.Evaluate(angleCurrentTargetVelocity);
+                    currentMotion.angleAccelerationMultiplier =
+                        planarMovementParameters.unstableGroundedAngleAccelerationBoost.Evaluate(
+                            angleCurrentTargetVelocity);
 
                     break;
 
@@ -217,8 +210,10 @@ namespace Lightbug.CharacterControllerPro.Demo
                         float time = Time.time - reducedAirControlInitialTime;
                         if (time <= reductionDuration)
                         {
-                            currentMotion.acceleration = (planarMovementParameters.notGroundedAcceleration / reductionDuration) * time;
-                            currentMotion.deceleration = (planarMovementParameters.notGroundedDeceleration / reductionDuration) * time;
+                            currentMotion.acceleration =
+                                (planarMovementParameters.notGroundedAcceleration / reductionDuration) * time;
+                            currentMotion.deceleration =
+                                (planarMovementParameters.notGroundedDeceleration / reductionDuration) * time;
                         }
                         else
                         {
@@ -227,7 +222,6 @@ namespace Lightbug.CharacterControllerPro.Demo
                             currentMotion.acceleration = planarMovementParameters.notGroundedAcceleration;
                             currentMotion.deceleration = planarMovementParameters.notGroundedDeceleration;
                         }
-
                     }
                     else
                     {
@@ -235,10 +229,10 @@ namespace Lightbug.CharacterControllerPro.Demo
                         currentMotion.deceleration = planarMovementParameters.notGroundedDeceleration;
                     }
 
-                    currentMotion.angleAccelerationMultiplier = planarMovementParameters.notGroundedAngleAccelerationBoost.Evaluate(angleCurrentTargetVelocity);
+                    currentMotion.angleAccelerationMultiplier =
+                        planarMovementParameters.notGroundedAngleAccelerationBoost.Evaluate(angleCurrentTargetVelocity);
 
                     break;
-
             }
 
 
@@ -247,8 +241,10 @@ namespace Lightbug.CharacterControllerPro.Demo
             {
                 if (CharacterActor.IsGrounded)
                 {
-                    currentMotion.acceleration *= materialController.CurrentSurface.accelerationMultiplier * materialController.CurrentVolume.accelerationMultiplier;
-                    currentMotion.deceleration *= materialController.CurrentSurface.decelerationMultiplier * materialController.CurrentVolume.decelerationMultiplier;
+                    currentMotion.acceleration *= materialController.CurrentSurface.accelerationMultiplier *
+                                                  materialController.CurrentVolume.accelerationMultiplier;
+                    currentMotion.deceleration *= materialController.CurrentSurface.decelerationMultiplier *
+                                                  materialController.CurrentVolume.decelerationMultiplier;
                 }
                 else
                 {
@@ -256,7 +252,6 @@ namespace Lightbug.CharacterControllerPro.Demo
                     currentMotion.deceleration *= materialController.CurrentVolume.decelerationMultiplier;
                 }
             }
-
         }
 
 
@@ -268,11 +263,14 @@ namespace Lightbug.CharacterControllerPro.Demo
         {
             //SetMotionValues();
 
-            float speedMultiplier = materialController != null ?
-            materialController.CurrentSurface.speedMultiplier * materialController.CurrentVolume.speedMultiplier : 1f;
+            float speedMultiplier = materialController != null
+                ? materialController.CurrentSurface.speedMultiplier * materialController.CurrentVolume.speedMultiplier
+                : 1f;
 
 
-            bool needToAccelerate = CustomUtilities.Multiply(CharacterStateController.InputMovementReference, currentPlanarSpeedLimit).sqrMagnitude >= CharacterActor.PlanarVelocity.sqrMagnitude;
+            bool needToAccelerate =
+                CustomUtilities.Multiply(CharacterStateController.InputMovementReference, currentPlanarSpeedLimit)
+                    .sqrMagnitude >= CharacterActor.PlanarVelocity.sqrMagnitude;
 
             Vector3 targetPlanarVelocity = default;
             switch (CharacterActor.CurrentState)
@@ -280,9 +278,11 @@ namespace Lightbug.CharacterControllerPro.Demo
                 case CharacterActorState.NotGrounded:
 
                     if (CharacterActor.WasGrounded)
-                        currentPlanarSpeedLimit = Mathf.Max(CharacterActor.PlanarVelocity.magnitude, planarMovementParameters.baseSpeedLimit);
+                        currentPlanarSpeedLimit = Mathf.Max(CharacterActor.PlanarVelocity.magnitude,
+                            planarMovementParameters.baseSpeedLimit);
 
-                    targetPlanarVelocity = CustomUtilities.Multiply(CharacterStateController.InputMovementReference, speedMultiplier, currentPlanarSpeedLimit);
+                    targetPlanarVelocity = CustomUtilities.Multiply(CharacterStateController.InputMovementReference,
+                        speedMultiplier, currentPlanarSpeedLimit);
 
                     break;
                 case CharacterActorState.StableGrounded:
@@ -305,21 +305,26 @@ namespace Lightbug.CharacterControllerPro.Demo
 
                     if (isCrouched)
                     {
-                        currentPlanarSpeedLimit = planarMovementParameters.baseSpeedLimit * crouchParameters.speedMultiplier;
+                        currentPlanarSpeedLimit =
+                            planarMovementParameters.baseSpeedLimit * crouchParameters.speedMultiplier;
                     }
                     else
                     {
-                        currentPlanarSpeedLimit = wantToRun ? planarMovementParameters.boostSpeedLimit : planarMovementParameters.baseSpeedLimit;
+                        currentPlanarSpeedLimit = wantToRun
+                            ? planarMovementParameters.boostSpeedLimit
+                            : planarMovementParameters.baseSpeedLimit;
                     }
 
-                    targetPlanarVelocity = CustomUtilities.Multiply(CharacterStateController.InputMovementReference, speedMultiplier, currentPlanarSpeedLimit);
+                    targetPlanarVelocity = CustomUtilities.Multiply(CharacterStateController.InputMovementReference,
+                        speedMultiplier, currentPlanarSpeedLimit);
 
                     break;
                 case CharacterActorState.UnstableGrounded:
 
                     currentPlanarSpeedLimit = planarMovementParameters.baseSpeedLimit;
 
-                    targetPlanarVelocity = CustomUtilities.Multiply(CharacterStateController.InputMovementReference, speedMultiplier, currentPlanarSpeedLimit);
+                    targetPlanarVelocity = CustomUtilities.Multiply(CharacterStateController.InputMovementReference,
+                        speedMultiplier, currentPlanarSpeedLimit);
 
 
                     break;
@@ -348,7 +353,6 @@ namespace Lightbug.CharacterControllerPro.Demo
         }
 
 
-
         protected virtual void ProcessGravity(float dt)
         {
             if (!verticalMovementParameters.useGravity)
@@ -361,22 +365,21 @@ namespace Lightbug.CharacterControllerPro.Demo
             float gravityMultiplier = 1f;
 
             if (materialController != null)
-                gravityMultiplier = CharacterActor.LocalVelocity.y >= 0 ?
-                    materialController.CurrentVolume.gravityAscendingMultiplier :
-                    materialController.CurrentVolume.gravityDescendingMultiplier;
+                gravityMultiplier = CharacterActor.LocalVelocity.y >= 0
+                    ? materialController.CurrentVolume.gravityAscendingMultiplier
+                    : materialController.CurrentVolume.gravityDescendingMultiplier;
 
             float gravity = gravityMultiplier * verticalMovementParameters.gravity;
 
 
             if (!CharacterActor.IsStable)
                 CharacterActor.VerticalVelocity += CustomUtilities.Multiply(-CharacterActor.Up, gravity, dt);
-
-
         }
 
 
-        protected bool UnstableGroundedJumpAvailable => !verticalMovementParameters.canJumpOnUnstableGround && CharacterActor.CurrentState == CharacterActorState.UnstableGrounded;
-
+        protected bool UnstableGroundedJumpAvailable => !verticalMovementParameters.canJumpOnUnstableGround &&
+                                                        CharacterActor.CurrentState ==
+                                                        CharacterActorState.UnstableGrounded;
 
 
         public enum JumpResult
@@ -392,13 +395,14 @@ namespace Lightbug.CharacterControllerPro.Demo
 
             if (!verticalMovementParameters.canJump)
                 return jumpResult;
-            
+
 
             switch (CharacterActor.CurrentState)
             {
                 case CharacterActorState.StableGrounded:
 
-                    if (CharacterActions.jump.StartedElapsedTime <= verticalMovementParameters.preGroundedJumpTime && groundedJumpAvailable)
+                    if (CharacterActions.jump.StartedElapsedTime <= verticalMovementParameters.preGroundedJumpTime &&
+                        groundedJumpAvailable)
                         jumpResult = JumpResult.Grounded;
 
                     break;
@@ -407,11 +411,12 @@ namespace Lightbug.CharacterControllerPro.Demo
                     if (CharacterActions.jump.Started)
                     {
                         // First check if the "grounded jump" is available. If so, execute a "coyote jump".
-                        if (CharacterActor.NotGroundedTime <= verticalMovementParameters.postGroundedJumpTime && groundedJumpAvailable)
+                        if (CharacterActor.NotGroundedTime <= verticalMovementParameters.postGroundedJumpTime &&
+                            groundedJumpAvailable)
                         {
                             jumpResult = JumpResult.Grounded;
                         }
-                        else if (notGroundedJumpsLeft != 0)  // Do a 'not grounded' jump
+                        else if (notGroundedJumpsLeft != 0) // Do a 'not grounded' jump
                         {
                             jumpResult = JumpResult.NotGrounded;
                         }
@@ -420,7 +425,8 @@ namespace Lightbug.CharacterControllerPro.Demo
                     break;
                 case CharacterActorState.UnstableGrounded:
 
-                    if (CharacterActions.jump.StartedElapsedTime <= verticalMovementParameters.preGroundedJumpTime && verticalMovementParameters.canJumpOnUnstableGround)
+                    if (CharacterActions.jump.StartedElapsedTime <= verticalMovementParameters.preGroundedJumpTime &&
+                        verticalMovementParameters.canJumpOnUnstableGround)
                         jumpResult = JumpResult.Grounded;
 
                     break;
@@ -428,7 +434,6 @@ namespace Lightbug.CharacterControllerPro.Demo
 
             return jumpResult;
         }
-
 
 
         protected virtual void ProcessJump(float dt)
@@ -456,18 +461,15 @@ namespace Lightbug.CharacterControllerPro.Demo
                     return false;
             }
 
-      
+
             JumpDown(dt);
 
             return true;
         }
 
-        
-
 
         protected virtual void JumpDown(float dt)
         {
-
             float groundDisplacementExtraDistance = 0f;
 
             Vector3 groundDisplacement = CustomUtilities.Multiply(CharacterActor.GroundVelocity, dt);
@@ -480,10 +482,12 @@ namespace Lightbug.CharacterControllerPro.Demo
             CharacterActor.Position -=
                 CustomUtilities.Multiply(
                     CharacterActor.Up,
-                    CharacterConstants.ColliderMinBottomOffset + verticalMovementParameters.jumpDownDistance + groundDisplacementExtraDistance
+                    CharacterConstants.ColliderMinBottomOffset + verticalMovementParameters.jumpDownDistance +
+                    groundDisplacementExtraDistance
                 );
 
-            CharacterActor.VerticalVelocity -= CustomUtilities.Multiply(CharacterActor.Up, verticalMovementParameters.jumpDownVerticalVelocity);
+            CharacterActor.VerticalVelocity -= CustomUtilities.Multiply(CharacterActor.Up,
+                verticalMovementParameters.jumpDownVerticalVelocity);
         }
 
         #endregion
@@ -498,7 +502,6 @@ namespace Lightbug.CharacterControllerPro.Demo
 
         protected virtual void ProcessRegularJump(float dt)
         {
-            
             if (CharacterActor.IsGrounded)
             {
                 if (verticalMovementParameters.canJumpOnUnstableGround || CharacterActor.IsStable)
@@ -511,16 +514,19 @@ namespace Lightbug.CharacterControllerPro.Demo
             {
                 if (verticalMovementParameters.cancelJumpOnRelease)
                 {
-                    if (CharacterActions.jump.StartedElapsedTime >= verticalMovementParameters.cancelJumpMaxTime || CharacterActor.IsFalling)
+                    if (CharacterActions.jump.StartedElapsedTime >= verticalMovementParameters.cancelJumpMaxTime ||
+                        CharacterActor.IsFalling)
                     {
                         isAllowedToCancelJump = false;
                     }
-                    else if (!CharacterActions.jump.value && CharacterActions.jump.StartedElapsedTime >= verticalMovementParameters.cancelJumpMinTime)
+                    else if (!CharacterActions.jump.value && CharacterActions.jump.StartedElapsedTime >=
+                             verticalMovementParameters.cancelJumpMinTime)
                     {
                         // Get the velocity mapped onto the current jump direction
                         Vector3 projectedJumpVelocity = Vector3.Project(CharacterActor.Velocity, jumpDirection);
 
-                        CharacterActor.Velocity -= CustomUtilities.Multiply(projectedJumpVelocity, 1f - verticalMovementParameters.cancelJumpMultiplier);
+                        CharacterActor.Velocity -= CustomUtilities.Multiply(projectedJumpVelocity,
+                            1f - verticalMovementParameters.cancelJumpMultiplier);
 
                         isAllowedToCancelJump = false;
                     }
@@ -562,14 +568,12 @@ namespace Lightbug.CharacterControllerPro.Demo
 
                 // First remove any velocity associated with the jump direction.
                 CharacterActor.Velocity -= Vector3.Project(CharacterActor.Velocity, jumpDirection);
-                CharacterActor.Velocity += CustomUtilities.Multiply(jumpDirection, verticalMovementParameters.jumpSpeed);
+                CharacterActor.Velocity +=
+                    CustomUtilities.Multiply(jumpDirection, verticalMovementParameters.jumpSpeed);
 
                 if (verticalMovementParameters.cancelJumpOnRelease)
                     isAllowedToCancelJump = true;
-
             }
-
-
         }
 
         /// <summary>
@@ -616,7 +620,8 @@ namespace Lightbug.CharacterControllerPro.Demo
                 ReduceAirControl(0.5f);
             }
 
-            currentPlanarSpeedLimit = Mathf.Max(CharacterActor.PlanarVelocity.magnitude, planarMovementParameters.baseSpeedLimit);
+            currentPlanarSpeedLimit = Mathf.Max(CharacterActor.PlanarVelocity.magnitude,
+                planarMovementParameters.baseSpeedLimit);
 
             CharacterActor.UseRootMotion = false;
         }
@@ -672,7 +677,8 @@ namespace Lightbug.CharacterControllerPro.Demo
             }
 
             Quaternion targetDeltaRotation = Quaternion.FromToRotation(CharacterActor.Forward, targetLookingDirection);
-            Quaternion currentDeltaRotation = Quaternion.Slerp(Quaternion.identity, targetDeltaRotation, lookingDirectionParameters.speed * dt);
+            Quaternion currentDeltaRotation = Quaternion.Slerp(Quaternion.identity, targetDeltaRotation,
+                lookingDirectionParameters.speed * dt);
 
             if (CharacterActor.CharacterBody.Is2D)
                 CharacterActor.SetYaw(targetLookingDirection);
@@ -767,12 +773,13 @@ namespace Lightbug.CharacterControllerPro.Demo
 
         void Crouch(float dt)
         {
-            CharacterActor.SizeReferenceType sizeReferenceType = CharacterActor.IsGrounded ?
-                CharacterActor.SizeReferenceType.Bottom : crouchParameters.notGroundedReference;
+            CharacterActor.SizeReferenceType sizeReferenceType = CharacterActor.IsGrounded
+                ? CharacterActor.SizeReferenceType.Bottom
+                : crouchParameters.notGroundedReference;
 
             bool validSize = CharacterActor.CheckAndInterpolateHeight(
                 CharacterActor.DefaultBodySize.y * crouchParameters.heightRatio,
-                crouchParameters.sizeLerpSpeed * dt, 
+                crouchParameters.sizeLerpSpeed * dt,
                 sizeReferenceType);
 
             if (validSize)
@@ -781,8 +788,9 @@ namespace Lightbug.CharacterControllerPro.Demo
 
         void StandUp(float dt)
         {
-            CharacterActor.SizeReferenceType sizeReferenceType = CharacterActor.IsGrounded ?
-                CharacterActor.SizeReferenceType.Bottom : crouchParameters.notGroundedReference;
+            CharacterActor.SizeReferenceType sizeReferenceType = CharacterActor.IsGrounded
+                ? CharacterActor.SizeReferenceType.Bottom
+                : crouchParameters.notGroundedReference;
 
             bool validSize = CharacterActor.CheckAndInterpolateHeight(
                 CharacterActor.DefaultBodySize.y,

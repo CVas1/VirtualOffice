@@ -24,13 +24,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3276619212081290565}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6452183697971330288}
   m_Father: {fileID: 3276619212830280659}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8214183359894459778
 MonoBehaviour:
@@ -73,16 +74,17 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3276619212830280649}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.41, y: 11.76, z: 132.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3276619212081290564}
   - {fileID: 6289874671616063268}
   - {fileID: 6289874670575315050}
   - {fileID: 6289874671932639383}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3276619212830280656
 MonoBehaviour:
@@ -122,21 +124,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   oneWayPlatformsValidArc: 175
-  useGroundTrigger: 1
-  alwaysNotGrounded: 0
-  forceGroundedAtStart: 1
+  slopeLimit: 55
   stableLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   allowCharactersAsStableSurfaces: 1
-  slopeLimit: 55
-  useStableEdgeWhenLanding: 0
-  stepUpDistance: 0.5
-  stepDownDistance: 0.5
-  edgeCompensation: 0
-  detectGroundWhileAscending: 0
   preventUnstableClimbing: 1
   preventBadSteps: 1
+  stepUpDistance: 0.5
+  stepDownDistance: 0.5
+  alwaysNotGrounded: 0
+  forceGroundedAtStart: 1
+  useGroundTrigger: 1
+  edgeCompensation: 0
+  useStableEdgeWhenLanding: 0
+  detectGroundWhileAscending: 0
   supportDynamicGround: 1
   dynamicGroundLayerMask:
     serializedVersion: 2
@@ -148,6 +150,7 @@ MonoBehaviour:
   inheritedGroundVerticalVelocityThreshold: 2
   inheritedGroundVerticalVelocityMultiplier: 1
   slideOnWalls: 1
+  resetVelocityOnTeleport: 1
   stablePostSimulationVelocity: 2
   unstablePostSimulationVelocity: 2
   constraintRotation: 1
@@ -187,12 +190,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6289874670575315051}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3276619212830280659}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6289874670575315053
 MonoBehaviour:
@@ -206,10 +210,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76e107f4442f0f4181c48506caf15f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpdateMode: 0
   isAI: 0
   inputHandlerSettings:
-    inputHandler: {fileID: 0}
     humanInputType: 0
+    inputHandler: {fileID: 0}
   aiBehaviour: {fileID: 0}
   characterActions:
     jump:
@@ -244,6 +249,7 @@ GameObject:
   - component: {fileID: 6289874671616063270}
   - component: {fileID: 6289874671616063271}
   - component: {fileID: 6289874671616063289}
+  - component: {fileID: 2934559014123315411}
   m_Layer: 0
   m_Name: States
   m_TagString: Untagged
@@ -258,12 +264,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6289874671616063269}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3276619212830280659}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6289874671616063291
 MonoBehaviour:
@@ -468,7 +475,6 @@ MonoBehaviour:
   ignoreSpeedMultipliers: 0
   forceNotGrounded: 1
   cancelOnContact: 1
-  contactVelocityTolerance: 5
 --- !u!114 &6289874671616063271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,6 +539,21 @@ MonoBehaviour:
   entryStateName: Entry
   exitStateName: Exit
   idleStateName: Idle
+--- !u!114 &2934559014123315411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6289874671616063269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6a453cd7026f449b087e57e6dc7512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overrideAnimatorController: 1
+  runtimeAnimatorController: {fileID: 9100000, guid: 904ee2ef8046c55498386f687d2c7c03,
+    type: 2}
 --- !u!1 &6289874671932639380
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,12 +578,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6289874671932639380}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3276619212830280659}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6289874671932639382
 MonoBehaviour:
@@ -583,6 +605,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3276619212081290564}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8e5ebc5d2f767da4fb09952c2835b1ec,
@@ -657,20 +680,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6635592257895208873, guid: 8e5ebc5d2f767da4fb09952c2835b1ec,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 0278e8512b313d54ba7e4b2b109c2796, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8e5ebc5d2f767da4fb09952c2835b1ec,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 287110351062980081}
   m_SourcePrefab: {fileID: 100100000, guid: 8e5ebc5d2f767da4fb09952c2835b1ec, type: 3}
 --- !u!1 &5963067515441899082 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8e5ebc5d2f767da4fb09952c2835b1ec,
-    type: 3}
-  m_PrefabInstance: {fileID: 6773549758663940891}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &6452183697971330288 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8e5ebc5d2f767da4fb09952c2835b1ec,
     type: 3}
   m_PrefabInstance: {fileID: 6773549758663940891}
   m_PrefabAsset: {fileID: 0}
@@ -686,3 +710,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b24a8f06539258c41887e7e69f8b1754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &6452183697971330288 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8e5ebc5d2f767da4fb09952c2835b1ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 6773549758663940891}
+  m_PrefabAsset: {fileID: 0}
