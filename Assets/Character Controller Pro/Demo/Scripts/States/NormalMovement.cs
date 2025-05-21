@@ -392,9 +392,7 @@ namespace Lightbug.CharacterControllerPro.Demo
 
             if (!verticalMovementParameters.canJump)
                 return jumpResult;
-
-            if (isCrouched)
-                return jumpResult;
+            
 
             switch (CharacterActor.CurrentState)
             {
@@ -458,19 +456,13 @@ namespace Lightbug.CharacterControllerPro.Demo
                     return false;
             }
 
-            if (!ProcessJumpDownAction())
-                return false;
-
+      
             JumpDown(dt);
 
             return true;
         }
 
-
-        protected virtual bool ProcessJumpDownAction()
-        {
-            return isCrouched && CharacterActions.jump.Started;
-        }
+        
 
 
         protected virtual void JumpDown(float dt)
@@ -708,7 +700,7 @@ namespace Lightbug.CharacterControllerPro.Demo
 
         public override void UpdateBehaviour(float dt)
         {
-            HandleSize(dt);
+            // HandleSize(dt);
             HandleVelocity(dt);
             HandleRotation(dt);
         }
