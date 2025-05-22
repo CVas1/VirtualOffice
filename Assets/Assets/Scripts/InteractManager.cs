@@ -1,13 +1,20 @@
 using System;
+using Lightbug.CharacterControllerPro.Implementation;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public LayerMask projectorLayerMask; 
+    [SerializeField]
+    private LayerMask projectorLayerMask; 
+    [SerializeField]
+    private CharacterStateController characterStateController;
+    
     private void Update()
     {
-        
-
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            characterStateController.EnqueueTransition<SitState>();
+        }
         if (Input.GetKeyDown(KeyCode.P))
         {
             //raycast to the object

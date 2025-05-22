@@ -4,8 +4,6 @@ using Lightbug.CharacterControllerPro.Demo;
 using Lightbug.Utilities;
 using Lightbug.CharacterControllerPro.Implementation;
 
-
-[AddComponentMenu("Character Controller Pro/Demo/Character/States/Normal Movement")]
 public class MoveState : CharacterState
 {
     [Space(10)] public PlanarMovementParameters planarMovementParameters = new PlanarMovementParameters();
@@ -706,11 +704,6 @@ public class MoveState : CharacterState
 
     public override void UpdateBehaviour(float dt)
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            CharacterStateController.EnqueueTransition<SitState>();
-        }
-
         HandleVelocity(dt);
         HandleRotation(dt);
     }

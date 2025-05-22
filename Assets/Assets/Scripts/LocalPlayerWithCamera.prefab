@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8512923950327284755}
   - component: {fileID: 7466865925562839571}
-  - component: {fileID: 8050170962456489711}
+  - component: {fileID: 2033514788560714157}
+  - component: {fileID: 4599773775219900896}
+  - component: {fileID: 6967930639192171797}
   m_Layer: 0
   m_Name: States
   m_TagString: Untagged
@@ -45,11 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991c552c8efe8914186b0d06951c5a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialState: {fileID: 8050170962456489711}
+  initialState: {fileID: 2033514788560714157}
   movementReferenceParameters:
     movementReferenceMode: 1
     externalReference: {fileID: 6722067003321472928}
---- !u!114 &8050170962456489711
+--- !u!114 &2033514788560714157
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,14 +60,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 133883781503033033}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3760adb8cf5de1a4483ca19b241e68e5, type: 3}
+  m_Script: {fileID: 11500000, guid: 07a20a875525e5849a5eaa9b4c250b74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   overrideAnimatorController: 1
   runtimeAnimatorController: {fileID: 9100000, guid: 4c77323136b9524478f3a5c86ed70c71,
     type: 2}
   planarMovementParameters:
-    baseSpeedLimit: 7
+    baseSpeedLimit: 6
     canRun: 1
     runInputMode: 1
     boostSpeedLimit: 10
@@ -170,7 +172,7 @@ MonoBehaviour:
     jumpDownVerticalVelocity: 0.5
   crouchParameters:
     enableCrouch: 1
-    notGroundedCrouch: 1
+    notGroundedCrouch: 0
     heightRatio: 0.75
     speedMultiplier: 0.3
     inputMode: 1
@@ -191,6 +193,45 @@ MonoBehaviour:
   horizontalAxisParameter: HorizontalAxis
   verticalAxisParameter: VerticalAxis
   heightParameter: Height
+--- !u!114 &4599773775219900896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133883781503033033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6a453cd7026f449b087e57e6dc7512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overrideAnimatorController: 1
+  runtimeAnimatorController: {fileID: 9100000, guid: 904ee2ef8046c55498386f687d2c7c03,
+    type: 2}
+  chairTag: Chair
+  addChairUp: 0.15
+  addChairForward: 0.11
+--- !u!135 &6967930639192171797
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133883781503033033}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.65
+  m_Center: {x: 0, y: 0.61, z: 0}
 --- !u!1 &877959372464090341
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +241,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2915132391474007800}
+  - component: {fileID: 5020527005990987239}
   m_Layer: 0
   m_Name: LocalPlayerWithCamera
   m_TagString: Untagged
@@ -224,6 +266,22 @@ Transform:
   - {fileID: 6722067003321472928}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5020527005990987239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877959372464090341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 032128294b5fce64598186eea56e9b30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectorLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  characterStateController: {fileID: 7466865925562839571}
 --- !u!1 &3155452028434866869
 GameObject:
   m_ObjectHideFlags: 0

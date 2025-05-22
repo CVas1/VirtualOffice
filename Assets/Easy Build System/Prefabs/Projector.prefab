@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3202560746170763031}
   - component: {fileID: 3158596166715293444}
   - component: {fileID: 7808873325248601952}
-  m_Layer: 10
+  m_Layer: 7
   m_Name: Projector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 1604491582156449544}
   - component: {fileID: 110861078966003836}
   - component: {fileID: 7726971874165878770}
-  m_Layer: 10
+  m_Layer: 7
   m_Name: BlackScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ PrefabInstance:
     - target: {fileID: 1050679090594331061, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5416283682859968517, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
@@ -439,7 +439,7 @@ PrefabInstance:
     - target: {fileID: 1857166883338410442, guid: 19c1c8c281a23443580dbdee291582a7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1857166883338410442, guid: 19c1c8c281a23443580dbdee291582a7,
         type: 3}

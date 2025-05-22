@@ -3,26 +3,27 @@ using System.Collections.Generic;
 using Lightbug.CharacterControllerPro.Demo;
 using UnityEngine;
 using Lightbug.CharacterControllerPro.Implementation;
+using UnityEngine.Serialization;
 
 public class SitState : CharacterState
 {
-    [Header("Chair Detection")]
-    [SerializeField]
+    [Header("Chair Detection")] [SerializeField]
     protected string chairTag = "Chair";
 
     protected bool isSitting = false;
     protected Transform chairTransform = null;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    //increase chair y offset
+    [SerializeField] private float addChairUp = 0.15f;
+    [SerializeField] private float addChairForward = 0.15f;
+
+    private HashSet<GameObject> chairsInTrigger = new();
+
+
 
     public override void CheckExitTransition()
     {
-        print("Checking exit transition for SitState");
-        // If there is no chair nearby, exit to NormalMovement
-        if (!IsChairNearby())
+        if (!GetNearbyChair())
         {
             CharacterStateController.EnqueueTransition<MoveState>();
         }
@@ -30,7 +31,6 @@ public class SitState : CharacterState
 
     public override bool CheckEnterTransition(CharacterState fromState)
     {
-        // Only enter if there is a chair nearby
         chairTransform = GetNearbyChair();
         return chairTransform != null;
     }
@@ -41,14 +41,8 @@ public class SitState : CharacterState
         isSitting = true;
         chairTransform = GetNearbyChair();
 
-        if (chairTransform != null)
-        {
-            // Snap character to chair position and rotation
-            CharacterActor.Position = chairTransform.position;
-            CharacterActor.Forward = chairTransform.forward;
-
-            // Do NOT set IsKinematic here!
-        }
+        // Force the character to be not grounded
+        CharacterActor.ForceNotGrounded();
     }
 
     public override void ExitBehaviour(float dt, CharacterState toState)
@@ -56,6 +50,9 @@ public class SitState : CharacterState
         base.ExitBehaviour(dt, toState);
         isSitting = false;
         chairTransform = null;
+
+        // Restore normal grounding behavior
+        CharacterActor.ForceNotGrounded();
     }
 
     public override void UpdateBehaviour(float dt)
@@ -63,17 +60,11 @@ public class SitState : CharacterState
         // Keep character locked to chair position
         if (isSitting && chairTransform != null)
         {
-            CharacterActor.Position = chairTransform.position;
-            CharacterActor.Forward = chairTransform.forward;
+            CharacterActor.ForceNotGrounded();
+            CharacterActor.Position = chairTransform.position + Vector3.up * addChairUp + chairTransform.forward * addChairForward;
+            CharacterActor.Forward = chairTransform.forward ;
             // Do NOT set velocity here, since IsKinematic is true
 
-            
-            print("sitting");
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                print("Exiting sit state");
-                CharacterStateController.ForceState<MoveState>();
-            }
             float horizontal = Input.GetAxisRaw("Movement X");
             float vertical = Input.GetAxisRaw("Movement Y");
             if (Mathf.Abs(horizontal) > 0.0000001f || Mathf.Abs(vertical) > 0.00001f)
@@ -83,26 +74,39 @@ public class SitState : CharacterState
         }
     }
 
-    // Helper: Check if a chair is nearby using triggers
-    protected bool IsChairNearby()
+    // Helper: Get the transform of a nearby chair
+    private Transform GetNearbyChair()
     {
-        foreach (var trigger in CharacterActor.Triggers)
+        foreach (var chair in GetChairsInTrigger())
         {
-            if (trigger.transform.CompareTag(chairTag))
-                return true;
+            if (chair.CompareTag(chairTag))
+            {
+                return chair.transform;
+            }
         }
-        return false;
+
+        return null;
     }
 
-    // Helper: Get the transform of a nearby chair
-    protected Transform GetNearbyChair()
+
+    private void OnTriggerEnter(Collider other)
     {
-        print("sa");
-        foreach (var trigger in CharacterActor.Triggers)
+        print("Trigger Entered");
+        if (other.CompareTag(chairTag))
         {
-            if (trigger.transform.CompareTag(chairTag))
-                return trigger.transform;
+            chairsInTrigger.Add(other.gameObject);
         }
-        return null;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(chairTag))
+        {
+            chairsInTrigger.Remove(other.gameObject);
+        }
+    }
+    public List<GameObject> GetChairsInTrigger()
+    {
+        return new List<GameObject>(chairsInTrigger);
     }
 }
