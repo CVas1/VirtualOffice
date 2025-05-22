@@ -586,6 +586,7 @@ GameObject:
   - component: {fileID: 7029671195870043796}
   - component: {fileID: 2828362129950518750}
   - component: {fileID: 2379907006290972634}
+  - component: {fileID: 7171984800838429150}
   m_Layer: 0
   m_Name: Camera 3D
   m_TagString: MainCamera
@@ -768,7 +769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 505491a43e9856546aded567aaf92bfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InputHandler: {fileID: 0}
+  m_InputHandler: {fileID: 7171984800838429150}
   m_RaycastSettings:
     m_Camera: {fileID: 3330733264367487249}
     m_ViewType: 0
@@ -798,6 +799,34 @@ MonoBehaviour:
   OnChangedBuildingPartEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7171984800838429150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9198618611588975683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5426b9c21eb5b594896e2d9496eac29c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InputSettings:
+    m_BlockWhenCursorOverUI: 0
+    m_CanRotateBuildingPart: 1
+    m_RotateActionKey: 114
+    m_CanSelectBuildingPart: 1
+    m_ValidateActionKey: 323
+    m_CancelActionKey: 324
+    m_UsePlacingModeShortcut: 1
+    m_PlacingModeKey: 101
+    m_ResetModeAfterPlacing: 0
+    m_UseEditingModeShortcut: 1
+    m_EditingModeKey: 116
+    m_ResetModeAfterEditing: 0
+    m_UseDestroyingModeShortcut: 1
+    m_DestroyingModeKey: 114
+    m_ResetModeAfterDestroying: 0
 --- !u!1001 &1453276256918187119
 PrefabInstance:
   m_ObjectHideFlags: 0
