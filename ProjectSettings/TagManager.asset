@@ -14,6 +14,8 @@ TagManager:
   - WallSlide
   - JumpDown
   - Chair
+  - Door
+  - Projector
   layers:
   - Default
   - TransparentFX

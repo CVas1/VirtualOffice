@@ -141,6 +141,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WorkChair3_C3
       objectReference: {fileID: 0}
+    - target: {fileID: 4210416356916708566, guid: 078d0f128f6e64d2d880d8ffc770c923,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4459933773181395771, guid: 078d0f128f6e64d2d880d8ffc770c923,
         type: 3}
       propertyPath: m_RootOrder

@@ -4,13 +4,11 @@ using System.Collections.Generic;
 
 public class Door : MonoBehaviour
 {
-    [SerializeField] private Transform doorTransform; // Assign the door (child) here
+    [SerializeField] private Transform doorTransform; 
     [SerializeField] private float openAngle = 90f;
     [SerializeField] private float animationDuration = 0.5f;
-    [SerializeField] private string playerTag = "Player";
 
     private Quaternion closedRotation;
-    private HashSet<Collider> playersInTrigger = new HashSet<Collider>();
     private bool isOpen = false;
 
     private void Start()
@@ -18,27 +16,16 @@ public class Door : MonoBehaviour
         closedRotation = doorTransform.localRotation;
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    public void OpenCloseDoor(Transform player)
     {
-        if (!other.CompareTag(playerTag)) return;
-
-        playersInTrigger.Add(other);
-
-        if (!isOpen)
-        {
-            OpenDoorBasedOnPlayer(other.transform);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (!other.CompareTag(playerTag)) return;
-
-        playersInTrigger.Remove(other);
-
-        if (playersInTrigger.Count == 0)
+        if (isOpen)
         {
             CloseDoor();
+        }
+        else
+        {
+            OpenDoorBasedOnPlayer(player);
         }
     }
 

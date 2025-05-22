@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
@@ -133,30 +134,6 @@ public class MoveState : CharacterState
     {
         get => verticalMovementParameters.useGravity;
         set => verticalMovementParameters.useGravity = value;
-    }
-
-    public override void CheckExitTransition()
-    {
-        if (CharacterActions.jetPack.value)
-        {
-            CharacterStateController.EnqueueTransition<JetPack>();
-        }
-        else if (CharacterActions.dash.Started)
-        {
-            CharacterStateController.EnqueueTransition<Dash>();
-        }
-        else if (CharacterActor.Triggers.Count != 0)
-        {
-            CharacterStateController.EnqueueTransition<LadderClimbing>();
-            CharacterStateController.EnqueueTransition<RopeClimbing>();
-        }
-        else if (!CharacterActor.IsGrounded)
-        {
-            if (!CharacterActions.crouch.value)
-                CharacterStateController.EnqueueTransition<WallSlide>();
-
-            CharacterStateController.EnqueueTransition<LedgeHanging>();
-        }
     }
 
     public override void ExitBehaviour(float dt, CharacterState toState)
@@ -735,73 +712,14 @@ public class MoveState : CharacterState
         CharacterStateController.Animator.SetFloat(verticalSpeedParameter, CharacterActor.LocalVelocity.y);
         CharacterStateController.Animator.SetFloat(planarSpeedParameter, CharacterActor.PlanarVelocity.magnitude);
     }
+    
 
-    protected virtual void HandleSize(float dt)
-    {
-        // Get the crouch input state 
-        if (crouchParameters.enableCrouch)
-        {
-            if (crouchParameters.inputMode == InputMode.Toggle)
-            {
-                if (CharacterActions.crouch.Started)
-                    wantToCrouch = !wantToCrouch;
-            }
-            else
-            {
-                wantToCrouch = CharacterActions.crouch.value;
-            }
-
-            if (!crouchParameters.notGroundedCrouch && !CharacterActor.IsGrounded)
-                wantToCrouch = false;
-
-            if (CharacterActor.IsGrounded && wantToRun)
-                wantToCrouch = false;
-        }
-        else
-        {
-            wantToCrouch = false;
-        }
-
-        if (wantToCrouch)
-            Crouch(dt);
-        else
-            StandUp(dt);
-    }
-
-    void Crouch(float dt)
-    {
-        CharacterActor.SizeReferenceType sizeReferenceType = CharacterActor.IsGrounded
-            ? CharacterActor.SizeReferenceType.Bottom
-            : crouchParameters.notGroundedReference;
-
-        bool validSize = CharacterActor.CheckAndInterpolateHeight(
-            CharacterActor.DefaultBodySize.y * crouchParameters.heightRatio,
-            crouchParameters.sizeLerpSpeed * dt,
-            sizeReferenceType);
-
-        if (validSize)
-            isCrouched = true;
-    }
-
-    void StandUp(float dt)
-    {
-        CharacterActor.SizeReferenceType sizeReferenceType = CharacterActor.IsGrounded
-            ? CharacterActor.SizeReferenceType.Bottom
-            : crouchParameters.notGroundedReference;
-
-        bool validSize = CharacterActor.CheckAndInterpolateHeight(
-            CharacterActor.DefaultBodySize.y,
-            crouchParameters.sizeLerpSpeed * dt,
-            sizeReferenceType);
-
-        if (validSize)
-            isCrouched = false;
-    }
-
+    
 
     protected virtual void HandleVelocity(float dt)
     {
         ProcessVerticalMovement(dt);
         ProcessPlanarMovement(dt);
     }
+    
 }

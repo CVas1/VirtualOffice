@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using Lightbug.CharacterControllerPro.Demo;
 using UnityEngine;
 using Lightbug.CharacterControllerPro.Implementation;
-using UnityEngine.Serialization;
 
 public class SitState : CharacterState
 {
@@ -20,26 +17,29 @@ public class SitState : CharacterState
     private HashSet<GameObject> chairsInTrigger = new();
 
 
-
     public override void CheckExitTransition()
     {
-        if (!GetNearbyChair())
-        {
-            CharacterStateController.EnqueueTransition<MoveState>();
-        }
+        // print("Checking exit transition for SitState");
+        // if (!GetNearbyChair())
+        // {
+        //     CharacterStateController.EnqueueTransition<MoveState>();
+        // }
     }
-
     public override bool CheckEnterTransition(CharacterState fromState)
     {
-        chairTransform = GetNearbyChair();
-        return chairTransform != null;
+        if(InteractManager.Instance.chair != null)
+        {
+            chairTransform = InteractManager.Instance.chair.transform;
+            return true;
+        }
+        return false;
     }
 
     public override void EnterBehaviour(float dt, CharacterState fromState)
     {
         base.EnterBehaviour(dt, fromState);
         isSitting = true;
-        chairTransform = GetNearbyChair();
+        chairTransform = InteractManager.Instance.chair.transform;
 
         // Force the character to be not grounded
         CharacterActor.ForceNotGrounded();
@@ -50,6 +50,7 @@ public class SitState : CharacterState
         base.ExitBehaviour(dt, toState);
         isSitting = false;
         chairTransform = null;
+        InteractManager.Instance.chair = null;
 
         // Restore normal grounding behavior
         CharacterActor.ForceNotGrounded();
@@ -74,6 +75,20 @@ public class SitState : CharacterState
         }
     }
 
+    public override void UpdateIK(int layerIndex)
+    {
+        if (CharacterActor.Animator == null)
+            return;
+
+        // Disable left foot IK
+        CharacterActor.Animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0f);
+        CharacterActor.Animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 0f);
+
+        // Disable right foot IK
+        CharacterActor.Animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0f);
+        CharacterActor.Animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 0f);
+    }
+
     // Helper: Get the transform of a nearby chair
     private Transform GetNearbyChair()
     {
@@ -91,7 +106,6 @@ public class SitState : CharacterState
 
     private void OnTriggerEnter(Collider other)
     {
-        print("Trigger Entered");
         if (other.CompareTag(chairTag))
         {
             chairsInTrigger.Add(other.gameObject);
@@ -105,6 +119,8 @@ public class SitState : CharacterState
             chairsInTrigger.Remove(other.gameObject);
         }
     }
+
+    // You can call this method from anywhere to get the current "chair" objects inside the trigger
     public List<GameObject> GetChairsInTrigger()
     {
         return new List<GameObject>(chairsInTrigger);

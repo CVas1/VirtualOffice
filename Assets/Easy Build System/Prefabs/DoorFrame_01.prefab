@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8103822910760820}
   - component: {fileID: 1881492609312517966}
   - component: {fileID: 2824305372279714256}
+  - component: {fileID: 7232850952140614139}
   m_Layer: 0
   m_Name: DoorFrame_01
   m_TagString: Untagged
@@ -128,6 +129,21 @@ MonoBehaviour:
   m_RequireSocket: 0
   m_IgnoreSocket: 0
   m_ShowDebugs: 0
+--- !u!114 &7232850952140614139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4264224605964428374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 047ab9690fee7dd4287b7ed6601f1608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorTransform: {fileID: 8554835595316314629}
+  openAngle: 90
+  animationDuration: 0.5
 --- !u!1001 &7334518188346497896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -136,6 +152,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8103822910760820}
     m_Modifications:
+    - target: {fileID: 1745778604723848151, guid: ada39435f888a454090ce9cf75bc1c37,
+        type: 3}
+      propertyPath: m_TagString
+      value: Door
+      objectReference: {fileID: 0}
     - target: {fileID: 8317419156308527220, guid: ada39435f888a454090ce9cf75bc1c37,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -205,6 +226,12 @@ Transform:
 --- !u!1 &2157164184418388390 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8657809691746554574, guid: ada39435f888a454090ce9cf75bc1c37,
+    type: 3}
+  m_PrefabInstance: {fileID: 7334518188346497896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8554835595316314629 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1401060150671481197, guid: ada39435f888a454090ce9cf75bc1c37,
     type: 3}
   m_PrefabInstance: {fileID: 7334518188346497896}
   m_PrefabAsset: {fileID: 0}

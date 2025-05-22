@@ -1,34 +1,59 @@
 using System;
+using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Implementation;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class InteractManager : MonoBehaviourSingleton<InteractManager>
 {
-    [SerializeField]
-    private LayerMask projectorLayerMask; 
-    [SerializeField]
     private CharacterStateController characterStateController;
+
+    [NonSerialized] public GameObject chair;
     
+    private void Start()
+    {
+        characterStateController = GetComponentInChildren<CharacterStateController>();
+        if (characterStateController == null)
+        {
+            Debug.LogError("InteractManager: CharacterStateController not found.");
+        }
+    }
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            characterStateController.EnqueueTransition<SitState>();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            //raycast to the object
+            //raycast control characterStateController.EnqueueTransition<SitState>();
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, projectorLayerMask))
+            if (Physics.Raycast(ray, out hit))
             {
                 print(hit.collider.gameObject.name);
-                GameObject targetObject = hit.collider.gameObject;
-                OfficeProjector officeProjector = targetObject.GetComponentInParent<OfficeProjector>();
+                GameObject go = hit.collider.gameObject;
 
-                if (officeProjector != null)
+                if (go.CompareTag(Tags.Chair))
                 {
-                    officeProjector.OnClick();
+                    chair = go;
+                    characterStateController.EnqueueTransition<SitState>();
+                }
+                else if (go.CompareTag(Tags.Door))
+                {
+                    //raycast to the door
+                    Door door = go.GetComponentInParent<Door>();
+                    if (door != null)
+                    {
+                        door.OpenCloseDoor(characterStateController.transform);
+                    }
+                }
+                else if (go.CompareTag(Tags.Projector))
+                {
+                    //raycast to the projector
+                    OfficeProjector officeProjector = go.GetComponentInParent<OfficeProjector>();
+                    if (officeProjector != null)
+                    {
+                        officeProjector.OnClick();
+                    }
                 }
             }
         }
