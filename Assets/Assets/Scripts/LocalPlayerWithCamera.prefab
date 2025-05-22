@@ -818,7 +818,7 @@ MonoBehaviour:
     m_CanSelectBuildingPart: 1
     m_ValidateActionKey: 323
     m_CancelActionKey: 324
-    m_UsePlacingModeShortcut: 1
+    m_UsePlacingModeShortcut: 0
     m_PlacingModeKey: 101
     m_ResetModeAfterPlacing: 0
     m_UseEditingModeShortcut: 1
