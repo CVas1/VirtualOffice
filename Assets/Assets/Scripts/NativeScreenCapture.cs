@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Assets.Scripts;
+using Assets.Scripts.Networking;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,7 +12,7 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
 
     [DllImport("ScreenCaptureDLL.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern void GetScreenSize(ref int width, ref int height);
-    
+
     [DllImport("ScreenCaptureDLL.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern void ReleaseScreenCaptureResources();
 
@@ -32,7 +33,7 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
 
     private void Start()
     {
-        GameManager.OnRoomLeave += StopCapture;
+        STDBRoomManager.OnRoomLeave += StopCapture;
 
         // Get screen size
         GetScreenSize(ref screenWidth, ref screenHeight);
@@ -105,7 +106,7 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
     {
         if (handle.IsAllocated)
             handle.Free();
-        
+
         ReleaseScreenCaptureResources();
     }
 }

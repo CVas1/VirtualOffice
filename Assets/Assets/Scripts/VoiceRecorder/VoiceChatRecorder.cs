@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using System.IO;
 using System.IO.Compression;
+using Assets.Scripts.Networking;
 
 namespace Assets.Scripts.VoiceRecorder
 {
@@ -90,7 +91,7 @@ namespace Assets.Scripts.VoiceRecorder
                 byte[] compressedData = Compress(rawData);
 
 
-                GameManager.Instance.SendVoiceClip(compressedData);
+                STDBBackendManager.Instance.voiceManager.SendVoiceClip(compressedData);
                 // VoiceChatPlayer.Instance.EnqueueAudio(compressedData, 0); // Pass the identity parameter
                 //OnChunkRecorded?.Invoke(compressedData);
             }

@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Networking;
 using EasyBuildSystem.Features.Runtime.Buildings.Manager;
 using EasyBuildSystem.Features.Runtime.Buildings.Part;
 using EasyBuildSystem.Features.Runtime.Buildings.Placer;
@@ -62,8 +63,8 @@ namespace Assets.Scripts
                 Destroy(gameObject);
             }
 
-            GameManager.OnConnected += () => SetConnectionStatus(true);
-            GameManager.OnDisconnected += () => SetConnectionStatus(false);
+            STDBBackendManager.OnConnected += () => SetConnectionStatus(true);
+            STDBBackendManager.OnDisconnected += () => SetConnectionStatus(false);
 
         }
 
@@ -126,7 +127,7 @@ namespace Assets.Scripts
         {
             if (selectedRoom == null) return;
             string password = joinRoomPasswordText.text;
-            GameManager.Instance.JoinRoom(selectedRoom.RoomId, password);
+            STDBBackendManager.Instance.roomManager.JoinRoom(selectedRoom.RoomId, password);
 
             //OnCloseMenu();
         }
@@ -152,11 +153,11 @@ namespace Assets.Scripts
             }
 
             // set time current than 5 seconds later
-            GameManager.Instance.RoomToJoin = (createRoomNameInput.text, createRoomPasswordInput.text, Time.time + 5f);
+            STDBBackendManager.Instance.roomManager.RoomToJoin = (createRoomNameInput.text, createRoomPasswordInput.text, Time.time + 5f);
 
             string roomName = createRoomNameInput.text;
             string password = createRoomPasswordInput.text;
-            GameManager.Instance.CreateRoom(roomName, password);
+            STDBBackendManager.Instance.roomManager.CreateRoom(roomName, password);
 
             // selectedRoom = null;
             // foreach (var room in GameManager.Instance.Rooms)
@@ -172,7 +173,7 @@ namespace Assets.Scripts
 
         public void QuitRoom()
         {
-            GameManager.Instance.LeaveRoom();
+            STDBBackendManager.Instance.roomManager.LeaveRoom();
             SetCursorVisibilty(true);
             selectedRoom = null;
             OnClickBackToMainMenu();
@@ -252,14 +253,14 @@ namespace Assets.Scripts
             GridLayoutGroup gridLayoutGroup = scrollViewContent.GetComponent<GridLayoutGroup>();
 
             float height = gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom +
-                           gridLayoutGroup.cellSize.y * GameManager.Instance.Rooms.Count +
-                           gridLayoutGroup.spacing.y * (GameManager.Instance.Rooms.Count - 1);
+                           gridLayoutGroup.cellSize.y * STDBBackendManager.Instance.roomManager.Rooms.Count +
+                           gridLayoutGroup.spacing.y * (STDBBackendManager.Instance.roomManager.Rooms.Count - 1);
 
             // Set the scroll view height
             scrollRect.sizeDelta = new Vector2(scrollRect.sizeDelta.x, height);
 
             int x = 0;
-            foreach (var room in GameManager.Instance.Rooms)
+            foreach (var room in STDBBackendManager.Instance.roomManager.Rooms)
             {
                 x++;
                 GameObject roomButton = Instantiate(selectRoomButtonPrefab, scrollViewContent.transform);

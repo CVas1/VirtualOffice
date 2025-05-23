@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Networking;
 using UnityEngine;
 using TMPro;
 using SpacetimeDB;
@@ -6,7 +7,6 @@ using SpacetimeDB.Types;
 
 namespace Assets.Scripts
 {
-  
     public class PlayerController : MonoBehaviour
     {
         private MeshRenderer meshRenderer;
@@ -28,7 +28,6 @@ namespace Assets.Scripts
         private void Start()
         {
             meshRenderer = GetComponent<MeshRenderer>();
-           
         }
 
         void Update()
@@ -39,15 +38,15 @@ namespace Assets.Scripts
                     Quaternion.Angle(transform.rotation, targetRotation) > 6f)
                 {
                     float yaw = transform.rotation.eulerAngles.y;
-                    GameManager.Instance.UpdatePlayerPosition(transform.position, yaw);
+                    STDBBackendManager.Instance.playerManager.UpdatePlayerPosition(transform.position, yaw);
                 }
 
                 lastUpdateTime = Time.time;
             }
             else
             {
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime );
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime );
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime);
             }
         }
 
@@ -94,7 +93,7 @@ namespace Assets.Scripts
                 Debug.LogError($"Failed to parse color: {hexColor}");
                 PlayerColor = Color.gray;
             }
-        
+
             if (meshRenderer == null) return;
             meshRenderer.material.color = PlayerColor;
         }
