@@ -35900,7 +35900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e016ef92e52934343857fd26e55140c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxFrameTicksPerSecond: 15
+  maxFrameTicksPerSecond: 20
 --- !u!4 &1344316533
 Transform:
   m_ObjectHideFlags: 0
