@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Assets.Scripts.Networking;
 using UnityEngine;
 using EasyBuildSystem.Features.Runtime.Buildings.Manager;
 using EasyBuildSystem.Features.Runtime.Buildings.Part;
@@ -95,7 +96,7 @@ namespace Assets.Scripts
                 }
 
                 string saveDataJson = JsonUtility.ToJson(saveData);
-                GameManager.Instance.SaveBuildingData(saveDataJson);
+                STDBBackendManager.Instance.buildingManager.SaveBuildingData(saveDataJson);
                 // File.AppendAllText(path, JsonUtility.ToJson(saveData));
             }
         }

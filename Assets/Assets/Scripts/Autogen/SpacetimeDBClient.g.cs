@@ -23,6 +23,8 @@ namespace SpacetimeDB.Types
             AddTable(ChatMessage = new(conn));
             AddTable(GameRoom = new(conn));
             AddTable(GameRoomSecret = new(conn));
+            AddTable(ImageBroadcastLock = new(conn));
+            AddTable(Images = new(conn));
             AddTable(LoggedOutPlayer = new(conn));
             AddTable(OnlinePlayer = new(conn));
             AddTable(PlayerCount = new(conn));
@@ -442,7 +444,9 @@ namespace SpacetimeDB.Types
                 "Disconnect" => BSATNHelpers.Decode<Reducer.Disconnect>(encodedArgs),
                 "JoinRoom" => BSATNHelpers.Decode<Reducer.JoinRoom>(encodedArgs),
                 "LeaveRoom" => BSATNHelpers.Decode<Reducer.LeaveRoom>(encodedArgs),
+                "LockImageBroadcast" => BSATNHelpers.Decode<Reducer.LockImageBroadcast>(encodedArgs),
                 "SaveEntity" => BSATNHelpers.Decode<Reducer.SaveEntity>(encodedArgs),
+                "SendImage" => BSATNHelpers.Decode<Reducer.SendImage>(encodedArgs),
                 "SendMessage" => BSATNHelpers.Decode<Reducer.SendMessage>(encodedArgs),
                 "SendVoice" => BSATNHelpers.Decode<Reducer.SendVoice>(encodedArgs),
                 "SetPlayerProfile" => BSATNHelpers.Decode<Reducer.SetPlayerProfile>(encodedArgs),
@@ -473,7 +477,9 @@ namespace SpacetimeDB.Types
                 Reducer.Disconnect args => Reducers.InvokeDisconnect(eventContext, args),
                 Reducer.JoinRoom args => Reducers.InvokeJoinRoom(eventContext, args),
                 Reducer.LeaveRoom args => Reducers.InvokeLeaveRoom(eventContext, args),
+                Reducer.LockImageBroadcast args => Reducers.InvokeLockImageBroadcast(eventContext, args),
                 Reducer.SaveEntity args => Reducers.InvokeSaveEntity(eventContext, args),
+                Reducer.SendImage args => Reducers.InvokeSendImage(eventContext, args),
                 Reducer.SendMessage args => Reducers.InvokeSendMessage(eventContext, args),
                 Reducer.SendVoice args => Reducers.InvokeSendVoice(eventContext, args),
                 Reducer.SetPlayerProfile args => Reducers.InvokeSetPlayerProfile(eventContext, args),

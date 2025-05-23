@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Networking;
 using UnityEngine;
 using TankAndHealerStudioAssets;
 
@@ -46,7 +47,7 @@ namespace Assets.Scripts
             {
                 // Handle shout command
                 message = message.Substring(1);
-                GameManager.Instance.SendChatMessage(message, true);
+                STDBBackendManager.Instance.chatManager.SendChatMessage(message, true);
             }
             else if (firstChar == '/')
             {
@@ -56,7 +57,7 @@ namespace Assets.Scripts
             }
             else
             {
-                GameManager.Instance.SendChatMessage(message);
+                STDBBackendManager.Instance.chatManager.SendChatMessage(message);
             }
         }
 
