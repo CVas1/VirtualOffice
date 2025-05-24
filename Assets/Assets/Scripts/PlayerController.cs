@@ -14,7 +14,7 @@ namespace Assets.Scripts
 
         private Vector3 targetPosition;
         private Quaternion targetRotation;
-        private bool isLocalPlayer = false;
+        public bool isLocalPlayer = false;
 
         public uint PlayerId { get; private set; }
         public Identity Identity { get; private set; }

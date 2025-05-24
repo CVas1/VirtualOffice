@@ -73,7 +73,15 @@ namespace Assets.Scripts.Networking
         {
             if (Players.TryGetValue(player.Identity, out PlayerController controller))
             {
-                Object.Destroy(controller.gameObject);
+                if (controller.isLocalPlayer)
+                {
+                    Object.Destroy(controller.transform.parent.gameObject);
+
+                }else
+                {
+                    // If not local, just destroy the controller's gameObject
+                    Object.Destroy(controller.gameObject);
+                }
                 Players.Remove(player.Identity);
             }
 
