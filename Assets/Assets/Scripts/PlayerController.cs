@@ -24,7 +24,7 @@ namespace Assets.Scripts
         public ulong RoomJoinTime { get; private set; }
 
         private float lastUpdateTime = 0f;
-        private const float updateInterval = 0.125f;
+        private const float updateInterval = 0.33f;
 
         CharacterActor characterActor;
         SpawnPoint sp;

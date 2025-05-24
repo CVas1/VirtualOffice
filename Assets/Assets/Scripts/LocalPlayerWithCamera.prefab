@@ -181,7 +181,7 @@ MonoBehaviour:
   lookingDirectionParameters:
     changeLookingDirection: 1
     speed: 10
-    lookingDirectionMode: 0
+    lookingDirectionMode: 2
     target: {fileID: 0}
     stableGroundedLookingDirectionMode: 1
     unstableGroundedLookingDirectionMode: 0
@@ -480,6 +480,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032128294b5fce64598186eea56e9b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &6213121600210575203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,7 +528,7 @@ MonoBehaviour:
   allowCharactersAsStableSurfaces: 1
   preventUnstableClimbing: 1
   preventBadSteps: 1
-  stepUpDistance: 0.6
+  stepUpDistance: 0.45000002
   stepDownDistance: 0.5
   alwaysNotGrounded: 0
   forceGroundedAtStart: 1
@@ -690,7 +693,7 @@ MonoBehaviour:
   heightLerpSpeed: 10
   cameraMode: 0
   hideBody: 0
-  bodyObject: {fileID: 0}
+  bodyObject: {fileID: 9100139835133718175}
   updateYaw: 1
   yawSpeed: 150
   updatePitch: 1
