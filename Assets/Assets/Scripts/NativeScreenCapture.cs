@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Assets.Scripts;
 using Assets.Scripts.Networking;
@@ -16,7 +17,20 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
     [DllImport("ScreenCaptureDLL.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern void ReleaseScreenCaptureResources();
 
-    private Texture2D screenTex;
+    public class ScreenCaptureDTO
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public byte[] ImageData { get; set; }
+
+        public ScreenCaptureDTO(int width, int height, byte[] imageData)
+        {
+            Width = width;
+            Height = height;
+            ImageData = imageData;
+        }
+    }
+
     private int screenWidth;
     private int screenHeight;
     private byte[] buffer;
@@ -29,7 +43,8 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
 
     [NonSerialized] public bool isCapturing = false;
 
-    public UnityEvent<Texture2D> OnTextureChanged;
+    // public UnityEvent<Texture2D> OnTextureChanged;
+    public Dictionary<int, Action<ScreenCaptureDTO>> OnTextureChanged = new Dictionary<int, Action<ScreenCaptureDTO>>();
 
     private void Start()
     {
@@ -40,7 +55,7 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
         Debug.Log("Screen size: " + screenWidth + " x " + screenHeight);
 
         // Init texture and buffer
-        screenTex = new Texture2D(screenWidth, screenHeight, TextureFormat.BGRA32, false);
+        //screenTex = new Texture2D(screenWidth, screenHeight, TextureFormat.BGRA32, false);
         buffer = new byte[screenWidth * screenHeight * 4];
         handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
         pointer = handle.AddrOfPinnedObject();
@@ -56,6 +71,25 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
     private void UpdateCaptureInterval()
     {
         captureInterval = 1f / Mathf.Max(1, captureFPS);
+    }
+
+    public ScreenCaptureDTO GetScreenImage()
+    {
+        // Make sure the latest capture is in the texture
+        bool success = CaptureScreen(pointer, screenWidth, screenHeight);
+        if (success)
+        {
+            // Texture2D screenTex = new Texture2D(screenWidth, screenHeight, TextureFormat.BGRA32, false);
+            // screenTex.LoadRawTextureData(buffer);
+            // screenTex.Apply();
+            // return screenTex; //
+            return new ScreenCaptureDTO(screenWidth, screenHeight, buffer);
+        }
+        else
+        {
+            Debug.LogError("Screen capture failed!");
+            return null;
+        }
     }
 
     public void StartCapture()
@@ -86,12 +120,23 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
 
         while (isCapturing)
         {
+            // check if the OnTextureChanged event has any subscribers else stop capturing
+            if (OnTextureChanged == null || OnTextureChanged.Count == 0)
+            {
+                StopCapture();
+                yield break;
+            }
+
+
             bool success = CaptureScreen(pointer, screenWidth, screenHeight);
             if (success)
             {
-                screenTex.LoadRawTextureData(buffer);
-                screenTex.Apply(); // Minimal Apply call
-                OnTextureChanged?.Invoke(screenTex);
+                ScreenCaptureDTO screenCaptureDTO = new ScreenCaptureDTO(screenWidth, screenHeight, buffer);
+                foreach (var action in OnTextureChanged.Values)
+                {
+                    // action?.Invoke(buffer);
+                    action?.Invoke(screenCaptureDTO);
+                }
             }
             else
             {

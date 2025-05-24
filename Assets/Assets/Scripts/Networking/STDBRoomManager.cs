@@ -142,16 +142,21 @@ namespace Assets.Scripts.Networking
         {
             string sql =
                 $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender != '0x{STDBBackendManager.LocalIdentity}'";
+
             voiceSub = conn.SubscriptionBuilder()
                 .Subscribe(new[] { sql });
         }
 
         private void SubscribeToImages(uint roomId, ulong timestamp)
         {
-            string sql =
-                $"SELECT * FROM images WHERE room_id = {roomId} AND (timestamp < {timestamp} OR sender != '0x{STDBBackendManager.LocalIdentity}')";
+            string sqlImage =
+                $"SELECT * FROM images WHERE room_id = {roomId} AND ( timestamp < {timestamp} OR sender != '0x{STDBBackendManager.LocalIdentity}' )";
+
+            string sqlBroadcastLock =
+                $"SELECT * FROM image_broadcast_lock WHERE sender = '0x{STDBBackendManager.LocalIdentity}'";
+
             imageSub = conn.SubscriptionBuilder()
-                .Subscribe(new[] { sql });
+                .Subscribe(new[] { sqlImage, sqlBroadcastLock });
         }
 
         private void SubscribeToAll(Timestamp timestamp)

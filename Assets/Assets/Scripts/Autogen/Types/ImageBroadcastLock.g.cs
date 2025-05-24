@@ -13,26 +13,27 @@ namespace SpacetimeDB.Types
     [DataContract]
     public sealed partial class ImageBroadcastLock
     {
-        [DataMember(Name = "image_id")]
-        public uint ImageId;
+        [DataMember(Name = "building_identifier")]
+        public string BuildingIdentifier;
         [DataMember(Name = "sender")]
         public SpacetimeDB.Identity Sender;
         [DataMember(Name = "timestamp")]
         public ulong Timestamp;
 
         public ImageBroadcastLock(
-            uint ImageId,
+            string BuildingIdentifier,
             SpacetimeDB.Identity Sender,
             ulong Timestamp
         )
         {
-            this.ImageId = ImageId;
+            this.BuildingIdentifier = BuildingIdentifier;
             this.Sender = Sender;
             this.Timestamp = Timestamp;
         }
 
         public ImageBroadcastLock()
         {
+            this.BuildingIdentifier = "";
         }
     }
 }

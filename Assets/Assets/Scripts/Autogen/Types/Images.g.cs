@@ -13,25 +13,37 @@ namespace SpacetimeDB.Types
     [DataContract]
     public sealed partial class Images
     {
-        [DataMember(Name = "image_id")]
-        public uint ImageId;
         [DataMember(Name = "building_identifier")]
         public string BuildingIdentifier;
         [DataMember(Name = "room_id")]
         public uint RoomId;
+        [DataMember(Name = "timestamp")]
+        public ulong Timestamp;
+        [DataMember(Name = "sender")]
+        public SpacetimeDB.Identity Sender;
+        [DataMember(Name = "width")]
+        public int Width;
+        [DataMember(Name = "height")]
+        public int Height;
         [DataMember(Name = "image_data")]
         public System.Collections.Generic.List<byte> ImageData;
 
         public Images(
-            uint ImageId,
             string BuildingIdentifier,
             uint RoomId,
+            ulong Timestamp,
+            SpacetimeDB.Identity Sender,
+            int Width,
+            int Height,
             System.Collections.Generic.List<byte> ImageData
         )
         {
-            this.ImageId = ImageId;
             this.BuildingIdentifier = BuildingIdentifier;
             this.RoomId = RoomId;
+            this.Timestamp = Timestamp;
+            this.Sender = Sender;
+            this.Width = Width;
+            this.Height = Height;
             this.ImageData = ImageData;
         }
 

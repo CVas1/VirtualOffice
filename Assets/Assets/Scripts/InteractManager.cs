@@ -13,6 +13,7 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
     private GameObject previousHitObject = null;
     private HighlightEffect previousHighlightEffect = null;
 
+
     private void Start()
     {
         characterStateController = GetComponentInChildren<CharacterStateController>();
@@ -72,9 +73,6 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
                     }
                 }
             }
-            
         }
-
-        
     }
 }

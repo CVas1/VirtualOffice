@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void LockImageBroadcastHandler(ReducerEventContext ctx, uint imageId);
+        public delegate void LockImageBroadcastHandler(ReducerEventContext ctx, string buildingIdentifier);
         public event LockImageBroadcastHandler? OnLockImageBroadcast;
 
-        public void LockImageBroadcast(uint imageId)
+        public void LockImageBroadcast(string buildingIdentifier)
         {
-            conn.InternalCallReducer(new Reducer.LockImageBroadcast(imageId), this.SetCallReducerFlags.LockImageBroadcastFlags);
+            conn.InternalCallReducer(new Reducer.LockImageBroadcast(buildingIdentifier), this.SetCallReducerFlags.LockImageBroadcastFlags);
         }
 
         public bool InvokeLockImageBroadcast(ReducerEventContext ctx, Reducer.LockImageBroadcast args)
@@ -25,7 +25,7 @@ namespace SpacetimeDB.Types
             if (OnLockImageBroadcast == null) return false;
             OnLockImageBroadcast(
                 ctx,
-                args.ImageId
+                args.BuildingIdentifier
             );
             return true;
         }
@@ -37,16 +37,17 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class LockImageBroadcast : Reducer, IReducerArgs
         {
-            [DataMember(Name = "image_id")]
-            public uint ImageId;
+            [DataMember(Name = "building_identifier")]
+            public string BuildingIdentifier;
 
-            public LockImageBroadcast(uint ImageId)
+            public LockImageBroadcast(string BuildingIdentifier)
             {
-                this.ImageId = ImageId;
+                this.BuildingIdentifier = BuildingIdentifier;
             }
 
             public LockImageBroadcast()
             {
+                this.BuildingIdentifier = "";
             }
 
             string IReducerArgs.ReducerName => "LockImageBroadcast";
