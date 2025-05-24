@@ -18,6 +18,7 @@ using EasyBuildSystem.Features.Runtime.Buildings.Part;
 using EasyBuildSystem.Features.Runtime.Buildings.Group;
 
 using EasyBuildSystem.Features.Runtime.Extensions;
+using Sirenix.OdinInspector;
 
 namespace EasyBuildSystem.Features.Runtime.Buildings.Manager
 {
@@ -30,7 +31,7 @@ namespace EasyBuildSystem.Features.Runtime.Buildings.Manager
 
         public static BuildingManager Instance;
 
-        [SerializeField] List<BuildingPart> m_BuildingPartReferences = new List<BuildingPart>();
+        [ShowInInspector] public List<BuildingPart> m_BuildingPartReferences = new List<BuildingPart>();
         public List<BuildingPart> BuildingPartReferences { get { return m_BuildingPartReferences; } set { m_BuildingPartReferences = value; } }
 
         [SerializeField] List<string> m_BuildingTypes = new List<string>();

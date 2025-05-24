@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51333b830fce45f43a6190548dd82766, type: 3}
-  m_Name: New Building Collection
+  m_Name: BuildingParts
   m_EditorClassIdentifier: 
   m_BuildingParts:
   - {fileID: 4659781735166917646, guid: 51ef56fb34d0d674e96a1113aac07de0, type: 3}
@@ -53,10 +53,6 @@ MonoBehaviour:
   - {fileID: 8677493855679633165, guid: 78ea7d143035e88428417a63cf184eaf, type: 3}
   - {fileID: 8497698212389572560, guid: 8884914c22f154f4aa2fbbb704f2508f, type: 3}
   - {fileID: 3202560746170763031, guid: c60717931c25001409be7f81828294cd, type: 3}
-  - {fileID: 1111535764513494679, guid: aec3f42b25a65704bbd52ab1ba6e011e, type: 3}
-  - {fileID: 1730191183464775931, guid: ca5e2045c591a714386a9bf50fc17353, type: 3}
-  - {fileID: 6844897643265337951, guid: ea8e5ee424085344caa75b72995b052f, type: 3}
-  - {fileID: 4337330182173953895, guid: 07967ecdd6660544687a0e97d268deca, type: 3}
   - {fileID: 8792574107740607806, guid: ed2a9282dd7a84a42a65ccee980629ca, type: 3}
   - {fileID: 8277582960423217934, guid: b0231ab7ad9eb99408119b900332b96f, type: 3}
   - {fileID: 7242378894598216950, guid: 4bcabce0c1b37784ba0c2eb875637354, type: 3}
@@ -70,4 +66,8 @@ MonoBehaviour:
   - {fileID: 318185285289896763, guid: 248f7a50a3c0f9e49a4435f234bd219c, type: 3}
   - {fileID: 4715066163224369932, guid: 32f2aeb6dc46cfc469565017ae3cefdb, type: 3}
   - {fileID: 4562926176205101090, guid: 5425c010215690b45896d034f53b5f43, type: 3}
+  - {fileID: 5938953483133220520, guid: fdb17a5c4073de94da0aced55186b401, type: 3}
+  - {fileID: 6385179420289577746, guid: e1114891d87254c43b720399163b67f2, type: 3}
+  - {fileID: 3000268871803684200, guid: a3efce6b52912c74c85e4f404f560613, type: 3}
+  - {fileID: 1710786860682624608, guid: 1259130c14a580f4dbd95d7c50237dee, type: 3}
   - {fileID: 5544088833714213572, guid: 87f8106f1dcea1f4f95e46770773102c, type: 3}

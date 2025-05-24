@@ -49,9 +49,6 @@ namespace Assets.Scripts
         [SerializeField] private Button removeButton;
         [SerializeField] private GameObject buildMenu;
 
-        public Transform buildPartContainer;
-        public GameObject buildPartPrefab;
-
         private void Awake()
         {
             if (Instance == null)
@@ -73,7 +70,6 @@ namespace Assets.Scripts
             OnClickBackToMainMenu();
             
             buildMenu.SetActive(false);
-            SetFurnitureContentButtons();
             removeButton.onClick.AddListener(() =>
             {
                 BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.DESTROY);
@@ -179,25 +175,7 @@ namespace Assets.Scripts
             OnClickBackToMainMenu();
         }
 
-        private void SetFurnitureContentButtons()
-        {
-            foreach (BuildingPart buildingPart in BuildingManager.Instance.BuildingPartReferences)
-            {
-                //create build part prefab
-                GameObject buildPartUI = Instantiate(buildPartPrefab, buildPartContainer);
-                buildPartUI.GetComponent<BuildPartUI>().buildingPart = buildingPart;
-                Texture2D texture = buildingPart.GetGeneralSettings.Thumbnail;
-
-                Sprite sprite = Sprite.Create(
-                    texture,
-                    new Rect(0, 0, texture.width, texture.height),
-                    new Vector2(0.5f, 0.5f)
-                );
-
-                buildPartUI.GetComponent<Image>().sprite = sprite;
-            
-            }
-        }
+        
 
         public void OnClickBackToMainMenu()
         {
