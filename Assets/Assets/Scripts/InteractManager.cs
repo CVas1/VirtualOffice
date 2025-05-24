@@ -46,7 +46,7 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
                     previousHighlightEffect.highlighted = true;
                 }
             }
-            
+
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (currentHitObject.CompareTag(Tags.Chair))
@@ -69,7 +69,14 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
                     OfficeProjector officeProjector = currentHitObject.GetComponentInParent<OfficeProjector>();
                     if (officeProjector != null)
                     {
-                        officeProjector.OnClick();
+                        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                        {
+                            officeProjector.Broadcast();
+                        }
+                        else
+                        {
+                            officeProjector.ChangeOnce();
+                        }
                     }
                 }
             }
