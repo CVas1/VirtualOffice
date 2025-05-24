@@ -12,6 +12,11 @@ namespace Assets.Scripts
     {
         private bool isLoading = false;
 
+        [SerializeField] private BuildingPart projector;
+
+        [SerializeField]
+        private Dictionary<string, OfficeProjector> officeProjectors = new Dictionary<string, OfficeProjector>();
+
         public static RoomBuildingManager Instance { get; private set; }
 
         private void Awake()
@@ -49,6 +54,19 @@ namespace Assets.Scripts
             if (isLoading) return;
             if (buildingPart == null) return;
             if (buildingPart.State != BuildingPart.StateType.DESTROY) return;
+
+            if (buildingPart.GetGeneralSettings.Identifier == projector.GetGeneralSettings.Identifier)
+            {
+                foreach (var item in buildingPart.Properties)
+                {
+                    if (item.StartsWith("ProjectorId"))
+                    {
+                        STDBBackendManager.Instance.imageManager.ProjectorDestroyedLocally(item.Substring(11));
+                        break;
+                    }
+                }
+            }
+
             Save();
         }
 
@@ -58,6 +76,30 @@ namespace Assets.Scripts
             if (isLoading) return;
             if (buildingPart == null) return;
             if (buildingPart.State != BuildingPart.StateType.PLACED) return;
+
+            if (buildingPart.GetGeneralSettings.Identifier == projector.GetGeneralSettings.Identifier)
+            {
+                bool found = false;
+                foreach (var item in buildingPart.Properties)
+                {
+                    if (item.StartsWith("ProjectorId"))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    string projectorId = Guid.NewGuid().ToString();
+                    buildingPart.Properties.Add("ProjectorId" + projectorId);
+                    OfficeProjector officeProjector = buildingPart.GetComponent<OfficeProjector>();
+                    officeProjector.SetProjectorId(projectorId);
+                    officeProjectors.Add(projectorId, officeProjector);
+                    STDBBackendManager.Instance.imageManager.ProjectorCreatedLocally(projectorId);
+                }
+            }
+
             Save();
         }
 
@@ -114,23 +156,10 @@ namespace Assets.Scripts
                 return;
             }
 
-            if (BuildingManager.Instance.RegisteredBuildingParts.Count > 0)
-            {
-                BuildingPart[] registeredBuildingParts = BuildingManager.Instance.RegisteredBuildingParts.ToArray();
+            DeleteAll();
+            isLoading = true;
 
-                for (int i = 0; i < registeredBuildingParts.Length; i++)
-                {
-                    if (registeredBuildingParts[i] != null)
-                    {
-                        if (registeredBuildingParts[i].State != BuildingPart.StateType.PREVIEW)
-                        {
-                            BuildingManager.Instance.DestroyBuildingPart(registeredBuildingParts[i]);
-                        }
-                    }
-                }
-            }
-
-
+            officeProjectors.Clear();
             for (int i = 0; i < saveData.Data.Count; i++)
             {
                 if (saveData.Data[i] != null)
@@ -145,6 +174,23 @@ namespace Assets.Scripts
                                 saveData.Data[i].Rotation, saveData.Data[i].Scale);
 
                         instancedBuildingPart.Properties = saveData.Data[i].Properties;
+
+                        if (instancedBuildingPart.GetGeneralSettings.Identifier ==
+                            projector.GetGeneralSettings.Identifier)
+                        {
+                            foreach (var item in instancedBuildingPart.Properties)
+                            {
+                                if (item.StartsWith("ProjectorId"))
+                                {
+                                    string projectorId = item.Substring(11);
+                                    OfficeProjector officeProjector =
+                                        instancedBuildingPart.GetComponent<OfficeProjector>();
+                                    officeProjector.SetProjectorId(projectorId);
+                                    officeProjectors.Add(projectorId, officeProjector);
+                                    break;
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -156,6 +202,25 @@ namespace Assets.Scripts
 
             isLoading = false;
         }
+
+        public void SetImageOfProjector(string projectorId, byte[] imageData, int width, int height)
+        {
+            if (projectorId == null) return;
+            if (officeProjectors.ContainsKey(projectorId))
+            {
+                officeProjectors[projectorId].SetImage(imageData);
+            }
+        }
+
+        // public OfficeProjector GetOfficeProjector(string projectorId)
+        // {
+        //     if (officeProjectors.ContainsKey(projectorId))
+        //     {
+        //         return officeProjectors[projectorId];
+        //     }
+        //
+        //     return null;
+        // }
 
         public void DeleteAll()
         {

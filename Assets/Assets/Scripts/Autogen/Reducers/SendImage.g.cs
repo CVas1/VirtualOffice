@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void SendImageHandler(ReducerEventContext ctx, string buildingIdentifier, System.Collections.Generic.List<byte> imageData);
+        public delegate void SendImageHandler(ReducerEventContext ctx, string buildingIdentifier, System.Collections.Generic.List<byte> imageData, int width, int height);
         public event SendImageHandler? OnSendImage;
 
-        public void SendImage(string buildingIdentifier, System.Collections.Generic.List<byte> imageData)
+        public void SendImage(string buildingIdentifier, System.Collections.Generic.List<byte> imageData, int width, int height)
         {
-            conn.InternalCallReducer(new Reducer.SendImage(buildingIdentifier, imageData), this.SetCallReducerFlags.SendImageFlags);
+            conn.InternalCallReducer(new Reducer.SendImage(buildingIdentifier, imageData, width, height), this.SetCallReducerFlags.SendImageFlags);
         }
 
         public bool InvokeSendImage(ReducerEventContext ctx, Reducer.SendImage args)
@@ -26,7 +26,9 @@ namespace SpacetimeDB.Types
             OnSendImage(
                 ctx,
                 args.BuildingIdentifier,
-                args.ImageData
+                args.ImageData,
+                args.Width,
+                args.Height
             );
             return true;
         }
@@ -42,14 +44,22 @@ namespace SpacetimeDB.Types
             public string BuildingIdentifier;
             [DataMember(Name = "image_data")]
             public System.Collections.Generic.List<byte> ImageData;
+            [DataMember(Name = "width")]
+            public int Width;
+            [DataMember(Name = "height")]
+            public int Height;
 
             public SendImage(
                 string BuildingIdentifier,
-                System.Collections.Generic.List<byte> ImageData
+                System.Collections.Generic.List<byte> ImageData,
+                int Width,
+                int Height
             )
             {
                 this.BuildingIdentifier = BuildingIdentifier;
                 this.ImageData = ImageData;
+                this.Width = Width;
+                this.Height = Height;
             }
 
             public SendImage()

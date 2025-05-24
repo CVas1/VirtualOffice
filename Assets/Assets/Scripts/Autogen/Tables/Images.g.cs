@@ -26,15 +26,6 @@ namespace SpacetimeDB.Types
 
             public readonly BuildingIdentifierUniqueIndex BuildingIdentifier;
 
-            public sealed class ImageIdUniqueIndex : UniqueIndexBase<uint>
-            {
-                protected override uint GetKey(Images row) => row.ImageId;
-
-                public ImageIdUniqueIndex(ImagesHandle table) : base(table) { }
-            }
-
-            public readonly ImageIdUniqueIndex ImageId;
-
             public sealed class RoomIdIndex : BTreeIndexBase<uint>
             {
                 protected override uint GetKey(Images row) => row.RoomId;
@@ -47,11 +38,10 @@ namespace SpacetimeDB.Types
             internal ImagesHandle(DbConnection conn) : base(conn)
             {
                 BuildingIdentifier = new(this);
-                ImageId = new(this);
                 RoomId = new(this);
             }
 
-            protected override object GetPrimaryKey(Images row) => row.ImageId;
+            protected override object GetPrimaryKey(Images row) => row.BuildingIdentifier;
         }
 
         public readonly ImagesHandle Images;

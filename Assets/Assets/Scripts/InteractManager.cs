@@ -8,7 +8,7 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
     private CharacterStateController characterStateController;
 
     [NonSerialized] public GameObject chair;
-    
+
     private void Start()
     {
         characterStateController = GetComponentInChildren<CharacterStateController>();
@@ -52,7 +52,14 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
                     OfficeProjector officeProjector = go.GetComponentInParent<OfficeProjector>();
                     if (officeProjector != null)
                     {
-                        officeProjector.OnClick();
+                        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                        {
+                            officeProjector.Broadcast();
+                        }
+                        else
+                        {
+                            officeProjector.ChangeOnce();
+                        }
                     }
                 }
             }

@@ -17,19 +17,31 @@ namespace SpacetimeDB.Types
         {
             protected override string RemoteTableName => "image_broadcast_lock";
 
-            public sealed class ImageIdUniqueIndex : UniqueIndexBase<uint>
+            public sealed class BuildingIdentifierUniqueIndex : UniqueIndexBase<string>
             {
-                protected override uint GetKey(ImageBroadcastLock row) => row.ImageId;
+                protected override string GetKey(ImageBroadcastLock row) => row.BuildingIdentifier;
 
-                public ImageIdUniqueIndex(ImageBroadcastLockHandle table) : base(table) { }
+                public BuildingIdentifierUniqueIndex(ImageBroadcastLockHandle table) : base(table) { }
             }
 
-            public readonly ImageIdUniqueIndex ImageId;
+            public readonly BuildingIdentifierUniqueIndex BuildingIdentifier;
+
+            public sealed class SenderIndex : BTreeIndexBase<SpacetimeDB.Identity>
+            {
+                protected override SpacetimeDB.Identity GetKey(ImageBroadcastLock row) => row.Sender;
+
+                public SenderIndex(ImageBroadcastLockHandle table) : base(table) { }
+            }
+
+            public readonly SenderIndex Sender;
 
             internal ImageBroadcastLockHandle(DbConnection conn) : base(conn)
             {
-                ImageId = new(this);
+                BuildingIdentifier = new(this);
+                Sender = new(this);
             }
+
+            protected override object GetPrimaryKey(ImageBroadcastLock row) => row.BuildingIdentifier;
         }
 
         public readonly ImageBroadcastLockHandle ImageBroadcastLock;

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3202560746170763031}
   - component: {fileID: 3158596166715293444}
   - component: {fileID: 7808873325248601952}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Projector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
