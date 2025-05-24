@@ -1,4 +1,5 @@
 using System;
+using HighlightPlus;
 using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Implementation;
 using UnityEngine;
@@ -8,7 +9,10 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
     private CharacterStateController characterStateController;
 
     [NonSerialized] public GameObject chair;
-    
+    [SerializeField] private LayerMask interactLayerMask;
+    private GameObject previousHitObject = null;
+    private HighlightEffect previousHighlightEffect = null;
+
     private void Start()
     {
         characterStateController = GetComponentInChildren<CharacterStateController>();
@@ -21,41 +25,56 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            //raycast control characterStateController.EnqueueTransition<SitState>();
+            GameObject currentHitObject = hit.collider.gameObject;
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (currentHitObject != null && currentHitObject != previousHitObject)
             {
-                print(hit.collider.gameObject.name);
-                GameObject go = hit.collider.gameObject;
-
-                if (go.CompareTag(Tags.Chair))
+                if (previousHighlightEffect != null)
                 {
-                    chair = go;
+                    previousHighlightEffect.highlighted = false;
+                }
+
+                previousHitObject = currentHitObject;
+                previousHighlightEffect = currentHitObject.GetComponentInParent<HighlightEffect>();
+                if (previousHighlightEffect != null)
+                {
+                    previousHighlightEffect.highlighted = true;
+                }
+            }
+            
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (currentHitObject.CompareTag(Tags.Chair))
+                {
+                    chair = currentHitObject;
                     characterStateController.EnqueueTransition<SitState>();
                 }
-                else if (go.CompareTag(Tags.Door))
+                else if (currentHitObject.CompareTag(Tags.Door))
                 {
                     //raycast to the door
-                    Door door = go.GetComponentInParent<Door>();
+                    Door door = currentHitObject.GetComponentInParent<Door>();
                     if (door != null)
                     {
                         door.OpenCloseDoor(characterStateController.transform);
                     }
                 }
-                else if (go.CompareTag(Tags.Projector))
+                else if (currentHitObject.CompareTag(Tags.Projector))
                 {
                     //raycast to the projector
-                    OfficeProjector officeProjector = go.GetComponentInParent<OfficeProjector>();
+                    OfficeProjector officeProjector = currentHitObject.GetComponentInParent<OfficeProjector>();
                     if (officeProjector != null)
                     {
                         officeProjector.OnClick();
                     }
                 }
             }
+            
         }
+
+        
     }
 }
