@@ -9,6 +9,7 @@ public class BuildPartUI : MonoBehaviour
     [SerializeField] private Button partButton;
     [SerializeField] private Image partImage;
     public BuildingPart buildingPart;
+    [NonSerialized]public BuildingPartSelectionUI buildingPartSelectionUI;
 
     private void Start()
     {
@@ -18,9 +19,6 @@ public class BuildPartUI : MonoBehaviour
 
     private void OnPartButtonClicked()
     {
-        BuildingPlacer.Instance.SelectBuildingPart(buildingPart);
-        BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.PLACE);
-        //cursor locked
-        Cursor.lockState = CursorLockMode.Locked;
+        buildingPartSelectionUI.Placing(buildingPart);
     }
 }
