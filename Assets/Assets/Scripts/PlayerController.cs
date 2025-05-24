@@ -1,5 +1,6 @@
 using System;
 using Assets.Scripts.Networking;
+using Lightbug.CharacterControllerPro.Core;
 using UnityEngine;
 using TMPro;
 using SpacetimeDB;
@@ -25,13 +26,18 @@ namespace Assets.Scripts
         private float lastUpdateTime = 0f;
         private const float updateInterval = 0.125f;
 
+        CharacterActor characterActor;
+        SpawnPoint sp;
         private void Start()
         {
             meshRenderer = GetComponent<MeshRenderer>();
+            sp = FindAnyObjectByType<SpawnPoint>();
+            characterActor = FindAnyObjectByType<CharacterActor>();
         }
 
         void Update()
         {
+            TeleportIfBelowZero();
             if (isLocalPlayer && Time.time - lastUpdateTime >= updateInterval)
             {
                 if (Vector3.Distance(transform.position, targetPosition) > 0.3f ||
@@ -51,14 +57,20 @@ namespace Assets.Scripts
         }
 
 
-        // private void TeleportIfBelowZero()
-        // {
-        //     if (transform.position.y < -5f)
-        //     {
-        //         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-        //         rb.linearVelocity = Vector3.zero;
-        //     }
-        // }
+        private void TeleportIfBelowZero()
+        {
+            if (!isLocalPlayer || characterActor.IsGrounded) return;
+            
+            if (characterActor.transform.position.y > -5) return;
+            if (sp != null)
+            {
+                characterActor.Teleport(sp.spawnPointTransform);
+            }
+            else
+            {
+                characterActor.Teleport(new Vector3(0, 1, 0));
+            }
+        }
 
         public void Init(OnlinePlayer playerData, bool isLocal)
         {

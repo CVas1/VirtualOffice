@@ -79,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetLayerMask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
 --- !u!114 &2556488812348798204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,3 +93,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   captureFPS: 10
+  OnTextureChanged:
+    m_PersistentCalls:
+      m_Calls: []
