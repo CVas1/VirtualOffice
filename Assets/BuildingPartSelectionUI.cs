@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using EasyBuildSystem.Features.Runtime.Buildings.Manager;
 using EasyBuildSystem.Features.Runtime.Buildings.Part;
+using EasyBuildSystem.Features.Runtime.Buildings.Placer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,8 +29,10 @@ public class BuildingPartSelectionUI : MonoBehaviour
         propsButton.onClick.AddListener(() => SetContentButtons(propsParts));
         interactableButton.onClick.AddListener(() => SetContentButtons(interactableParts));
 
+        
         SetContentButtons(wallParts);
     }
+    
 
     private void SetContentButtons(List<BuildingPart> buildingParts)
     {
@@ -50,9 +54,11 @@ public class BuildingPartSelectionUI : MonoBehaviour
 
     private void CreateBuildPartUI(BuildingPart buildingPart)
     {
-        GameObject buildPartUI = Instantiate(buildPartPrefab, buildPartContainer);
-        buildPartUI.GetComponent<BuildPartUI>().buildingPart = buildingPart;
-
+        GameObject buildPartUIObject = Instantiate(buildPartPrefab, buildPartContainer);
+        BuildPartUI buildPartUI = buildPartUIObject.GetComponent<BuildPartUI>();
+        buildPartUI.buildingPartSelectionUI = this;
+        buildPartUI.buildingPart = buildingPart;
+        
         Texture2D texture = buildingPart.GetGeneralSettings.Thumbnail;
         Sprite sprite = Sprite.Create(
             texture,
@@ -60,6 +66,16 @@ public class BuildingPartSelectionUI : MonoBehaviour
             new Vector2(0.5f, 0.5f)
         );
 
-        buildPartUI.GetComponent<Image>().sprite = sprite;
+        buildPartUIObject.GetComponent<Image>().sprite = sprite;
+    }
+    
+    public void Placing(BuildingPart buildingPart)
+    {
+        if (buildingPart == null) return;
+
+        BuildingPlacer.Instance.SelectBuildingPart(buildingPart);
+        BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.PLACE);
+        gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

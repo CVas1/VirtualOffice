@@ -44,10 +44,11 @@ namespace Assets.Scripts
         private Image connectionStatusImage;
 
         private GameRoom selectedRoom = null;
-        
-        [Header("Build Menu")]
-        [SerializeField] private Button removeButton;
-        [SerializeField] private GameObject buildMenu;
+
+        [Header("Build Menu")] [SerializeField]
+        private GameObject buildMenu;
+
+        [SerializeField] private BuildingPartSelectionUI buildingPartSelectionUI;
 
         private void Awake()
         {
@@ -62,19 +63,13 @@ namespace Assets.Scripts
 
             STDBBackendManager.OnConnected += () => SetConnectionStatus(true);
             STDBBackendManager.OnDisconnected += () => SetConnectionStatus(false);
-
         }
 
         private void Start()
         {
             OnClickBackToMainMenu();
-            
+
             buildMenu.SetActive(false);
-            removeButton.onClick.AddListener(() =>
-            {
-                BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.DESTROY);
-                SetCursorVisibilty(false);
-            });
         }
 
         public void Update()
@@ -83,24 +78,31 @@ namespace Assets.Scripts
             {
                 QuitRoom();
             }
-            
+
 
             // Toggle cursor lock state with Tab
             // check if quit button is active
 
             if (QuitButton.activeSelf && Input.GetKeyDown(KeyCode.Tab))
             {
-                if (Cursor.lockState == CursorLockMode.Locked)
+                if (!buildMenu.gameObject.activeSelf)
                 {
                     BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.NONE);
+                    buildingPartSelectionUI.gameObject.SetActive(true);
                     SetCursorVisibilty(true);
                     buildMenu.SetActive(true);
                 }
-                else 
+                else if (buildingPartSelectionUI.gameObject.activeSelf)
                 {
                     BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.NONE);
                     SetCursorVisibilty(false);
                     buildMenu.SetActive(false);
+                }
+                else
+                {
+                    BuildingPlacer.Instance.ChangeBuildMode(BuildingPlacer.BuildMode.NONE);
+                    buildingPartSelectionUI.gameObject.SetActive(true);
+                    SetCursorVisibilty(true);
                 }
             }
         }
@@ -149,7 +151,8 @@ namespace Assets.Scripts
             }
 
             // set time current than 5 seconds later
-            STDBBackendManager.Instance.roomManager.RoomToJoin = (createRoomNameInput.text, createRoomPasswordInput.text, Time.time + 5f);
+            STDBBackendManager.Instance.roomManager.RoomToJoin =
+                (createRoomNameInput.text, createRoomPasswordInput.text, Time.time + 5f);
 
             string roomName = createRoomNameInput.text;
             string password = createRoomPasswordInput.text;
@@ -175,7 +178,6 @@ namespace Assets.Scripts
             OnClickBackToMainMenu();
         }
 
-        
 
         public void OnClickBackToMainMenu()
         {
