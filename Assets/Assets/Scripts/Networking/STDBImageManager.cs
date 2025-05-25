@@ -47,7 +47,7 @@ namespace Assets.Scripts.Networking
 
         private void OnImageLockDelete(EventContext ctx, ImageBroadcastLock lockData)
         {
-            Debug.Log(lockData);
+            RoomBuildingManager.Instance.StopBroadcastingImage(lockData.BuildingIdentifier);
         }
 
         public void ProjectorCreatedLocally(string projectorId)

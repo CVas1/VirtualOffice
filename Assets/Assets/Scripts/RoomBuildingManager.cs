@@ -212,6 +212,15 @@ namespace Assets.Scripts
             }
         }
 
+        public void StopBroadcastingImage(string projectorId)
+        {
+            if (projectorId == null) return;
+            if (officeProjectors.ContainsKey(projectorId))
+            {
+                officeProjectors[projectorId].StopBroadcast();
+            }
+        }
+
         // public OfficeProjector GetOfficeProjector(string projectorId)
         // {
         //     if (officeProjectors.ContainsKey(projectorId))
