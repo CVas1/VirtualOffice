@@ -58,15 +58,15 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
                     chair = currentHitObject;
                     characterStateController.EnqueueTransition<SitState>();
                 }
-                else if (currentHitObject.CompareTag(Tags.Door))
-                {
-                    //raycast to the door
-                    Door door = currentHitObject.GetComponentInParent<Door>();
-                    if (door != null)
-                    {
-                        door.OpenCloseDoor(characterStateController.transform);
-                    }
-                }
+                // else if (currentHitObject.CompareTag(Tags.Door))
+                // {
+                //     //raycast to the door
+                //     Door door = currentHitObject.GetComponentInParent<Door>();
+                //     if (door != null)
+                //     {
+                //         door.OpenCloseDoor(characterStateController.transform);
+                //     }
+                // }
                 else if (currentHitObject.CompareTag(Tags.Projector))
                 {
                     //raycast to the projector

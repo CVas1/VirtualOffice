@@ -1,10 +1,9 @@
 using UnityEngine;
 using DG.Tweening;
-using System.Collections.Generic;
 
 public class Door : MonoBehaviour
 {
-    [SerializeField] private Transform doorTransform; 
+    [SerializeField] private Transform doorTransform;
     [SerializeField] private float openAngle = 90f;
     [SerializeField] private float animationDuration = 0.5f;
 
@@ -16,16 +15,19 @@ public class Door : MonoBehaviour
         closedRotation = doorTransform.localRotation;
     }
 
-
-    public void OpenCloseDoor(Transform player)
+    private void OnTriggerEnter(Collider other)
     {
-        if (isOpen)
+        if (!isOpen && other.CompareTag("Player"))
+        {
+            OpenDoorBasedOnPlayer(other.transform);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (isOpen && other.CompareTag("Player"))
         {
             CloseDoor();
-        }
-        else
-        {
-            OpenDoorBasedOnPlayer(player);
         }
     }
 
