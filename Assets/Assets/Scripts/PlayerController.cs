@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Assets.Scripts.Networking;
 using Lightbug.CharacterControllerPro.Core;
 using UnityEngine;
@@ -24,10 +25,24 @@ namespace Assets.Scripts
         public ulong RoomJoinTime { get; private set; }
 
         private float lastUpdateTime = 0f;
-        private const float updateInterval = 0.33f;
+        private const float updateInterval = 0.2f;
+
+        public float interpolationSpeedForPosition = 10f;
+        public float interpolationSpeedForRotation = 10f;
+
+        private class State
+        {
+            public Vector3 position;
+            public Quaternion rotation;
+            public float timestamp;
+        }
+
+        private Queue<State> stateBuffer = new Queue<State>();
+        private float interpolationBackTime = 0.4f; // 400 ms
 
         CharacterActor characterActor;
         SpawnPoint sp;
+
         private void Start()
         {
             meshRenderer = GetComponent<MeshRenderer>();
@@ -48,11 +63,29 @@ namespace Assets.Scripts
                 }
 
                 lastUpdateTime = Time.time;
+                return;
             }
-            else
+
+            float interpTime = Time.time - interpolationBackTime;
+
+            // Find two states to interpolate between
+            State prev = null, next = null;
+            foreach (var state in stateBuffer)
             {
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime);
+                if (state.timestamp <= interpTime)
+                    prev = state;
+                else
+                {
+                    next = state;
+                    break;
+                }
+            }
+
+            if (prev != null && next != null)
+            {
+                float t = Mathf.InverseLerp(prev.timestamp, next.timestamp, interpTime);
+                transform.position = Vector3.Lerp(prev.position, next.position, t);
+                transform.rotation = Quaternion.Slerp(prev.rotation, next.rotation, t);
             }
         }
 
@@ -60,7 +93,7 @@ namespace Assets.Scripts
         private void TeleportIfBelowZero()
         {
             if (!isLocalPlayer || characterActor.IsGrounded) return;
-            
+
             if (characterActor.transform.position.y > -5) return;
             if (sp != null)
             {
@@ -88,8 +121,18 @@ namespace Assets.Scripts
 
         public void UpdatePlayer(OnlinePlayer updatedData)
         {
-            targetPosition = ToVector3(updatedData.LastPosition);
-            targetRotation = Quaternion.Euler(0, updatedData.LastRotation, 0);
+            // Add new state to buffer
+            stateBuffer.Enqueue(new State
+            {
+                position = ToVector3(updatedData.LastPosition),
+                rotation = Quaternion.Euler(0, updatedData.LastRotation, 0),
+                timestamp = Time.time
+            });
+
+            // Remove old states
+            while (stateBuffer.Count > 2 && stateBuffer.Peek().timestamp < Time.time - 1f)
+                stateBuffer.Dequeue();
+
             SetColor(updatedData.Color);
             SetName(updatedData.Name);
         }

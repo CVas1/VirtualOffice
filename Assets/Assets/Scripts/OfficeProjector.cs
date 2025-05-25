@@ -82,6 +82,15 @@ public class OfficeProjector : MonoBehaviour
         }
     }
 
+    public void StopBroadcast()
+    {
+        if (isProjecting)
+        {
+            StopProjection();
+            isProjecting = false;
+        }
+    }
+
     public void SetImageRaw(NativeScreenCapture.ScreenCaptureDTO textureDTO)
     {
         if (projectorImageRenderer != null)
@@ -127,8 +136,9 @@ public class OfficeProjector : MonoBehaviour
 
     private void StartProjection()
     {
-        NativeScreenCapture.Instance.OnTextureChanged.TryAdd(this.GetHashCode(), OnTextureChanged);
-        NativeScreenCapture.Instance.StartCapture();
+        STDBBackendManager.Instance.imageManager.SendLockImageBroadcast(GetProjectorId());
+        // NativeScreenCapture.Instance.OnTextureChanged.TryAdd(this.GetHashCode(), OnTextureChanged);
+        // NativeScreenCapture.Instance.StartCapture();
     }
 
     private void StopProjection()
