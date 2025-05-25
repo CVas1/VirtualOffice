@@ -683,6 +683,8 @@ public class MoveState : CharacterState
     {
         if(Cursor.lockState != CursorLockMode.Locked)
         {
+            CharacterActor.PlanarVelocity = Vector3.zero;
+            CharacterActor.VerticalVelocity = Vector3.zero;
             return;
         }
         HandleVelocity(dt);
