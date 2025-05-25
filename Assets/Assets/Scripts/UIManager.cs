@@ -20,6 +20,7 @@ namespace Assets.Scripts
         [SerializeField] private GameObject BackButton;
         [SerializeField] private GameObject QuitButton;
         [SerializeField] private UltimateChatBox ChatPanel;
+        [SerializeField] private GameObject MailPanel;
 
         [Header("Main Menu")] [SerializeField] private GameObject mainMenuPanel;
 
@@ -49,6 +50,8 @@ namespace Assets.Scripts
         private GameObject buildMenu;
 
         [SerializeField] private BuildingPartSelectionUI buildingPartSelectionUI;
+        
+        
 
         private void Awake()
         {
@@ -80,8 +83,10 @@ namespace Assets.Scripts
             }
 
 
-            // Toggle cursor lock state with Tab
-            // check if quit button is active
+            if (QuitButton.activeSelf && Input.GetKeyDown(KeyCode.M))
+            {
+                MailBoxOpenClose();
+            }
 
             if (QuitButton.activeSelf && Input.GetKeyDown(KeyCode.Tab))
             {
@@ -104,6 +109,22 @@ namespace Assets.Scripts
                     buildingPartSelectionUI.gameObject.SetActive(true);
                     SetCursorVisibilty(true);
                 }
+            }
+        }
+
+        private void MailBoxOpenClose()
+        {
+            if (UIMailPanel.Instance.mailBoxPanel.gameObject.activeSelf ||
+                UIMailPanel.Instance.mailReadPanel.gameObject.activeSelf ||
+                UIMailPanel.Instance.mailWritePanel.gameObject.activeSelf)
+            {
+                UIMailPanel.Instance.CloseMailBoxPanel();
+                SetCursorVisibilty(false);
+            }
+            else
+            {
+                UIMailPanel.Instance.OpenMailBoxPanel();
+                SetCursorVisibilty(true);
             }
         }
 

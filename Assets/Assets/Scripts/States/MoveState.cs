@@ -681,6 +681,10 @@ public class MoveState : CharacterState
 
     public override void UpdateBehaviour(float dt)
     {
+        if(Cursor.lockState != CursorLockMode.Locked)
+        {
+            return;
+        }
         HandleVelocity(dt);
         HandleRotation(dt);
     }

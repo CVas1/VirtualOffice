@@ -222,7 +222,11 @@ namespace Lightbug.CharacterControllerPro.Demo
                 this.enabled = false;
                 return;
             }
-
+            //if cursor is locked, then process the input
+            if(Cursor.lockState != CursorLockMode.Locked)
+            {
+                return;
+            }
             Vector2 cameraAxes = inputHandlerSettings.InputHandler.GetVector2(axes);
 
             if (updatePitch)
