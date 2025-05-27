@@ -17,6 +17,15 @@ namespace SpacetimeDB.Types
         {
             protected override string RemoteTableName => "user_account";
 
+            public sealed class EmailUniqueIndex : UniqueIndexBase<string>
+            {
+                protected override string GetKey(UserAccount row) => row.Email;
+
+                public EmailUniqueIndex(UserAccountHandle table) : base(table) { }
+            }
+
+            public readonly EmailUniqueIndex Email;
+
             public sealed class UserIdUniqueIndex : UniqueIndexBase<uint>
             {
                 protected override uint GetKey(UserAccount row) => row.UserId;
@@ -26,19 +35,10 @@ namespace SpacetimeDB.Types
 
             public readonly UserIdUniqueIndex UserId;
 
-            public sealed class UsernameUniqueIndex : UniqueIndexBase<string>
-            {
-                protected override string GetKey(UserAccount row) => row.Username;
-
-                public UsernameUniqueIndex(UserAccountHandle table) : base(table) { }
-            }
-
-            public readonly UsernameUniqueIndex Username;
-
             internal UserAccountHandle(DbConnection conn) : base(conn)
             {
+                Email = new(this);
                 UserId = new(this);
-                Username = new(this);
             }
 
             protected override object GetPrimaryKey(UserAccount row) => row.UserId;
