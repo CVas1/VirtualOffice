@@ -13,35 +13,39 @@ namespace SpacetimeDB.Types
     [DataContract]
     public sealed partial class PlayerRoomPosition
     {
-        [DataMember(Name = "identity_room_key")]
-        public string IdentityRoomKey;
-        [DataMember(Name = "identity")]
-        public SpacetimeDB.Identity Identity;
+        [DataMember(Name = "user_room_key")]
+        public string UserRoomKey;
+        [DataMember(Name = "user_id")]
+        public uint UserId;
         [DataMember(Name = "room_id")]
         public uint RoomId;
         [DataMember(Name = "last_position")]
         public DbVector3 LastPosition;
         [DataMember(Name = "last_rotation")]
         public float LastRotation;
+        [DataMember(Name = "last_updated")]
+        public ulong LastUpdated;
 
         public PlayerRoomPosition(
-            string IdentityRoomKey,
-            SpacetimeDB.Identity Identity,
+            string UserRoomKey,
+            uint UserId,
             uint RoomId,
             DbVector3 LastPosition,
-            float LastRotation
+            float LastRotation,
+            ulong LastUpdated
         )
         {
-            this.IdentityRoomKey = IdentityRoomKey;
-            this.Identity = Identity;
+            this.UserRoomKey = UserRoomKey;
+            this.UserId = UserId;
             this.RoomId = RoomId;
             this.LastPosition = LastPosition;
             this.LastRotation = LastRotation;
+            this.LastUpdated = LastUpdated;
         }
 
         public PlayerRoomPosition()
         {
-            this.IdentityRoomKey = "";
+            this.UserRoomKey = "";
             this.LastPosition = new();
         }
     }

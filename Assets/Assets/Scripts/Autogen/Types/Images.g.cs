@@ -19,8 +19,10 @@ namespace SpacetimeDB.Types
         public uint RoomId;
         [DataMember(Name = "timestamp")]
         public ulong Timestamp;
-        [DataMember(Name = "sender")]
-        public SpacetimeDB.Identity Sender;
+        [DataMember(Name = "sender_user_id")]
+        public uint SenderUserId;
+        [DataMember(Name = "sender_username")]
+        public string SenderUsername;
         [DataMember(Name = "width")]
         public int Width;
         [DataMember(Name = "height")]
@@ -32,7 +34,8 @@ namespace SpacetimeDB.Types
             string BuildingIdentifier,
             uint RoomId,
             ulong Timestamp,
-            SpacetimeDB.Identity Sender,
+            uint SenderUserId,
+            string SenderUsername,
             int Width,
             int Height,
             System.Collections.Generic.List<byte> ImageData
@@ -41,7 +44,8 @@ namespace SpacetimeDB.Types
             this.BuildingIdentifier = BuildingIdentifier;
             this.RoomId = RoomId;
             this.Timestamp = Timestamp;
-            this.Sender = Sender;
+            this.SenderUserId = SenderUserId;
+            this.SenderUsername = SenderUsername;
             this.Width = Width;
             this.Height = Height;
             this.ImageData = ImageData;
@@ -50,6 +54,7 @@ namespace SpacetimeDB.Types
         public Images()
         {
             this.BuildingIdentifier = "";
+            this.SenderUsername = "";
             this.ImageData = new();
         }
     }

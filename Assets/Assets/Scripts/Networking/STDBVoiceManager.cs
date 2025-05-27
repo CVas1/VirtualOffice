@@ -1,6 +1,7 @@
 using System.Linq;
 using Assets.Scripts.VoiceRecorder;
 using SpacetimeDB.Types;
+using UnityEngine;
 
 namespace Assets.Scripts.Networking
 {
@@ -22,16 +23,17 @@ namespace Assets.Scripts.Networking
             if (currentVoiceSub != null && currentVoiceSub.IsActive)
                 currentVoiceSub.Unsubscribe();
 
-            // Only get new voice clips after join timestamp
-            string sql = $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp}";
+            // Only get new voice clips after join timestamp and exclude our own clips
+            string sql = $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender_user_id != {STDBBackendManager.LocalUserId}";
             currentVoiceSub = conn.SubscriptionBuilder().Subscribe(new[] { sql });
         }
 
         private void OnVoiceClipInsert(EventContext ctx, VoiceClip clip)
         {
-            if (clip.Sender.Equals(STDBBackendManager.LocalIdentity)) return;
+            // Skip our own voice clips
+            if (clip.SenderUserId == STDBBackendManager.LocalUserId) return;
 
-            if (STDBBackendManager.Instance.playerManager.Players.TryGetValue(clip.Sender, out PlayerController player))
+            if (STDBBackendManager.Instance.playerManager.Players.TryGetValue(clip.SenderUserId, out PlayerController player))
             {
                 VoiceChatPlayer.Instance.EnqueueAudio(clip.AudioData.ToArray(), player.PlayerId);
             }
@@ -44,6 +46,11 @@ namespace Assets.Scripts.Networking
 
         public void SendVoiceClip(byte[] audioData)
         {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to send voice clips");
+                return;
+            }
             conn.Reducers.SendVoice(audioData.ToList());
         }
     }

@@ -17,24 +17,6 @@ namespace SpacetimeDB.Types
         {
             protected override string RemoteTableName => "online_player";
 
-            public sealed class IdentityUniqueIndex : UniqueIndexBase<SpacetimeDB.Identity>
-            {
-                protected override SpacetimeDB.Identity GetKey(OnlinePlayer row) => row.Identity;
-
-                public IdentityUniqueIndex(OnlinePlayerHandle table) : base(table) { }
-            }
-
-            public readonly IdentityUniqueIndex Identity;
-
-            public sealed class PlayerIdUniqueIndex : UniqueIndexBase<uint>
-            {
-                protected override uint GetKey(OnlinePlayer row) => row.PlayerId;
-
-                public PlayerIdUniqueIndex(OnlinePlayerHandle table) : base(table) { }
-            }
-
-            public readonly PlayerIdUniqueIndex PlayerId;
-
             public sealed class RoomIdIndex : BTreeIndexBase<uint>
             {
                 protected override uint GetKey(OnlinePlayer row) => row.RoomId;
@@ -44,14 +26,22 @@ namespace SpacetimeDB.Types
 
             public readonly RoomIdIndex RoomId;
 
-            internal OnlinePlayerHandle(DbConnection conn) : base(conn)
+            public sealed class UserIdUniqueIndex : UniqueIndexBase<uint>
             {
-                Identity = new(this);
-                PlayerId = new(this);
-                RoomId = new(this);
+                protected override uint GetKey(OnlinePlayer row) => row.UserId;
+
+                public UserIdUniqueIndex(OnlinePlayerHandle table) : base(table) { }
             }
 
-            protected override object GetPrimaryKey(OnlinePlayer row) => row.Identity;
+            public readonly UserIdUniqueIndex UserId;
+
+            internal OnlinePlayerHandle(DbConnection conn) : base(conn)
+            {
+                RoomId = new(this);
+                UserId = new(this);
+            }
+
+            protected override object GetPrimaryKey(OnlinePlayer row) => row.UserId;
         }
 
         public readonly OnlinePlayerHandle OnlinePlayer;

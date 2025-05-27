@@ -15,20 +15,24 @@ namespace SpacetimeDB.Types
     {
         [DataMember(Name = "room_id")]
         public uint RoomId;
-        [DataMember(Name = "identity")]
-        public SpacetimeDB.Identity Identity;
+        [DataMember(Name = "user_id")]
+        public uint UserId;
         [DataMember(Name = "data")]
         public string Data;
+        [DataMember(Name = "last_updated")]
+        public ulong LastUpdated;
 
         public RoomEntity(
             uint RoomId,
-            SpacetimeDB.Identity Identity,
-            string Data
+            uint UserId,
+            string Data,
+            ulong LastUpdated
         )
         {
             this.RoomId = RoomId;
-            this.Identity = Identity;
+            this.UserId = UserId;
             this.Data = Data;
+            this.LastUpdated = LastUpdated;
         }
 
         public RoomEntity()

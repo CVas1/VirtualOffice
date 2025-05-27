@@ -18,7 +18,7 @@ namespace Assets.Scripts.Networking
 
         private void OnChatMessageInsert(EventContext ctx, ChatMessage message)
         {
-            if (STDBBackendManager.Instance.playerManager.Players.TryGetValue(message.Sender,
+            if (STDBBackendManager.Instance.playerManager.Players.TryGetValue(message.SenderUserId,
                     out PlayerController player))
             {
                 string username = player.PlayerName;
@@ -30,6 +30,11 @@ namespace Assets.Scripts.Networking
 
         public void SendChatMessage(string message, bool shout = false)
         {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to send chat messages");
+                return;
+            }
             conn.Reducers.SendMessage(message, shout);
         }
     }

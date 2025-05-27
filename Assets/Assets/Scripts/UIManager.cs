@@ -50,8 +50,7 @@ namespace Assets.Scripts
         private GameObject buildMenu;
 
         [SerializeField] private BuildingPartSelectionUI buildingPartSelectionUI;
-        
-        
+
 
         private void Awake()
         {
@@ -203,6 +202,7 @@ namespace Assets.Scripts
         public void OnClickBackToMainMenu()
         {
             ChatPanel.Disable();
+            ChatPanel.gameObject.SetActive(false);
             QuitButton.SetActive(false);
             BackButton.SetActive(true);
             ShadowPanel.SetActive(true);
@@ -216,6 +216,7 @@ namespace Assets.Scripts
         public void OnCloseMenu()
         {
             ChatPanel.Enable();
+            ChatPanel.gameObject.SetActive(true);
             QuitButton.SetActive(true);
             BackButton.SetActive(false);
             ShadowPanel.SetActive(false);

@@ -13,12 +13,12 @@ namespace SpacetimeDB.Types
     [DataContract]
     public sealed partial class OnlinePlayer
     {
+        [DataMember(Name = "user_id")]
+        public uint UserId;
         [DataMember(Name = "identity")]
         public SpacetimeDB.Identity Identity;
-        [DataMember(Name = "player_id")]
-        public uint PlayerId;
-        [DataMember(Name = "name")]
-        public string Name;
+        [DataMember(Name = "username")]
+        public string Username;
         [DataMember(Name = "color")]
         public string Color;
         [DataMember(Name = "room_id")]
@@ -35,9 +35,9 @@ namespace SpacetimeDB.Types
         public float LastRotation;
 
         public OnlinePlayer(
+            uint UserId,
             SpacetimeDB.Identity Identity,
-            uint PlayerId,
-            string Name,
+            string Username,
             string Color,
             uint RoomId,
             ulong LastRoomJoinTime,
@@ -47,9 +47,9 @@ namespace SpacetimeDB.Types
             float LastRotation
         )
         {
+            this.UserId = UserId;
             this.Identity = Identity;
-            this.PlayerId = PlayerId;
-            this.Name = Name;
+            this.Username = Username;
             this.Color = Color;
             this.RoomId = RoomId;
             this.LastRoomJoinTime = LastRoomJoinTime;
@@ -61,7 +61,7 @@ namespace SpacetimeDB.Types
 
         public OnlinePlayer()
         {
-            this.Name = "";
+            this.Username = "";
             this.Color = "";
             this.LastPosition = new();
         }

@@ -30,6 +30,8 @@ namespace SpacetimeDB.Types
             AddTable(PlayerCount = new(conn));
             AddTable(PlayerRoomPosition = new(conn));
             AddTable(RoomEntity = new(conn));
+            AddTable(UserAccount = new(conn));
+            AddTable(UserSession = new(conn));
             AddTable(VoiceClip = new(conn));
         }
     }
@@ -440,11 +442,15 @@ namespace SpacetimeDB.Types
             return update.ReducerCall.ReducerName switch
             {
                 "Connect" => BSATNHelpers.Decode<Reducer.Connect>(encodedArgs),
+                "CreateOnlinePlayer" => BSATNHelpers.Decode<Reducer.CreateOnlinePlayer>(encodedArgs),
                 "CreateRoom" => BSATNHelpers.Decode<Reducer.CreateRoom>(encodedArgs),
                 "Disconnect" => BSATNHelpers.Decode<Reducer.Disconnect>(encodedArgs),
                 "JoinRoom" => BSATNHelpers.Decode<Reducer.JoinRoom>(encodedArgs),
                 "LeaveRoom" => BSATNHelpers.Decode<Reducer.LeaveRoom>(encodedArgs),
                 "LockImageBroadcast" => BSATNHelpers.Decode<Reducer.LockImageBroadcast>(encodedArgs),
+                "Login" => BSATNHelpers.Decode<Reducer.Login>(encodedArgs),
+                "Logout" => BSATNHelpers.Decode<Reducer.Logout>(encodedArgs),
+                "Register" => BSATNHelpers.Decode<Reducer.Register>(encodedArgs),
                 "SaveEntity" => BSATNHelpers.Decode<Reducer.SaveEntity>(encodedArgs),
                 "SendImage" => BSATNHelpers.Decode<Reducer.SendImage>(encodedArgs),
                 "SendMessage" => BSATNHelpers.Decode<Reducer.SendMessage>(encodedArgs),
@@ -473,11 +479,15 @@ namespace SpacetimeDB.Types
             return reducer switch
             {
                 Reducer.Connect args => Reducers.InvokeConnect(eventContext, args),
+                Reducer.CreateOnlinePlayer args => Reducers.InvokeCreateOnlinePlayer(eventContext, args),
                 Reducer.CreateRoom args => Reducers.InvokeCreateRoom(eventContext, args),
                 Reducer.Disconnect args => Reducers.InvokeDisconnect(eventContext, args),
                 Reducer.JoinRoom args => Reducers.InvokeJoinRoom(eventContext, args),
                 Reducer.LeaveRoom args => Reducers.InvokeLeaveRoom(eventContext, args),
                 Reducer.LockImageBroadcast args => Reducers.InvokeLockImageBroadcast(eventContext, args),
+                Reducer.Login args => Reducers.InvokeLogin(eventContext, args),
+                Reducer.Logout args => Reducers.InvokeLogout(eventContext, args),
+                Reducer.Register args => Reducers.InvokeRegister(eventContext, args),
                 Reducer.SaveEntity args => Reducers.InvokeSaveEntity(eventContext, args),
                 Reducer.SendImage args => Reducers.InvokeSendImage(eventContext, args),
                 Reducer.SendMessage args => Reducers.InvokeSendMessage(eventContext, args),

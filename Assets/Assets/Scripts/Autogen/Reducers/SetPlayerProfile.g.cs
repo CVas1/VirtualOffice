@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void SetPlayerProfileHandler(ReducerEventContext ctx, string name, string color);
+        public delegate void SetPlayerProfileHandler(ReducerEventContext ctx, string color);
         public event SetPlayerProfileHandler? OnSetPlayerProfile;
 
-        public void SetPlayerProfile(string name, string color)
+        public void SetPlayerProfile(string color)
         {
-            conn.InternalCallReducer(new Reducer.SetPlayerProfile(name, color), this.SetCallReducerFlags.SetPlayerProfileFlags);
+            conn.InternalCallReducer(new Reducer.SetPlayerProfile(color), this.SetCallReducerFlags.SetPlayerProfileFlags);
         }
 
         public bool InvokeSetPlayerProfile(ReducerEventContext ctx, Reducer.SetPlayerProfile args)
@@ -25,7 +25,6 @@ namespace SpacetimeDB.Types
             if (OnSetPlayerProfile == null) return false;
             OnSetPlayerProfile(
                 ctx,
-                args.Name,
                 args.Color
             );
             return true;
@@ -38,23 +37,16 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class SetPlayerProfile : Reducer, IReducerArgs
         {
-            [DataMember(Name = "name")]
-            public string Name;
             [DataMember(Name = "color")]
             public string Color;
 
-            public SetPlayerProfile(
-                string Name,
-                string Color
-            )
+            public SetPlayerProfile(string Color)
             {
-                this.Name = Name;
                 this.Color = Color;
             }
 
             public SetPlayerProfile()
             {
-                this.Name = "";
                 this.Color = "";
             }
 

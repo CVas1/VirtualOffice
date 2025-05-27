@@ -17,21 +17,21 @@ namespace SpacetimeDB.Types
         {
             protected override string RemoteTableName => "logged_out_player";
 
-            public sealed class IdentityUniqueIndex : UniqueIndexBase<SpacetimeDB.Identity>
+            public sealed class UserIdUniqueIndex : UniqueIndexBase<uint>
             {
-                protected override SpacetimeDB.Identity GetKey(LoggedOutPlayer row) => row.Identity;
+                protected override uint GetKey(LoggedOutPlayer row) => row.UserId;
 
-                public IdentityUniqueIndex(LoggedOutPlayerHandle table) : base(table) { }
+                public UserIdUniqueIndex(LoggedOutPlayerHandle table) : base(table) { }
             }
 
-            public readonly IdentityUniqueIndex Identity;
+            public readonly UserIdUniqueIndex UserId;
 
             internal LoggedOutPlayerHandle(DbConnection conn) : base(conn)
             {
-                Identity = new(this);
+                UserId = new(this);
             }
 
-            protected override object GetPrimaryKey(LoggedOutPlayer row) => row.Identity;
+            protected override object GetPrimaryKey(LoggedOutPlayer row) => row.UserId;
         }
 
         public readonly LoggedOutPlayerHandle LoggedOutPlayer;

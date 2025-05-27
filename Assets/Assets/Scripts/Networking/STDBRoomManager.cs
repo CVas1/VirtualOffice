@@ -35,6 +35,11 @@ namespace Assets.Scripts.Networking
 
         public void JoinRoom(uint roomId, string password)
         {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to join a room");
+                return;
+            }
             conn.Reducers.JoinRoom(roomId, password);
         }
 
@@ -62,7 +67,18 @@ namespace Assets.Scripts.Networking
 
         private void OnJoinRoom(ReducerEventContext ctx, uint roomId, string password)
         {
-            if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity) return;
+            // Check if this is our user's join room event
+            bool isOurEvent = false;
+            foreach (var player in conn.Db.OnlinePlayer.Iter())
+            {
+                if (player.Identity.Equals(STDBBackendManager.LocalIdentity) && player.RoomId == roomId)
+                {
+                    isOurEvent = true;
+                    break;
+                }
+            }
+
+            if (!isOurEvent) return;
 
             if (ctx.Event.Status is Status.Failed fail)
             {
@@ -78,14 +94,24 @@ namespace Assets.Scripts.Networking
                 OnRoomJoin?.Invoke();
 
                 UnsubscribeFromAll();
-
                 SubscribeToAll(ctx.Event.Timestamp);
             }
         }
 
         private void OnLeaveRoom(ReducerEventContext ctx)
         {
-            if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity) return;
+            // Check if this is our user's leave room event by checking if we have a player with our identity
+            bool isOurEvent = false;
+            foreach (var player in conn.Db.OnlinePlayer.Iter())
+            {
+                if (player.Identity.Equals(STDBBackendManager.LocalIdentity))
+                {
+                    isOurEvent = true;
+                    break;
+                }
+            }
+
+            if (!isOurEvent) return;
 
             if (ctx.Event.Status is Status.Failed fail)
             {
@@ -95,18 +121,31 @@ namespace Assets.Scripts.Networking
             else
             {
                 UnsubscribeFromAll();
-
                 CurrentRoomId = 0;
-
-
-                // STDBBackendManager.Instance.playerManager.ClearAllPlayers();
                 RoomBuildingManager.Instance.OnRoomLeave();
                 OnRoomLeave?.Invoke();
             }
         }
 
-        public void LeaveRoom() => conn.Reducers.LeaveRoom();
-        public void CreateRoom(string name, string password) => conn.Reducers.CreateRoom(name, password);
+        public void LeaveRoom()
+        {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to leave a room");
+                return;
+            }
+            conn.Reducers.LeaveRoom();
+        }
+
+        public void CreateRoom(string name, string password)
+        {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to create a room");
+                return;
+            }
+            conn.Reducers.CreateRoom(name, password);
+        }
 
         private string ExtractErrorMessage(Status.Failed failed)
         {
@@ -141,7 +180,7 @@ namespace Assets.Scripts.Networking
         private void SubscribeToVoice(uint roomId, ulong timestamp)
         {
             string sql =
-                $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender != '0x{STDBBackendManager.LocalIdentity}'";
+                $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender_user_id != {STDBBackendManager.LocalUserId}";
 
             voiceSub = conn.SubscriptionBuilder()
                 .Subscribe(new[] { sql });
@@ -150,10 +189,10 @@ namespace Assets.Scripts.Networking
         private void SubscribeToImages(uint roomId, ulong timestamp)
         {
             string sqlImage =
-                $"SELECT * FROM images WHERE room_id = {roomId} AND ( timestamp < {timestamp} OR sender != '0x{STDBBackendManager.LocalIdentity}' )";
+                $"SELECT * FROM images WHERE room_id = {roomId} AND ( timestamp < {timestamp} OR sender_user_id != {STDBBackendManager.LocalUserId} )";
 
             string sqlBroadcastLock =
-                $"SELECT * FROM image_broadcast_lock WHERE sender = '0x{STDBBackendManager.LocalIdentity}'";
+                $"SELECT * FROM image_broadcast_lock WHERE sender_user_id = {STDBBackendManager.LocalUserId}";
 
             imageSub = conn.SubscriptionBuilder()
                 .Subscribe(new[] { sqlImage, sqlBroadcastLock });

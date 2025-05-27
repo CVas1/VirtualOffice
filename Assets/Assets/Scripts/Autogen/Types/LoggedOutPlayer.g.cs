@@ -13,12 +13,10 @@ namespace SpacetimeDB.Types
     [DataContract]
     public sealed partial class LoggedOutPlayer
     {
-        [DataMember(Name = "identity")]
-        public SpacetimeDB.Identity Identity;
-        [DataMember(Name = "player_id")]
-        public uint PlayerId;
-        [DataMember(Name = "name")]
-        public string Name;
+        [DataMember(Name = "user_id")]
+        public uint UserId;
+        [DataMember(Name = "username")]
+        public string Username;
         [DataMember(Name = "color")]
         public string Color;
         [DataMember(Name = "last_disconnect_time")]
@@ -27,17 +25,15 @@ namespace SpacetimeDB.Types
         public ulong TotalPlayTime;
 
         public LoggedOutPlayer(
-            SpacetimeDB.Identity Identity,
-            uint PlayerId,
-            string Name,
+            uint UserId,
+            string Username,
             string Color,
             ulong LastDisconnectTime,
             ulong TotalPlayTime
         )
         {
-            this.Identity = Identity;
-            this.PlayerId = PlayerId;
-            this.Name = Name;
+            this.UserId = UserId;
+            this.Username = Username;
             this.Color = Color;
             this.LastDisconnectTime = LastDisconnectTime;
             this.TotalPlayTime = TotalPlayTime;
@@ -45,7 +41,7 @@ namespace SpacetimeDB.Types
 
         public LoggedOutPlayer()
         {
-            this.Name = "";
+            this.Username = "";
             this.Color = "";
         }
     }

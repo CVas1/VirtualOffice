@@ -26,22 +26,22 @@ namespace SpacetimeDB.Types
 
             public readonly RoomIdIndex RoomId;
 
-            public sealed class SenderUniqueIndex : UniqueIndexBase<SpacetimeDB.Identity>
+            public sealed class SenderUserIdUniqueIndex : UniqueIndexBase<uint>
             {
-                protected override SpacetimeDB.Identity GetKey(VoiceClip row) => row.Sender;
+                protected override uint GetKey(VoiceClip row) => row.SenderUserId;
 
-                public SenderUniqueIndex(VoiceClipHandle table) : base(table) { }
+                public SenderUserIdUniqueIndex(VoiceClipHandle table) : base(table) { }
             }
 
-            public readonly SenderUniqueIndex Sender;
+            public readonly SenderUserIdUniqueIndex SenderUserId;
 
             internal VoiceClipHandle(DbConnection conn) : base(conn)
             {
                 RoomId = new(this);
-                Sender = new(this);
+                SenderUserId = new(this);
             }
 
-            protected override object GetPrimaryKey(VoiceClip row) => row.Sender;
+            protected override object GetPrimaryKey(VoiceClip row) => row.SenderUserId;
         }
 
         public readonly VoiceClipHandle VoiceClip;

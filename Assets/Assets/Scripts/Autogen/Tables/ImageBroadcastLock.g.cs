@@ -26,19 +26,19 @@ namespace SpacetimeDB.Types
 
             public readonly BuildingIdentifierUniqueIndex BuildingIdentifier;
 
-            public sealed class SenderIndex : BTreeIndexBase<SpacetimeDB.Identity>
+            public sealed class SenderUserIdIndex : BTreeIndexBase<uint>
             {
-                protected override SpacetimeDB.Identity GetKey(ImageBroadcastLock row) => row.Sender;
+                protected override uint GetKey(ImageBroadcastLock row) => row.SenderUserId;
 
-                public SenderIndex(ImageBroadcastLockHandle table) : base(table) { }
+                public SenderUserIdIndex(ImageBroadcastLockHandle table) : base(table) { }
             }
 
-            public readonly SenderIndex Sender;
+            public readonly SenderUserIdIndex SenderUserId;
 
             internal ImageBroadcastLockHandle(DbConnection conn) : base(conn)
             {
                 BuildingIdentifier = new(this);
-                Sender = new(this);
+                SenderUserId = new(this);
             }
 
             protected override object GetPrimaryKey(ImageBroadcastLock row) => row.BuildingIdentifier;

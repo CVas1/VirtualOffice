@@ -7,7 +7,7 @@ namespace Assets.Scripts.Networking
 {
     public class STDBPlayerManager
     {
-        public Dictionary<Identity, PlayerController> Players = new Dictionary<Identity, PlayerController>();
+        public Dictionary<uint, PlayerController> Players = new Dictionary<uint, PlayerController>();
 
         private DbConnection conn;
         private GameObject localPlayerPrefab;
@@ -35,7 +35,7 @@ namespace Assets.Scripts.Networking
             if (STDBBackendManager.Instance.mainCamera != null)
                 STDBBackendManager.Instance.mainCamera.gameObject.SetActive(false);
 
-            bool isLocal = player.Identity.Equals(STDBBackendManager.LocalIdentity);
+            bool isLocal = player.UserId == STDBBackendManager.LocalUserId;
             PlayerController controller;
 
             if (isLocal)
@@ -47,19 +47,19 @@ namespace Assets.Scripts.Networking
                 controller = Object.Instantiate(remotePlayerPrefab).GetComponent<PlayerController>();
             }
 
-            Debug.Log($"Player {player.PlayerId} created in room {player.RoomId}.");
+            Debug.Log($"Player {player.UserId} ({player.Username}) created in room {player.RoomId}.");
             controller.transform.position =
                 new Vector3(player.LastPosition.X, player.LastPosition.Y, player.LastPosition.Z);
 
             controller.Init(player, isLocal);
-            Players[player.Identity] = controller;
+            Players[player.UserId] = controller;
         }
 
         private void OnPlayerUpdate(EventContext ctx, OnlinePlayer oldData, OnlinePlayer newData)
         {
-            if (newData.Identity.Equals(STDBBackendManager.LocalIdentity)) return;
+            if (newData.UserId == STDBBackendManager.LocalUserId) return;
 
-            if (Players.TryGetValue(newData.Identity, out PlayerController controller))
+            if (Players.TryGetValue(newData.UserId, out PlayerController controller))
             {
                 controller.UpdatePlayer(newData);
             }
@@ -71,29 +71,29 @@ namespace Assets.Scripts.Networking
 
         private void OnPlayerDelete(EventContext ctx, OnlinePlayer player)
         {
-            if (Players.TryGetValue(player.Identity, out PlayerController controller))
+            if (Players.TryGetValue(player.UserId, out PlayerController controller))
             {
                 if (controller.isLocalPlayer)
                 {
                     Object.Destroy(controller.transform.parent.gameObject);
-
-                }else
+                }
+                else
                 {
                     // If not local, just destroy the controller's gameObject
                     Object.Destroy(controller.gameObject);
                 }
-                Players.Remove(player.Identity);
+                Players.Remove(player.UserId);
             }
 
             // Reactivate camera if local player
-            if (player.Identity.Equals(STDBBackendManager.LocalIdentity) &&
+            if (player.UserId == STDBBackendManager.LocalUserId &&
                 STDBBackendManager.Instance.mainCamera != null)
                 STDBBackendManager.Instance.mainCamera.gameObject.SetActive(true);
         }
 
-        public void SetPlayerProfile(string playerName, string color)
+        public void SetPlayerProfile(string color)
         {
-            conn.Reducers.SetPlayerProfile(playerName, color);
+            conn.Reducers.SetPlayerProfile(color);
         }
 
         public void UpdatePlayerPosition(Vector3 position, float rotation)
@@ -107,6 +107,18 @@ namespace Assets.Scripts.Networking
                 Object.Destroy(player.gameObject);
 
             Players.Clear();
+        }
+
+        public PlayerController GetLocalPlayer()
+        {
+            Players.TryGetValue(STDBBackendManager.LocalUserId, out PlayerController localPlayer);
+            return localPlayer;
+        }
+
+        public PlayerController GetPlayerByUserId(uint userId)
+        {
+            Players.TryGetValue(userId, out PlayerController player);
+            return player;
         }
     }
 }
