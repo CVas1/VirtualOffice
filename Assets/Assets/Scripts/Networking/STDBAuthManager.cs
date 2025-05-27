@@ -7,6 +7,8 @@ namespace Assets.Scripts.Networking
 {
     public class STDBAuthManager
     {
+        public const string LastUsedEmailKey = "LastUsedEmail";
+
         private DbConnection conn;
         public static uint LocalUserId { get; private set; } = 0;
         public static bool IsLoggedIn => LocalUserId > 0;
@@ -33,19 +35,20 @@ namespace Assets.Scripts.Networking
                     LocalUserId = player.UserId;
                     OnAuthenticationStateChanged?.Invoke(true);
                     Debug.Log($"Online player created with user_id: {LocalUserId}");
-
-                    // unsubscribe from the online player insert event to avoid duplicates
-                    if (getUserIdSubscription != null && getUserIdSubscription.IsActive)
-                        getUserIdSubscription.Unsubscribe();
+                    STDBRoomManager.OnRoomJoin += () =>
+                    {
+                        if (getUserIdSubscription != null && getUserIdSubscription.IsActive)
+                            getUserIdSubscription.Unsubscribe();
+                    };
                 }
             };
         }
 
-        public void Register(string username, string password)
+        public void Register(string email, string username, string password)
         {
             if (conn != null && conn.IsActive)
             {
-                conn.Reducers.Register(username, password);
+                conn.Reducers.Register(email, username, password);
             }
             else
             {
@@ -53,11 +56,11 @@ namespace Assets.Scripts.Networking
             }
         }
 
-        public void Login(string username, string password)
+        public void Login(string mail, string password)
         {
             if (conn != null && conn.IsActive)
             {
-                conn.Reducers.Login(username, password);
+                conn.Reducers.Login(mail, password);
             }
             else
             {
@@ -73,7 +76,7 @@ namespace Assets.Scripts.Networking
             }
         }
 
-        private void OnRegister(ReducerEventContext ctx, string username, string password)
+        private void OnRegister(ReducerEventContext ctx, string mail, string username, string password)
         {
             if (ctx.Event.Status is Status.Failed fail)
             {
@@ -82,13 +85,13 @@ namespace Assets.Scripts.Networking
             }
             else
             {
-                Debug.Log($"Registration successful for: {username}");
+                Debug.Log($"Registration successful for: {mail}");
                 // After successful registration, automatically login
-                Login(username, password);
+                Login(mail, password);
             }
         }
 
-        private void OnLogin(ReducerEventContext ctx, string username, string password)
+        private void OnLogin(ReducerEventContext ctx, string mail, string password)
         {
             if (ctx.Event.Status is Status.Failed fail)
             {
@@ -97,7 +100,11 @@ namespace Assets.Scripts.Networking
             }
             else
             {
-                Debug.Log($"Login successful for: {username}");
+                Debug.Log($"Login successful for: {mail}");
+
+                // Save the latest correct mail to PlayerPrefs
+                PlayerPrefs.SetString(LastUsedEmailKey, mail);
+                PlayerPrefs.Save();
 
                 // subscribe to online player updates
                 //$"SELECT * FROM image_broadcast_lock WHERE identity = '0x{STDBBackendManager.LocalIdentity}'";

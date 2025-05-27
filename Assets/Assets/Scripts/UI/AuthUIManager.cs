@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Assets.Scripts.Networking;
+using UnityEngine.Serialization;
 
 namespace Assets.Scripts.UI
 {
@@ -11,16 +12,24 @@ namespace Assets.Scripts.UI
         [Header("Menus")] public GameObject signInMenu;
         public GameObject registerMenu;
 
-        [Header("Sign In Fields")] public TMP_InputField signInUsernameInput;
+        [Header("Sign In Fields")] public TMP_InputField signInMailInput;
         public TMP_InputField signInPasswordInput;
         public TMP_Text signInErrorText;
 
-        [Header("Register Fields")] public TMP_InputField registerUsernameInput;
+        [Header("Register Fields")] public TMP_InputField registerMailInput;
         public TMP_InputField registerPasswordInput;
+        public TMP_InputField registerUsernameInput;
         public TMP_Text registerErrorText;
 
         private void Awake()
         {
+            // Load last used email if available
+            if (PlayerPrefs.HasKey(STDBAuthManager.LastUsedEmailKey))
+            {
+                string lastEmail = PlayerPrefs.GetString(STDBAuthManager.LastUsedEmailKey);
+                signInMailInput.text = lastEmail;
+            }
+
             // Subscribe to auth events
             STDBAuthManager.OnAuthenticationStateChanged += OnAuthStateChanged;
             STDBAuthManager.OnAuthenticationError += OnAuthError;
@@ -48,11 +57,12 @@ namespace Assets.Scripts.UI
 
         public void OnClickLogin()
         {
-            string username = signInUsernameInput.text.Trim();
+            string mail = signInMailInput.text.Trim();
             string password = signInPasswordInput.text;
-            if (username.Length < 3)
+
+            if (string.IsNullOrEmpty(mail) || !mail.Contains("@"))
             {
-                signInErrorText.text = "Username must be at least 3 characters.";
+                signInErrorText.text = "Invalid email address.";
                 signInErrorText.gameObject.SetActive(true);
                 return;
             }
@@ -65,13 +75,22 @@ namespace Assets.Scripts.UI
             }
 
             signInErrorText.gameObject.SetActive(false);
-            STDBBackendManager.Instance.authManager.Login(username, password);
+            STDBBackendManager.Instance.authManager.Login(mail, password);
         }
 
         public void OnClickRegister()
         {
+            string mail = registerMailInput.text.Trim();
             string username = registerUsernameInput.text.Trim();
-            string password = registerPasswordInput.text;
+            string password = registerPasswordInput.text.Trim();
+
+            if (string.IsNullOrEmpty(mail) || !mail.Contains("@"))
+            {
+                registerErrorText.text = "Invalid email address.";
+                registerErrorText.gameObject.SetActive(true);
+                return;
+            }
+
             if (username.Length < 3)
             {
                 registerErrorText.text = "Username must be at least 3 characters.";
@@ -87,7 +106,7 @@ namespace Assets.Scripts.UI
             }
 
             registerErrorText.gameObject.SetActive(false);
-            STDBBackendManager.Instance.authManager.Register(username, password);
+            STDBBackendManager.Instance.authManager.Register(mail, username, password);
         }
 
         private void OnAuthStateChanged(bool loggedIn)

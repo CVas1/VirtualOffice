@@ -455,7 +455,9 @@ namespace SpacetimeDB.Types
                 "SendImage" => BSATNHelpers.Decode<Reducer.SendImage>(encodedArgs),
                 "SendMessage" => BSATNHelpers.Decode<Reducer.SendMessage>(encodedArgs),
                 "SendVoice" => BSATNHelpers.Decode<Reducer.SendVoice>(encodedArgs),
+                "SetPlayerColor" => BSATNHelpers.Decode<Reducer.SetPlayerColor>(encodedArgs),
                 "SetPlayerProfile" => BSATNHelpers.Decode<Reducer.SetPlayerProfile>(encodedArgs),
+                "SetPlayerUsername" => BSATNHelpers.Decode<Reducer.SetPlayerUsername>(encodedArgs),
                 "UpdateLastPosition" => BSATNHelpers.Decode<Reducer.UpdateLastPosition>(encodedArgs),
                 var reducer => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };
@@ -492,7 +494,9 @@ namespace SpacetimeDB.Types
                 Reducer.SendImage args => Reducers.InvokeSendImage(eventContext, args),
                 Reducer.SendMessage args => Reducers.InvokeSendMessage(eventContext, args),
                 Reducer.SendVoice args => Reducers.InvokeSendVoice(eventContext, args),
+                Reducer.SetPlayerColor args => Reducers.InvokeSetPlayerColor(eventContext, args),
                 Reducer.SetPlayerProfile args => Reducers.InvokeSetPlayerProfile(eventContext, args),
+                Reducer.SetPlayerUsername args => Reducers.InvokeSetPlayerUsername(eventContext, args),
                 Reducer.UpdateLastPosition args => Reducers.InvokeUpdateLastPosition(eventContext, args),
                 _ => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };

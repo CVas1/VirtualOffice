@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void RegisterHandler(ReducerEventContext ctx, string username, string password);
+        public delegate void RegisterHandler(ReducerEventContext ctx, string email, string username, string password);
         public event RegisterHandler? OnRegister;
 
-        public void Register(string username, string password)
+        public void Register(string email, string username, string password)
         {
-            conn.InternalCallReducer(new Reducer.Register(username, password), this.SetCallReducerFlags.RegisterFlags);
+            conn.InternalCallReducer(new Reducer.Register(email, username, password), this.SetCallReducerFlags.RegisterFlags);
         }
 
         public bool InvokeRegister(ReducerEventContext ctx, Reducer.Register args)
@@ -25,6 +25,7 @@ namespace SpacetimeDB.Types
             if (OnRegister == null) return false;
             OnRegister(
                 ctx,
+                args.Email,
                 args.Username,
                 args.Password
             );
@@ -38,22 +39,27 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class Register : Reducer, IReducerArgs
         {
+            [DataMember(Name = "email")]
+            public string Email;
             [DataMember(Name = "username")]
             public string Username;
             [DataMember(Name = "password")]
             public string Password;
 
             public Register(
+                string Email,
                 string Username,
                 string Password
             )
             {
+                this.Email = Email;
                 this.Username = Username;
                 this.Password = Password;
             }
 
             public Register()
             {
+                this.Email = "";
                 this.Username = "";
                 this.Password = "";
             }

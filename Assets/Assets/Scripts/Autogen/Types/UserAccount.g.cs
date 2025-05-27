@@ -15,6 +15,8 @@ namespace SpacetimeDB.Types
     {
         [DataMember(Name = "user_id")]
         public uint UserId;
+        [DataMember(Name = "email")]
+        public string Email;
         [DataMember(Name = "username")]
         public string Username;
         [DataMember(Name = "password_hash")]
@@ -28,6 +30,7 @@ namespace SpacetimeDB.Types
 
         public UserAccount(
             uint UserId,
+            string Email,
             string Username,
             string PasswordHash,
             string Salt,
@@ -36,6 +39,7 @@ namespace SpacetimeDB.Types
         )
         {
             this.UserId = UserId;
+            this.Email = Email;
             this.Username = Username;
             this.PasswordHash = PasswordHash;
             this.Salt = Salt;
@@ -45,6 +49,7 @@ namespace SpacetimeDB.Types
 
         public UserAccount()
         {
+            this.Email = "";
             this.Username = "";
             this.PasswordHash = "";
             this.Salt = "";

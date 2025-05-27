@@ -13,6 +13,8 @@ namespace Assets.Scripts.Networking
         private GameObject localPlayerPrefab;
         private GameObject remotePlayerPrefab;
 
+        public static OnlinePlayer localPlayer = null;
+
         public void Init(DbConnection connection, GameObject localPrefab, GameObject remotePrefab)
         {
             conn = connection;
@@ -29,13 +31,15 @@ namespace Assets.Scripts.Networking
 
         private void OnPlayerInsert(EventContext ctx, OnlinePlayer player)
         {
+            bool isLocal = player.UserId == STDBBackendManager.LocalUserId;
+            if (isLocal) localPlayer = player;
+
             if (player.RoomId != STDBRoomManager.CurrentRoomId) return;
 
             // Disable main camera if it exists
             if (STDBBackendManager.Instance.mainCamera != null)
                 STDBBackendManager.Instance.mainCamera.gameObject.SetActive(false);
 
-            bool isLocal = player.UserId == STDBBackendManager.LocalUserId;
             PlayerController controller;
 
             if (isLocal)
@@ -57,6 +61,9 @@ namespace Assets.Scripts.Networking
 
         private void OnPlayerUpdate(EventContext ctx, OnlinePlayer oldData, OnlinePlayer newData)
         {
+            bool isLocal = newData.UserId == STDBBackendManager.LocalUserId;
+            if (isLocal) localPlayer = newData;
+
             if (newData.UserId == STDBBackendManager.LocalUserId) return;
 
             if (Players.TryGetValue(newData.UserId, out PlayerController controller))
@@ -71,6 +78,9 @@ namespace Assets.Scripts.Networking
 
         private void OnPlayerDelete(EventContext ctx, OnlinePlayer player)
         {
+            bool isLocal = player.UserId == STDBBackendManager.LocalUserId;
+            if (isLocal) localPlayer = player;
+
             if (Players.TryGetValue(player.UserId, out PlayerController controller))
             {
                 if (controller.isLocalPlayer)
@@ -82,6 +92,7 @@ namespace Assets.Scripts.Networking
                     // If not local, just destroy the controller's gameObject
                     Object.Destroy(controller.gameObject);
                 }
+
                 Players.Remove(player.UserId);
             }
 
@@ -93,7 +104,7 @@ namespace Assets.Scripts.Networking
 
         public void SetPlayerProfile(string color)
         {
-            conn.Reducers.SetPlayerProfile(color);
+            // conn.Reducers.SetPlayerProfile(color);
         }
 
         public void UpdatePlayerPosition(Vector3 position, float rotation)
