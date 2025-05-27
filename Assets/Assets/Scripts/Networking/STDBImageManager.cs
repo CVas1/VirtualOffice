@@ -17,8 +17,8 @@ namespace Assets.Scripts.Networking
             conn.Db.Images.OnInsert += OnImagesInsert;
             conn.Db.Images.OnUpdate += OnImagesUpdate;
 
-            conn.Db.ImageBroadcastLock.OnInsert += OnImageLockInsert;
-            conn.Db.ImageBroadcastLock.OnUpdate += OnImageLockUpdate;
+            // conn.Db.ImageBroadcastLock.OnInsert += OnImageLockInsert;
+            // conn.Db.ImageBroadcastLock.OnUpdate += OnImageLockUpdate;
             conn.Db.ImageBroadcastLock.OnDelete += OnImageLockDelete;
         }
 
@@ -36,14 +36,14 @@ namespace Assets.Scripts.Networking
                 newImage.Height);
         }
 
-        private void OnImageLockInsert(EventContext ctx, ImageBroadcastLock lockData)
-        {
-        }
-
-        private void OnImageLockUpdate(EventContext ctx, ImageBroadcastLock oldLock, ImageBroadcastLock newLock)
-        {
-            Debug.Log(newLock);
-        }
+        // private void OnImageLockInsert(EventContext ctx, ImageBroadcastLock lockData)
+        // {
+        // }
+        //
+        // private void OnImageLockUpdate(EventContext ctx, ImageBroadcastLock oldLock, ImageBroadcastLock newLock)
+        // {
+        //     Debug.Log(newLock);
+        // }
 
         private void OnImageLockDelete(EventContext ctx, ImageBroadcastLock lockData)
         {
@@ -61,6 +61,12 @@ namespace Assets.Scripts.Networking
         // Method to send an image to the server
         public void SendImage(string buildingIdentifier, byte[] imageData, int width, int height)
         {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to send images");
+                return;
+            }
+
             if (conn != null && conn.IsActive)
             {
                 conn.Reducers.SendImage(buildingIdentifier, imageData.ToList(), width, height);
@@ -73,6 +79,12 @@ namespace Assets.Scripts.Networking
 
         public void SendLockImageBroadcast(string buildingIdentifier)
         {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to lock image broadcast");
+                return;
+            }
+
             if (conn != null && conn.IsActive)
             {
                 conn.Reducers.LockImageBroadcast(buildingIdentifier);

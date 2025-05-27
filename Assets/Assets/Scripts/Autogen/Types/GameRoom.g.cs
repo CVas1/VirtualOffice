@@ -17,14 +17,22 @@ namespace SpacetimeDB.Types
         public uint RoomId;
         [DataMember(Name = "name")]
         public string Name;
+        [DataMember(Name = "created_by_user_id")]
+        public uint CreatedByUserId;
+        [DataMember(Name = "created_at")]
+        public ulong CreatedAt;
 
         public GameRoom(
             uint RoomId,
-            string Name
+            string Name,
+            uint CreatedByUserId,
+            ulong CreatedAt
         )
         {
             this.RoomId = RoomId;
             this.Name = Name;
+            this.CreatedByUserId = CreatedByUserId;
+            this.CreatedAt = CreatedAt;
         }
 
         public GameRoom()

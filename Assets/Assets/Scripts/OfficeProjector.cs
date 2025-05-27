@@ -137,8 +137,8 @@ public class OfficeProjector : MonoBehaviour
     private void StartProjection()
     {
         STDBBackendManager.Instance.imageManager.SendLockImageBroadcast(GetProjectorId());
-        // NativeScreenCapture.Instance.OnTextureChanged.TryAdd(this.GetHashCode(), OnTextureChanged);
-        // NativeScreenCapture.Instance.StartCapture();
+        NativeScreenCapture.Instance.OnTextureChanged.TryAdd(this.GetHashCode(), OnTextureChanged);
+        NativeScreenCapture.Instance.StartCapture();
     }
 
     private void StopProjection()

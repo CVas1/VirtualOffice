@@ -15,25 +15,30 @@ namespace SpacetimeDB.Types
     {
         [DataMember(Name = "building_identifier")]
         public string BuildingIdentifier;
-        [DataMember(Name = "sender")]
-        public SpacetimeDB.Identity Sender;
+        [DataMember(Name = "sender_user_id")]
+        public uint SenderUserId;
+        [DataMember(Name = "sender_username")]
+        public string SenderUsername;
         [DataMember(Name = "timestamp")]
         public ulong Timestamp;
 
         public ImageBroadcastLock(
             string BuildingIdentifier,
-            SpacetimeDB.Identity Sender,
+            uint SenderUserId,
+            string SenderUsername,
             ulong Timestamp
         )
         {
             this.BuildingIdentifier = BuildingIdentifier;
-            this.Sender = Sender;
+            this.SenderUserId = SenderUserId;
+            this.SenderUsername = SenderUsername;
             this.Timestamp = Timestamp;
         }
 
         public ImageBroadcastLock()
         {
             this.BuildingIdentifier = "";
+            this.SenderUsername = "";
         }
     }
 }

@@ -17,21 +17,21 @@ namespace SpacetimeDB.Types
         {
             protected override string RemoteTableName => "player_room_position";
 
-            public sealed class IdentityRoomKeyUniqueIndex : UniqueIndexBase<string>
+            public sealed class UserRoomKeyUniqueIndex : UniqueIndexBase<string>
             {
-                protected override string GetKey(PlayerRoomPosition row) => row.IdentityRoomKey;
+                protected override string GetKey(PlayerRoomPosition row) => row.UserRoomKey;
 
-                public IdentityRoomKeyUniqueIndex(PlayerRoomPositionHandle table) : base(table) { }
+                public UserRoomKeyUniqueIndex(PlayerRoomPositionHandle table) : base(table) { }
             }
 
-            public readonly IdentityRoomKeyUniqueIndex IdentityRoomKey;
+            public readonly UserRoomKeyUniqueIndex UserRoomKey;
 
             internal PlayerRoomPositionHandle(DbConnection conn) : base(conn)
             {
-                IdentityRoomKey = new(this);
+                UserRoomKey = new(this);
             }
 
-            protected override object GetPrimaryKey(PlayerRoomPosition row) => row.IdentityRoomKey;
+            protected override object GetPrimaryKey(PlayerRoomPosition row) => row.UserRoomKey;
         }
 
         public readonly PlayerRoomPositionHandle PlayerRoomPosition;

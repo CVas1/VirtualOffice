@@ -11,7 +11,7 @@ namespace Assets.Scripts.Networking
         public void Init(DbConnection connection)
         {
             conn = connection;
-            
+
             // Register for building-related events
             conn.Db.RoomEntity.OnInsert += OnBuildingInsert;
             conn.Db.RoomEntity.OnUpdate += OnBuildingUpdate;
@@ -26,7 +26,7 @@ namespace Assets.Scripts.Networking
         private void OnBuildingUpdate(EventContext ctx, RoomEntity roomEntityOld, RoomEntity roomEntityNew)
         {
             // Ignore updates from the local player to avoid loops
-            if (roomEntityNew.Identity == STDBBackendManager.LocalIdentity) return;
+            if (roomEntityNew.UserId == STDBBackendManager.LocalUserId) return;
             RoomBuildingManager.Instance.Load(roomEntityNew.Data);
         }
 
@@ -37,6 +37,11 @@ namespace Assets.Scripts.Networking
 
         public void SaveBuildingData(string data)
         {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to save building data");
+                return;
+            }
             conn.Reducers.SaveEntity(STDBRoomManager.CurrentRoomId, data);
         }
     }

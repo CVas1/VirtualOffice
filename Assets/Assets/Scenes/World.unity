@@ -54651,12 +54651,12 @@ PrefabInstance:
     - target: {fileID: 7108875163747438387, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 481.85278
+      value: 856.62726
       objectReference: {fileID: 0}
     - target: {fileID: 7108875163747438387, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 31.28125
+      value: 54.742184
       objectReference: {fileID: 0}
     - target: {fileID: 7108875164223929974, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
@@ -54671,22 +54671,22 @@ PrefabInstance:
     - target: {fileID: 7108875164318232196, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 547.56
+      value: 973.44006
       objectReference: {fileID: 0}
     - target: {fileID: 7108875164318232196, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 280.8983
+      value: 499.37476
       objectReference: {fileID: 0}
     - target: {fileID: 7108875164318232196, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 258.76587
+      value: 1185.7882
       objectReference: {fileID: 0}
     - target: {fileID: 7108875164318232196, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 123.80322
+      value: 148.41455
       objectReference: {fileID: 0}
     - target: {fileID: 7108875164789100597, guid: e371a05c297288d4f8a3cbb24400591e,
         type: 3}
@@ -54980,17 +54980,6 @@ PrefabInstance:
       propertyPath: chatBox
       value: 
       objectReference: {fileID: 973292899}
-    - target: {fileID: 3171008872811553373, guid: 32f364b88f383864496a69c56d435217,
-        type: 3}
-      propertyPath: projector
-      value: 
-      objectReference: {fileID: 3202560746170763031, guid: c60717931c25001409be7f81828294cd,
-        type: 3}
-    - target: {fileID: 6060937516656966916, guid: 32f364b88f383864496a69c56d435217,
-        type: 3}
-      propertyPath: mainCamera
-      value: 
-      objectReference: {fileID: 972912531}
     - target: {fileID: 8663410013820576442, guid: 32f364b88f383864496a69c56d435217,
         type: 3}
       propertyPath: m_Name

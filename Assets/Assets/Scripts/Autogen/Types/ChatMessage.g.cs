@@ -15,8 +15,10 @@ namespace SpacetimeDB.Types
     {
         [DataMember(Name = "message_id")]
         public uint MessageId;
-        [DataMember(Name = "sender")]
-        public SpacetimeDB.Identity Sender;
+        [DataMember(Name = "sender_user_id")]
+        public uint SenderUserId;
+        [DataMember(Name = "sender_username")]
+        public string SenderUsername;
         [DataMember(Name = "room_id")]
         public uint RoomId;
         [DataMember(Name = "content")]
@@ -28,7 +30,8 @@ namespace SpacetimeDB.Types
 
         public ChatMessage(
             uint MessageId,
-            SpacetimeDB.Identity Sender,
+            uint SenderUserId,
+            string SenderUsername,
             uint RoomId,
             string Content,
             bool Shout,
@@ -36,7 +39,8 @@ namespace SpacetimeDB.Types
         )
         {
             this.MessageId = MessageId;
-            this.Sender = Sender;
+            this.SenderUserId = SenderUserId;
+            this.SenderUsername = SenderUsername;
             this.RoomId = RoomId;
             this.Content = Content;
             this.Shout = Shout;
@@ -45,6 +49,7 @@ namespace SpacetimeDB.Types
 
         public ChatMessage()
         {
+            this.SenderUsername = "";
             this.Content = "";
         }
     }

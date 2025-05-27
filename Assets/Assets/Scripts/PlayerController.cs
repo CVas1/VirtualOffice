@@ -107,7 +107,7 @@ namespace Assets.Scripts
 
         public void Init(OnlinePlayer playerData, bool isLocal)
         {
-            PlayerId = playerData.PlayerId;
+            PlayerId = playerData.UserId;
             Identity = playerData.Identity;
             isLocalPlayer = isLocal;
 
@@ -115,7 +115,7 @@ namespace Assets.Scripts
             targetPosition = transform.position;
 
             SetColor(playerData.Color);
-            SetName(playerData.Name);
+            SetName(playerData.Username);
             RoomJoinTime = playerData.LastRoomJoinTime;
         }
 
@@ -134,7 +134,7 @@ namespace Assets.Scripts
                 stateBuffer.Dequeue();
 
             SetColor(updatedData.Color);
-            SetName(updatedData.Name);
+            SetName(updatedData.Username);
         }
 
         private void SetColor(string hexColor)

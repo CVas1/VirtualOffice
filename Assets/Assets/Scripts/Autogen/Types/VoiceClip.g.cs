@@ -13,30 +13,35 @@ namespace SpacetimeDB.Types
     [DataContract]
     public sealed partial class VoiceClip
     {
-        [DataMember(Name = "sender")]
-        public SpacetimeDB.Identity Sender;
+        [DataMember(Name = "sender_user_id")]
+        public uint SenderUserId;
         [DataMember(Name = "room_id")]
         public uint RoomId;
+        [DataMember(Name = "sender_username")]
+        public string SenderUsername;
         [DataMember(Name = "timestamp")]
         public ulong Timestamp;
         [DataMember(Name = "audio_data")]
         public System.Collections.Generic.List<byte> AudioData;
 
         public VoiceClip(
-            SpacetimeDB.Identity Sender,
+            uint SenderUserId,
             uint RoomId,
+            string SenderUsername,
             ulong Timestamp,
             System.Collections.Generic.List<byte> AudioData
         )
         {
-            this.Sender = Sender;
+            this.SenderUserId = SenderUserId;
             this.RoomId = RoomId;
+            this.SenderUsername = SenderUsername;
             this.Timestamp = Timestamp;
             this.AudioData = AudioData;
         }
 
         public VoiceClip()
         {
+            this.SenderUsername = "";
             this.AudioData = new();
         }
     }

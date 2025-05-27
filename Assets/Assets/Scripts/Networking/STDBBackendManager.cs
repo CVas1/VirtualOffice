@@ -9,6 +9,7 @@ namespace Assets.Scripts.Networking
     {
         public static STDBBackendManager Instance { get; private set; }
         public static Identity LocalIdentity { get; private set; }
+        public static uint LocalUserId => STDBAuthManager.LocalUserId;
         public static DbConnection Conn { get; private set; }
 
         public GameObject localPlayerPrefab;
@@ -20,6 +21,7 @@ namespace Assets.Scripts.Networking
         public static event Action OnDisconnected;
 
         private STDBConnectionManager stdbConnectionManager;
+        public STDBAuthManager authManager;
         public STDBRoomManager roomManager;
         public STDBPlayerManager playerManager;
         public STDBVoiceManager voiceManager;
@@ -30,8 +32,10 @@ namespace Assets.Scripts.Networking
         private void Start()
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
 
             stdbConnectionManager = new STDBConnectionManager();
+            authManager = new STDBAuthManager();
             roomManager = new STDBRoomManager();
             playerManager = new STDBPlayerManager();
             voiceManager = new STDBVoiceManager();
@@ -52,6 +56,8 @@ namespace Assets.Scripts.Networking
             LocalIdentity = identity;
             AuthToken.SaveToken(token);
 
+            // Initialize all managers
+            authManager.Init(conn);
             roomManager.Init(conn);
             playerManager.Init(conn, localPlayerPrefab, remotePlayerPrefab);
             voiceManager.Init(conn);
@@ -62,7 +68,6 @@ namespace Assets.Scripts.Networking
             OnConnected?.Invoke();
 
             Conn.SubscriptionBuilder()
-                // .OnApplied(OnSubscriptionAppliedHandler)
                 .Subscribe(new[]
                 {
                     "SELECT * FROM game_room",
@@ -79,5 +84,6 @@ namespace Assets.Scripts.Networking
         }
 
         public static bool IsConnected() => Conn != null && Conn.IsActive;
+        public static bool IsAuthenticated() => STDBAuthManager.IsLoggedIn;
     }
 }
