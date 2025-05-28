@@ -33,6 +33,8 @@ namespace SpacetimeDB.Types
         public DbVector3 LastPosition;
         [DataMember(Name = "last_rotation")]
         public float LastRotation;
+        [DataMember(Name = "current_animation_state")]
+        public uint CurrentAnimationState;
 
         public OnlinePlayer(
             uint UserId,
@@ -44,7 +46,8 @@ namespace SpacetimeDB.Types
             ulong LastConnectTime,
             ulong TotalPlayTime,
             DbVector3 LastPosition,
-            float LastRotation
+            float LastRotation,
+            uint CurrentAnimationState
         )
         {
             this.UserId = UserId;
@@ -57,6 +60,7 @@ namespace SpacetimeDB.Types
             this.TotalPlayTime = TotalPlayTime;
             this.LastPosition = LastPosition;
             this.LastRotation = LastRotation;
+            this.CurrentAnimationState = CurrentAnimationState;
         }
 
         public OnlinePlayer()

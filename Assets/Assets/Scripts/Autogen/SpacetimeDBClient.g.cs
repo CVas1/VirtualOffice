@@ -458,6 +458,7 @@ namespace SpacetimeDB.Types
                 "SetPlayerProfile" => BSATNHelpers.Decode<Reducer.SetPlayerProfile>(encodedArgs),
                 "SetPlayerUsername" => BSATNHelpers.Decode<Reducer.SetPlayerUsername>(encodedArgs),
                 "UpdateLastPosition" => BSATNHelpers.Decode<Reducer.UpdateLastPosition>(encodedArgs),
+                "UpdateLastPositionLegacy" => BSATNHelpers.Decode<Reducer.UpdateLastPositionLegacy>(encodedArgs),
                 var reducer => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };
         }
@@ -497,6 +498,7 @@ namespace SpacetimeDB.Types
                 Reducer.SetPlayerProfile args => Reducers.InvokeSetPlayerProfile(eventContext, args),
                 Reducer.SetPlayerUsername args => Reducers.InvokeSetPlayerUsername(eventContext, args),
                 Reducer.UpdateLastPosition args => Reducers.InvokeUpdateLastPosition(eventContext, args),
+                Reducer.UpdateLastPositionLegacy args => Reducers.InvokeUpdateLastPositionLegacy(eventContext, args),
                 _ => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };
         }

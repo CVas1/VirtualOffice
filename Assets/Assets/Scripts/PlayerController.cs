@@ -13,8 +13,9 @@ namespace Assets.Scripts
     {
         public SkinnedMeshRenderer meshRenderer;
 
-        private Vector3 targetPosition;
-        private Quaternion targetRotation;
+        private Vector3 lastSyncedPosition;
+        private Quaternion lastSyncedRotation;
+        public uint lastSyncedState = 0U;
         public bool isLocalPlayer = false;
 
         public uint PlayerId { get; private set; }
@@ -24,42 +25,56 @@ namespace Assets.Scripts
         public Color PlayerColor { get; private set; }
         public ulong RoomJoinTime { get; private set; }
 
-        private float lastUpdateTime = 0f;
+        private float lastUpdateTime;
         private const float updateInterval = 0.2f;
-
-        public float interpolationSpeedForPosition = 10f;
-        public float interpolationSpeedForRotation = 10f;
 
         private class State
         {
             public Vector3 position;
             public Quaternion rotation;
             public float timestamp;
+            public uint state;
         }
 
         private Queue<State> stateBuffer = new Queue<State>();
-        private float interpolationBackTime = 0.4f; // 400 ms
+        private float interpolationBackTime = 0.25f; // 250 ms
 
-        CharacterActor characterActor;
+        [HideInInspector] public CharacterActor characterActor;
         SpawnPoint sp;
+        private PlayerAnimController animController;
 
-        private void Start()
+        private void Awake()
         {
             // meshRenderer = GetComponent<MeshRenderer>();
             sp = FindAnyObjectByType<SpawnPoint>();
-            characterActor = FindAnyObjectByType<CharacterActor>();
+            characterActor = GetComponent<CharacterActor>();
+            animController = GetComponent<PlayerAnimController>();
         }
 
         void Update()
         {
             TeleportIfBelowZero();
+
             if (isLocalPlayer && Time.time - lastUpdateTime >= updateInterval)
             {
-                if (Vector3.Distance(transform.position, targetPosition) > 0.3f ||
-                    Quaternion.Angle(transform.rotation, targetRotation) > 6f)
+                if (lastSyncedState != animController.CurrentAnimState)
+                {
+                    Debug.Log(animController.CurrentAnimState);
+                }
+
+                if (Vector3.Distance(transform.position, lastSyncedPosition) > 0.3f ||
+                    Quaternion.Angle(transform.rotation, lastSyncedRotation) > 6f ||
+                    lastSyncedState != animController.CurrentAnimState)
                 {
                     float yaw = transform.rotation.eulerAngles.y;
-                    STDBBackendManager.Instance.playerManager.UpdatePlayerPosition(transform.position, yaw);
+                    STDBBackendManager.Instance.playerManager.UpdatePlayerPositionWithAnimation(
+                        transform.position, yaw,
+                        animController.CurrentAnimState
+                    );
+
+                    lastSyncedPosition = transform.position;
+                    lastSyncedRotation = transform.rotation;
+                    lastSyncedState = animController.CurrentAnimState;
                 }
 
                 lastUpdateTime = Time.time;
@@ -86,6 +101,9 @@ namespace Assets.Scripts
                 float t = Mathf.InverseLerp(prev.timestamp, next.timestamp, interpTime);
                 transform.position = Vector3.Lerp(prev.position, next.position, t);
                 transform.rotation = Quaternion.Slerp(prev.rotation, next.rotation, t);
+                //lastSyncedState = (PlayerAnimController.PlayerState)next.state;
+                animController.SetPlayerState(next.state);
+                lastSyncedState = next.state;
             }
         }
 
@@ -111,8 +129,24 @@ namespace Assets.Scripts
             Identity = playerData.Identity;
             isLocalPlayer = isLocal;
 
-            transform.position = ToVector3(playerData.LastPosition);
-            targetPosition = transform.position;
+            if (isLocalPlayer)
+            {
+                characterActor.Teleport(
+                    ToVector3(playerData.LastPosition),
+                    Quaternion.Euler(0, playerData.LastRotation, 0)
+                );
+            }
+            else
+            {
+                transform.position = ToVector3(playerData.LastPosition);
+                transform.rotation = Quaternion.Euler(0, playerData.LastRotation, 0);
+                animController.SetPlayerState(playerData.CurrentAnimationState);
+            }
+
+            lastSyncedState = playerData.CurrentAnimationState;
+
+            lastSyncedPosition = transform.position;
+            lastSyncedRotation = transform.rotation;
 
             SetColor(playerData.Color);
             SetName(playerData.Username);
@@ -126,7 +160,8 @@ namespace Assets.Scripts
             {
                 position = ToVector3(updatedData.LastPosition),
                 rotation = Quaternion.Euler(0, updatedData.LastRotation, 0),
-                timestamp = Time.time
+                timestamp = Time.time,
+                state = updatedData.CurrentAnimationState
             });
 
             // Remove old states

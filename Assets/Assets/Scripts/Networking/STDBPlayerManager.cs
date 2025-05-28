@@ -50,10 +50,6 @@ namespace Assets.Scripts.Networking
 
             if (player.RoomId != STDBRoomManager.CurrentRoomId) return;
 
-            // Disable main camera if it exists
-            // if (STDBBackendManager.Instance.mainCamera != null)
-            //     STDBBackendManager.Instance.mainCamera.gameObject.SetActive(false);
-
             PlayerController controller;
 
             controller = Object.Instantiate(remotePlayerPrefab).GetComponent<PlayerController>();
@@ -96,16 +92,17 @@ namespace Assets.Scripts.Networking
 
                 Players.Remove(player.UserId);
             }
-
-            // Reactivate camera if local player
-            // if (player.UserId == STDBAuthManager.LocalUserId &&
-            //     STDBBackendManager.Instance.mainCamera != null)
-            //     STDBBackendManager.Instance.mainCamera.gameObject.SetActive(true);
         }
 
         public void UpdatePlayerPosition(Vector3 position, float rotation)
         {
-            conn.Reducers.UpdateLastPosition(new DbVector3(position.x, position.y, position.z), rotation);
+            conn.Reducers.UpdateLastPositionLegacy(new DbVector3(position.x, position.y, position.z), rotation);
+        }
+
+        public void UpdatePlayerPositionWithAnimation(Vector3 position, float rotation, uint animationState)
+        {
+            conn.Reducers.UpdateLastPosition(new DbVector3(position.x, position.y, position.z), rotation,
+                animationState);
         }
 
         public void ClearAllPlayers()

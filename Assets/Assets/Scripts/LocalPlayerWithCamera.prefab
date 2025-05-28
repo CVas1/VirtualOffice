@@ -442,6 +442,7 @@ GameObject:
   - component: {fileID: 6213121600210575203}
   - component: {fileID: 5242620139049971007}
   - component: {fileID: 8452210896959631434}
+  - component: {fileID: 4691082488091833912}
   m_Layer: 0
   m_Name: LocalPlayer
   m_TagString: Player
@@ -576,9 +577,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 133967432374116658}
+  lastSyncedState: 0
   isLocalPlayer: 0
-  interpolationSpeedForPosition: 10
-  interpolationSpeedForRotation: 10
+  characterActor: {fileID: 0}
+--- !u!114 &4691082488091833912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9100139835133718175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddbe858e1c34248a284f05d4de545de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localPlayerStateController: {fileID: 7466865925562839571}
+  remotePlayerAnimator: {fileID: 0}
+  playerController: {fileID: 8452210896959631434}
 --- !u!1 &9198618611588975683
 GameObject:
   m_ObjectHideFlags: 0
