@@ -11,7 +11,7 @@ namespace Assets.Scripts
 {
     public class PlayerController : MonoBehaviour
     {
-        private MeshRenderer meshRenderer;
+        public SkinnedMeshRenderer meshRenderer;
 
         private Vector3 targetPosition;
         private Quaternion targetRotation;
@@ -45,7 +45,7 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            meshRenderer = GetComponent<MeshRenderer>();
+            // meshRenderer = GetComponent<MeshRenderer>();
             sp = FindAnyObjectByType<SpawnPoint>();
             characterActor = FindAnyObjectByType<CharacterActor>();
         }
@@ -139,6 +139,12 @@ namespace Assets.Scripts
 
         private void SetColor(string hexColor)
         {
+            // if hex collor do not start with '#', prepend it
+            if (!hexColor.StartsWith("#"))
+            {
+                hexColor = "#" + hexColor;
+            }
+
             if (ColorUtility.TryParseHtmlString(hexColor, out Color color))
             {
                 PlayerColor = color;

@@ -575,7 +575,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03c39c09dd042f0acf364d3e74de912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 0}
   isLocalPlayer: 0
+  interpolationSpeedForPosition: 10
+  interpolationSpeedForRotation: 10
 --- !u!1 &9198618611588975683
 GameObject:
   m_ObjectHideFlags: 0

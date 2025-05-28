@@ -11,6 +11,7 @@ namespace Assets.Scripts.Networking
 
         private DbConnection conn;
         public static uint LocalUserId { get; private set; } = 0;
+        public static OnlinePlayer LocalPlayer;
         public static bool IsLoggedIn => LocalUserId > 0;
 
         public static event Action<bool> OnAuthenticationStateChanged;
@@ -30,16 +31,28 @@ namespace Assets.Scripts.Networking
 
             conn.Db.OnlinePlayer.OnInsert += (ctx, player) =>
             {
-                if (player.Identity.Equals(STDBBackendManager.LocalIdentity))
+                if (!player.Identity.Equals(STDBBackendManager.LocalIdentity)) return;
+
+                LocalUserId = player.UserId;
+                LocalPlayer = player;
+                OnAuthenticationStateChanged?.Invoke(true);
+
+                // STDBRoomManager.OnRoomJoin += () =>
+                // {
+                //     if (getUserIdSubscription != null && getUserIdSubscription.IsActive)
+                //         getUserIdSubscription.Unsubscribe();
+                // };
+            };
+
+            conn.Db.OnlinePlayer.OnUpdate += (ctx, oldPlayer, newPlayer) =>
+            {
+                if (!newPlayer.Identity.Equals(STDBBackendManager.LocalIdentity)) return;
+                LocalPlayer = newPlayer;
+
+                if (newPlayer.RoomId != STDBRoomManager.CurrentRoomId)
                 {
-                    LocalUserId = player.UserId;
-                    OnAuthenticationStateChanged?.Invoke(true);
-                    Debug.Log($"Online player created with user_id: {LocalUserId}");
-                    STDBRoomManager.OnRoomJoin += () =>
-                    {
-                        if (getUserIdSubscription != null && getUserIdSubscription.IsActive)
-                            getUserIdSubscription.Unsubscribe();
-                    };
+                    if (newPlayer.RoomId != uint.MaxValue)
+                        STDBBackendManager.Instance.roomManager.OnJoinRoom(newPlayer.RoomId);
                 }
             };
         }
@@ -132,6 +145,8 @@ namespace Assets.Scripts.Networking
             else
             {
                 LocalUserId = 0;
+                if (getUserIdSubscription != null && getUserIdSubscription.IsActive)
+                    getUserIdSubscription.Unsubscribe();
                 OnAuthenticationStateChanged?.Invoke(false);
                 Debug.Log("Logged out successfully");
             }
@@ -143,22 +158,6 @@ namespace Assets.Scripts.Networking
             {
                 string message = ExtractErrorMessage(fail);
                 OnAuthenticationError?.Invoke($"Failed to create online player: {message}");
-            }
-            else
-            {
-                // // Find our online player to get the user_id
-                // foreach (var player in conn.Db.OnlinePlayer.Iter())
-                // {
-                //     if (player.Identity.Equals(STDBBackendManager.LocalIdentity))
-                //     {
-                //         LocalUserId = player.UserId;
-                //         OnAuthenticationStateChanged?.Invoke(true);
-                //         Debug.Log($"Online player created with user_id: {LocalUserId}");
-                //         return;
-                //     }
-                // }
-                //
-                // Debug.Log("No online player found after creation, this should not happen.");
             }
         }
 

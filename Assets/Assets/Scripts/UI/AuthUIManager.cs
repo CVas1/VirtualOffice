@@ -21,6 +21,9 @@ namespace Assets.Scripts.UI
         public TMP_InputField registerUsernameInput;
         public TMP_Text registerErrorText;
 
+        [Header("Connection Status")] [SerializeField]
+        private Image connectionStatusImage;
+
         private void Awake()
         {
             // Load last used email if available
@@ -33,6 +36,9 @@ namespace Assets.Scripts.UI
             // Subscribe to auth events
             STDBAuthManager.OnAuthenticationStateChanged += OnAuthStateChanged;
             STDBAuthManager.OnAuthenticationError += OnAuthError;
+
+            STDBBackendManager.OnConnected += () => SetConnectionStatus(true);
+            STDBBackendManager.OnDisconnected += () => SetConnectionStatus(false);
         }
 
         private void OnDestroy()
@@ -135,6 +141,18 @@ namespace Assets.Scripts.UI
             {
                 signInErrorText.text = error;
                 signInErrorText.gameObject.SetActive(true);
+            }
+        }
+
+        public void SetConnectionStatus(bool isConnected)
+        {
+            if (isConnected)
+            {
+                connectionStatusImage.color = Color.green;
+            }
+            else
+            {
+                connectionStatusImage.color = Color.red;
             }
         }
     }

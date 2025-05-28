@@ -26,10 +26,6 @@ namespace Assets.Scripts
         private void Start()
         {
             chatBox.OnInputFieldSubmitted += OnChatInputSubmitted;
-        }
-
-        public void ClearChat()
-        {
             chatBox.ClearChat();
         }
 

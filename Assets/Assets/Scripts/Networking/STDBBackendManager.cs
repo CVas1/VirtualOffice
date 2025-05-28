@@ -9,13 +9,12 @@ namespace Assets.Scripts.Networking
     {
         public static STDBBackendManager Instance { get; private set; }
         public static Identity LocalIdentity { get; private set; }
-        public static uint LocalUserId => STDBAuthManager.LocalUserId;
         public static DbConnection Conn { get; private set; }
 
         public GameObject localPlayerPrefab;
         public GameObject remotePlayerPrefab;
 
-        public Camera mainCamera;
+        // public Camera mainCamera;
 
         public static event Action OnConnected;
         public static event Action OnDisconnected;

@@ -13,8 +13,6 @@ namespace Assets.Scripts.Networking
         private GameObject localPlayerPrefab;
         private GameObject remotePlayerPrefab;
 
-        public static OnlinePlayer localPlayer = null;
-
         public void Init(DbConnection connection, GameObject localPrefab, GameObject remotePrefab)
         {
             conn = connection;
@@ -29,27 +27,36 @@ namespace Assets.Scripts.Networking
             conn.Db.OnlinePlayer.OnDelete += OnPlayerDelete;
         }
 
+        public void SpawnLocalPlayer()
+        {
+            PlayerController controller =
+                Object.Instantiate(localPlayerPrefab).GetComponentInChildren<PlayerController>();
+            OnlinePlayer player = STDBAuthManager.LocalPlayer;
+            controller.transform.position =
+                new Vector3(player.LastPosition.X, player.LastPosition.Y, player.LastPosition.Z);
+
+            controller.Init(player, true);
+            Players[player.UserId] = controller;
+        }
+
         private void OnPlayerInsert(EventContext ctx, OnlinePlayer player)
         {
-            bool isLocal = player.UserId == STDBBackendManager.LocalUserId;
-            if (isLocal) localPlayer = player;
+            bool isLocal = player.UserId == STDBAuthManager.LocalUserId;
+            if (isLocal)
+            {
+                // controller = Object.Instantiate(localPlayerPrefab).GetComponentInChildren<PlayerController>();
+                return;
+            }
 
             if (player.RoomId != STDBRoomManager.CurrentRoomId) return;
 
             // Disable main camera if it exists
-            if (STDBBackendManager.Instance.mainCamera != null)
-                STDBBackendManager.Instance.mainCamera.gameObject.SetActive(false);
+            // if (STDBBackendManager.Instance.mainCamera != null)
+            //     STDBBackendManager.Instance.mainCamera.gameObject.SetActive(false);
 
             PlayerController controller;
 
-            if (isLocal)
-            {
-                controller = Object.Instantiate(localPlayerPrefab).GetComponentInChildren<PlayerController>();
-            }
-            else
-            {
-                controller = Object.Instantiate(remotePlayerPrefab).GetComponent<PlayerController>();
-            }
+            controller = Object.Instantiate(remotePlayerPrefab).GetComponent<PlayerController>();
 
             Debug.Log($"Player {player.UserId} ({player.Username}) created in room {player.RoomId}.");
             controller.transform.position =
@@ -61,10 +68,7 @@ namespace Assets.Scripts.Networking
 
         private void OnPlayerUpdate(EventContext ctx, OnlinePlayer oldData, OnlinePlayer newData)
         {
-            bool isLocal = newData.UserId == STDBBackendManager.LocalUserId;
-            if (isLocal) localPlayer = newData;
-
-            if (newData.UserId == STDBBackendManager.LocalUserId) return;
+            if (newData.UserId == STDBAuthManager.LocalUserId) return;
 
             if (Players.TryGetValue(newData.UserId, out PlayerController controller))
             {
@@ -78,9 +82,6 @@ namespace Assets.Scripts.Networking
 
         private void OnPlayerDelete(EventContext ctx, OnlinePlayer player)
         {
-            bool isLocal = player.UserId == STDBBackendManager.LocalUserId;
-            if (isLocal) localPlayer = player;
-
             if (Players.TryGetValue(player.UserId, out PlayerController controller))
             {
                 if (controller.isLocalPlayer)
@@ -97,14 +98,9 @@ namespace Assets.Scripts.Networking
             }
 
             // Reactivate camera if local player
-            if (player.UserId == STDBBackendManager.LocalUserId &&
-                STDBBackendManager.Instance.mainCamera != null)
-                STDBBackendManager.Instance.mainCamera.gameObject.SetActive(true);
-        }
-
-        public void SetPlayerProfile(string color)
-        {
-            // conn.Reducers.SetPlayerProfile(color);
+            // if (player.UserId == STDBAuthManager.LocalUserId &&
+            //     STDBBackendManager.Instance.mainCamera != null)
+            //     STDBBackendManager.Instance.mainCamera.gameObject.SetActive(true);
         }
 
         public void UpdatePlayerPosition(Vector3 position, float rotation)
@@ -122,7 +118,7 @@ namespace Assets.Scripts.Networking
 
         public PlayerController GetLocalPlayer()
         {
-            Players.TryGetValue(STDBBackendManager.LocalUserId, out PlayerController localPlayer);
+            Players.TryGetValue(STDBAuthManager.LocalUserId, out PlayerController localPlayer);
             return localPlayer;
         }
 

@@ -26,7 +26,7 @@ namespace Assets.Scripts.Networking
         private void OnBuildingUpdate(EventContext ctx, RoomEntity roomEntityOld, RoomEntity roomEntityNew)
         {
             // Ignore updates from the local player to avoid loops
-            if (roomEntityNew.UserId == STDBBackendManager.LocalUserId) return;
+            if (roomEntityNew.UserId == STDBAuthManager.LocalUserId) return;
             RoomBuildingManager.Instance.Load(roomEntityNew.Data);
         }
 
@@ -42,6 +42,7 @@ namespace Assets.Scripts.Networking
                 Debug.LogError("Must be logged in to save building data");
                 return;
             }
+
             conn.Reducers.SaveEntity(STDBRoomManager.CurrentRoomId, data);
         }
     }
