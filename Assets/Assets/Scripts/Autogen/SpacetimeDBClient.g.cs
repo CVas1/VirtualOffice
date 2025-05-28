@@ -22,7 +22,6 @@ namespace SpacetimeDB.Types
         {
             AddTable(ChatMessage = new(conn));
             AddTable(GameRoom = new(conn));
-            AddTable(GameRoomSecret = new(conn));
             AddTable(ImageBroadcastLock = new(conn));
             AddTable(Images = new(conn));
             AddTable(LoggedOutPlayer = new(conn));

@@ -31,17 +31,15 @@ namespace Assets.Scripts
             }
         }
 
-        public void OnRoomJoin()
+        public void OnEnable()
         {
-            Debug.Log("OnRoomJoin");
             isLoading = false;
             BuildingManager.Instance.OnDestroyingBuildingPartEvent.AddListener(OnDestroyingBuildingPart);
             BuildingManager.Instance.OnPlacingBuildingPartEvent.AddListener(OnPlacingBuildingPart);
         }
 
-        public void OnRoomLeave()
+        public void OnDisable()
         {
-            Debug.Log("OnRoomLeave");
             BuildingManager.Instance.OnDestroyingBuildingPartEvent.RemoveListener(OnDestroyingBuildingPart);
             BuildingManager.Instance.OnPlacingBuildingPartEvent.RemoveListener(OnPlacingBuildingPart);
 

@@ -11,11 +11,12 @@ namespace Assets.Scripts.Networking
 {
     public class STDBRoomManager
     {
-        public (string, string, float)? RoomToJoin = null;
-        public List<GameRoom> Rooms = new List<GameRoom>();
         public static uint CurrentRoomId { get; private set; } = 0;
+
         public static event Action OnRoomJoin;
         public static event Action OnRoomLeave;
+
+        public static event Action<string> ErrorMessageEvent;
 
         private DbConnection conn;
         private SubscriptionHandle playerSub;
@@ -24,117 +25,132 @@ namespace Assets.Scripts.Networking
         private SubscriptionHandle voiceSub;
         private SubscriptionHandle imageSub;
 
+        private Timestamp joinTimestamp;
+
         public void Init(DbConnection connection)
         {
             conn = connection;
-            conn.Db.GameRoom.OnInsert += OnRoomInsert;
-            conn.Db.GameRoom.OnDelete += OnRoomDelete;
-            conn.Reducers.OnJoinRoom += OnJoinRoom;
-            conn.Reducers.OnLeaveRoom += OnLeaveRoom;
+            // conn.Db.GameRoom.OnInsert += OnRoomInsert;
+            // conn.Db.GameRoom.OnDelete += OnRoomDelete;
+            conn.Reducers.OnJoinRoom += OnJoinRoomCallback;
+            conn.Reducers.OnCreateRoom += OnCreateRoomCallback;
+            conn.Reducers.OnLeaveRoom += OnLeaveRoomCallback;
         }
 
-        public void JoinRoom(uint roomId, string password)
+
+        private void OnJoinRoomCallback(ReducerEventContext ctx, string roomName, string password)
+        {
+            if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity)
+            {
+                Debug.LogWarning("Received join room event from another user, ignoring.");
+                return;
+            }
+
+            if (ctx.Event.Status is Status.Failed fail)
+            {
+                string message = $"Failed to join room: {ExtractErrorMessage(fail)}";
+                Debug.LogError(message);
+                ErrorMessageEvent?.Invoke(message);
+            }
+            else
+            {
+                joinTimestamp = ctx.Event.Timestamp;
+                // CurrentRoomId = roomId;
+
+                // UIManager.Instance.OnCloseMenu();
+                // RoomBuildingManager.Instance.OnRoomJoin();
+                // ChatManager.Instance.ClearChat();
+                // OnRoomJoin?.Invoke();
+
+                // UnsubscribeFromAll();
+                // SubscribeToAll(ctx.Event.Timestamp);
+            }
+        }
+
+        public void OnJoinRoom(uint roomId)
+        {
+            // if (CurrentRoomId != 0)
+            // {
+            //     Debug.LogWarning($"Already in room {CurrentRoomId}, leaving before joining {roomId}");
+            //     LeaveRoom();
+            // }
+
+            CurrentRoomId = roomId;
+
+            // load "world" scene
+            UnityEngine.SceneManagement.SceneManager.LoadScene("World");
+
+            // UnsubscribeFromAll();
+            // SubscribeToAll(joinTimestamp);
+            // OnRoomJoin?.Invoke();
+            //
+            // STDBBackendManager.Instance.playerManager.SpawnLocalPlayer();
+        }
+
+        public void InitilizeAfterWorldLoad()
+        {
+            UnsubscribeFromAll();
+            SubscribeToAll(joinTimestamp);
+            OnRoomJoin?.Invoke();
+
+            STDBBackendManager.Instance.playerManager.SpawnLocalPlayer();
+        }
+
+        private void OnCreateRoomCallback(ReducerEventContext ctx, string roomName, string password)
+        {
+            if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity)
+            {
+                Debug.LogWarning("Received create room event from another user, ignoring.");
+                return;
+            }
+
+            if (ctx.Event.Status is Status.Failed fail)
+            {
+                string message = $"Failed to create room: {ExtractErrorMessage(fail)}";
+                Debug.LogError(message);
+                ErrorMessageEvent?.Invoke(message);
+            }
+            else
+            {
+                JoinRoom(roomName, password);
+            }
+        }
+
+        private void OnLeaveRoomCallback(ReducerEventContext ctx)
+        {
+            if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity)
+            {
+                Debug.LogWarning("Received join room event from another user, ignoring.");
+                return;
+            }
+
+            if (ctx.Event.Status is Status.Failed fail)
+            {
+                string message = $"Failed to leave room: {ExtractErrorMessage(fail)}";
+                Debug.LogError(message);
+                ErrorMessageEvent?.Invoke(message);
+            }
+            else
+            {
+                UnsubscribeFromAll();
+                CurrentRoomId = 0;
+                OnRoomLeave?.Invoke();
+
+                // load "main menu" scene
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            }
+        }
+
+
+        public void JoinRoom(string roomName, string password)
         {
             if (!STDBBackendManager.IsAuthenticated())
             {
                 Debug.LogError("Must be logged in to join a room");
                 return;
             }
-            conn.Reducers.JoinRoom(roomId, password);
-        }
 
-        private void OnRoomInsert(EventContext ctx, GameRoom room)
-        {
-            Rooms.Add(room);
-
-            if (RoomToJoin == null || room.Name != RoomToJoin.Value.Item1) return;
-            if (Time.time > RoomToJoin.Value.Item3)
-            {
-                RoomToJoin = null;
-                return;
-            }
-
-            // UIManager.Instance.OnJoinRoom();
-            UIManager.Instance.OnClickJoinRoomMenu(room);
-            JoinRoom(room.RoomId, RoomToJoin.Value.Item2);
-            RoomToJoin = null;
-        }
-
-        private void OnRoomDelete(EventContext ctx, GameRoom room)
-        {
-            Rooms.Remove(room);
-        }
-
-        private void OnJoinRoom(ReducerEventContext ctx, uint roomId, string password)
-        {
-            // Check if this is our user's join room event
-            bool isOurEvent = false;
-            foreach (var player in conn.Db.OnlinePlayer.Iter())
-            {
-                if (player.Identity.Equals(STDBBackendManager.LocalIdentity) && player.RoomId == roomId)
-                {
-                    isOurEvent = true;
-                    break;
-                }
-            }
-
-            if (!isOurEvent) return;
-
-            if (ctx.Event.Status is Status.Failed fail)
-            {
-                string message = ExtractErrorMessage(fail);
-                UIManager.Instance.JoinRoomError(message);
-            }
-            else
-            {
-                CurrentRoomId = roomId;
-                UIManager.Instance.OnCloseMenu();
-                RoomBuildingManager.Instance.OnRoomJoin();
-                ChatManager.Instance.ClearChat();
-                OnRoomJoin?.Invoke();
-
-                UnsubscribeFromAll();
-                SubscribeToAll(ctx.Event.Timestamp);
-            }
-        }
-
-        private void OnLeaveRoom(ReducerEventContext ctx)
-        {
-            // Check if this is our user's leave room event by checking if we have a player with our identity
-            bool isOurEvent = false;
-            foreach (var player in conn.Db.OnlinePlayer.Iter())
-            {
-                if (player.Identity.Equals(STDBBackendManager.LocalIdentity))
-                {
-                    isOurEvent = true;
-                    break;
-                }
-            }
-
-            if (!isOurEvent) return;
-
-            if (ctx.Event.Status is Status.Failed fail)
-            {
-                string message = ExtractErrorMessage(fail);
-                Debug.LogError($"Failed to leave room({CurrentRoomId}): {message}");
-            }
-            else
-            {
-                UnsubscribeFromAll();
-                CurrentRoomId = 0;
-                RoomBuildingManager.Instance.OnRoomLeave();
-                OnRoomLeave?.Invoke();
-            }
-        }
-
-        public void LeaveRoom()
-        {
-            if (!STDBBackendManager.IsAuthenticated())
-            {
-                Debug.LogError("Must be logged in to leave a room");
-                return;
-            }
-            conn.Reducers.LeaveRoom();
+            conn.Reducers.JoinRoom(roomName, password);
         }
 
         public void CreateRoom(string name, string password)
@@ -144,7 +160,19 @@ namespace Assets.Scripts.Networking
                 Debug.LogError("Must be logged in to create a room");
                 return;
             }
+
             conn.Reducers.CreateRoom(name, password);
+        }
+
+        public void LeaveRoom()
+        {
+            if (!STDBBackendManager.IsAuthenticated())
+            {
+                Debug.LogError("Must be logged in to leave a room");
+                return;
+            }
+
+            conn.Reducers.LeaveRoom();
         }
 
         private string ExtractErrorMessage(Status.Failed failed)
@@ -180,7 +208,7 @@ namespace Assets.Scripts.Networking
         private void SubscribeToVoice(uint roomId, ulong timestamp)
         {
             string sql =
-                $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender_user_id != {STDBBackendManager.LocalUserId}";
+                $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender_user_id != {STDBAuthManager.LocalUserId}";
 
             voiceSub = conn.SubscriptionBuilder()
                 .Subscribe(new[] { sql });
@@ -189,10 +217,10 @@ namespace Assets.Scripts.Networking
         private void SubscribeToImages(uint roomId, ulong timestamp)
         {
             string sqlImage =
-                $"SELECT * FROM images WHERE room_id = {roomId} AND ( timestamp < {timestamp} OR sender_user_id != {STDBBackendManager.LocalUserId} )";
+                $"SELECT * FROM images WHERE room_id = {roomId} AND ( timestamp < {timestamp} OR sender_user_id != {STDBAuthManager.LocalUserId} )";
 
             string sqlBroadcastLock =
-                $"SELECT * FROM image_broadcast_lock WHERE sender_user_id = {STDBBackendManager.LocalUserId}";
+                $"SELECT * FROM image_broadcast_lock WHERE sender_user_id = {STDBAuthManager.LocalUserId}";
 
             imageSub = conn.SubscriptionBuilder()
                 .Subscribe(new[] { sqlImage, sqlBroadcastLock });

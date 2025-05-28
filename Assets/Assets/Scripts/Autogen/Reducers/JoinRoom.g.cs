@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void JoinRoomHandler(ReducerEventContext ctx, uint roomId, string password);
+        public delegate void JoinRoomHandler(ReducerEventContext ctx, string roomName, string password);
         public event JoinRoomHandler? OnJoinRoom;
 
-        public void JoinRoom(uint roomId, string password)
+        public void JoinRoom(string roomName, string password)
         {
-            conn.InternalCallReducer(new Reducer.JoinRoom(roomId, password), this.SetCallReducerFlags.JoinRoomFlags);
+            conn.InternalCallReducer(new Reducer.JoinRoom(roomName, password), this.SetCallReducerFlags.JoinRoomFlags);
         }
 
         public bool InvokeJoinRoom(ReducerEventContext ctx, Reducer.JoinRoom args)
@@ -25,7 +25,7 @@ namespace SpacetimeDB.Types
             if (OnJoinRoom == null) return false;
             OnJoinRoom(
                 ctx,
-                args.RoomId,
+                args.RoomName,
                 args.Password
             );
             return true;
@@ -38,22 +38,23 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class JoinRoom : Reducer, IReducerArgs
         {
-            [DataMember(Name = "room_id")]
-            public uint RoomId;
+            [DataMember(Name = "room_name")]
+            public string RoomName;
             [DataMember(Name = "password")]
             public string Password;
 
             public JoinRoom(
-                uint RoomId,
+                string RoomName,
                 string Password
             )
             {
-                this.RoomId = RoomId;
+                this.RoomName = RoomName;
                 this.Password = Password;
             }
 
             public JoinRoom()
             {
+                this.RoomName = "";
                 this.Password = "";
             }
 

@@ -24,16 +24,18 @@ namespace Assets.Scripts.Networking
                 currentVoiceSub.Unsubscribe();
 
             // Only get new voice clips after join timestamp and exclude our own clips
-            string sql = $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender_user_id != {STDBBackendManager.LocalUserId}";
+            string sql =
+                $"SELECT * FROM voice_clip WHERE room_id = {roomId} AND timestamp > {timestamp} AND sender_user_id != {STDBAuthManager.LocalUserId}";
             currentVoiceSub = conn.SubscriptionBuilder().Subscribe(new[] { sql });
         }
 
         private void OnVoiceClipInsert(EventContext ctx, VoiceClip clip)
         {
             // Skip our own voice clips
-            if (clip.SenderUserId == STDBBackendManager.LocalUserId) return;
+            if (clip.SenderUserId == STDBAuthManager.LocalUserId) return;
 
-            if (STDBBackendManager.Instance.playerManager.Players.TryGetValue(clip.SenderUserId, out PlayerController player))
+            if (STDBBackendManager.Instance.playerManager.Players.TryGetValue(clip.SenderUserId,
+                    out PlayerController player))
             {
                 VoiceChatPlayer.Instance.EnqueueAudio(clip.AudioData.ToArray(), player.PlayerId);
             }
@@ -51,6 +53,7 @@ namespace Assets.Scripts.Networking
                 Debug.LogError("Must be logged in to send voice clips");
                 return;
             }
+
             conn.Reducers.SendVoice(audioData.ToList());
         }
     }

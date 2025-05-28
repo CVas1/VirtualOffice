@@ -4,7 +4,7 @@ using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Implementation;
 using UnityEngine;
 
-public class InteractManager : MonoBehaviourSingleton<InteractManager>
+public class InteractManager : MonoBehaviour
 {
     private CharacterStateController characterStateController;
 
@@ -13,6 +13,20 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
     private GameObject previousHitObject = null;
     private HighlightEffect previousHighlightEffect = null;
 
+    public static InteractManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance);
+            Instance = this;
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {
@@ -26,10 +40,17 @@ public class InteractManager : MonoBehaviourSingleton<InteractManager>
 
     private void Update()
     {
-        if(Cursor.lockState != CursorLockMode.Locked)
+        if (Cursor.lockState != CursorLockMode.Locked)
         {
             return;
         }
+
+        if (Camera.main == null)
+        {
+            Debug.LogError("InteractManager: Main camera not found.");
+            return;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))

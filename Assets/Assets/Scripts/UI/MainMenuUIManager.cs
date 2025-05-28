@@ -9,13 +9,18 @@ namespace Assets.Scripts.UI
         public TMP_InputField usernameInput;
         public ColorPicker colorPicker;
 
+        public TMP_InputField roomNameInput;
+        public TMP_InputField roomPasswordInput;
+
+        public TMP_Text errorText;
+
         private void Start()
         {
-            if (STDBPlayerManager.localPlayer != null)
+            if (STDBAuthManager.LocalPlayer != null)
             {
-                usernameInput.text = STDBPlayerManager.localPlayer.Username;
-                Debug.Log(STDBPlayerManager.localPlayer.Color);
-                string colorString = STDBPlayerManager.localPlayer.Color;
+                usernameInput.text = STDBAuthManager.LocalPlayer.Username;
+                Debug.Log(STDBAuthManager.LocalPlayer.Color);
+                string colorString = STDBAuthManager.LocalPlayer.Color;
                 if (!colorString.StartsWith("#"))
                     colorString = "#" + colorString;
 
@@ -27,10 +32,12 @@ namespace Assets.Scripts.UI
                 else
                 {
                     Debug.LogWarning("Failed to parse player color from string: " +
-                                     STDBPlayerManager.localPlayer.Color);
+                                     STDBAuthManager.LocalPlayer.Color);
                     colorPicker.color = Color.white; // Default color if parsing fails
                 }
             }
+
+            STDBRoomManager.ErrorMessageEvent += OnRoomError;
         }
 
         public void OnUsernameChanged()
@@ -43,7 +50,7 @@ namespace Assets.Scripts.UI
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(newUsername) || newUsername == STDBPlayerManager.localPlayer.Username) return;
+            if (string.IsNullOrWhiteSpace(newUsername) || newUsername == STDBAuthManager.LocalPlayer.Username) return;
             // Update backend
             STDBBackendManager.Conn.Reducers.SetPlayerUsername(newUsername);
         }
@@ -54,10 +61,36 @@ namespace Assets.Scripts.UI
             string colorString = ColorUtility.ToHtmlStringRGB(newColor);
             Debug.Log(" OnColorChanged" + colorString);
 
-            if (colorString == STDBPlayerManager.localPlayer.Color) return; // No change
+            if (colorString == STDBAuthManager.LocalPlayer.Color) return; // No change
 
             // Update backend
             STDBBackendManager.Conn.Reducers.SetPlayerColor(colorString);
+        }
+
+        public void JoinRoom()
+        {
+            string roomName = roomNameInput.text;
+            string password = roomPasswordInput.text;
+            STDBBackendManager.Instance.roomManager.JoinRoom(roomName, password);
+        }
+
+        public void CreateRoom()
+        {
+            string roomName = roomNameInput.text;
+            string password = roomPasswordInput.text;
+
+            if (string.IsNullOrWhiteSpace(roomName) || string.IsNullOrWhiteSpace(password))
+            {
+                Debug.LogError("Room name and password cannot be empty.");
+                return;
+            }
+
+            STDBBackendManager.Instance.roomManager.CreateRoom(roomName, password);
+        }
+
+        private void OnRoomError(string error)
+        {
+            errorText.text = error;
         }
     }
 }
