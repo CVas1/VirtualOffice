@@ -575,7 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03c39c09dd042f0acf364d3e74de912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshRenderer: {fileID: 0}
+  meshRenderer: {fileID: 133967432374116658}
   isLocalPlayer: 0
   interpolationSpeedForPosition: 10
   interpolationSpeedForRotation: 10
@@ -902,6 +902,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f6862d8aee10a042821738d523fc6fa, type: 3}
+--- !u!137 &133967432374116658 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1581011571419598173, guid: 7f6862d8aee10a042821738d523fc6fa,
+    type: 3}
+  m_PrefabInstance: {fileID: 1453276256918187119}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2119725081724682111 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 667049195000124176, guid: 7f6862d8aee10a042821738d523fc6fa,

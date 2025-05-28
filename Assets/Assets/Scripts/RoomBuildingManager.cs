@@ -48,7 +48,7 @@ namespace Assets.Scripts
 
         private void OnDestroyingBuildingPart(BuildingPart buildingPart)
         {
-            Debug.Log("OnDestroyingBuildingPart");
+            // Debug.Log("OnDestroyingBuildingPart");
             if (isLoading) return;
             if (buildingPart == null) return;
             if (buildingPart.State != BuildingPart.StateType.DESTROY) return;
@@ -70,7 +70,7 @@ namespace Assets.Scripts
 
         private void OnPlacingBuildingPart(BuildingPart buildingPart)
         {
-            Debug.Log("OnPlacingBuildingPart");
+            // Debug.Log("OnPlacingBuildingPart");
             if (isLoading) return;
             if (buildingPart == null) return;
             if (buildingPart.State != BuildingPart.StateType.PLACED) return;

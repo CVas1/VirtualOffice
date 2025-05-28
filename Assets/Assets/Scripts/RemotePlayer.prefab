@@ -282,7 +282,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03c39c09dd042f0acf364d3e74de912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 1784317870509441241}
   isLocalPlayer: 0
+  interpolationSpeedForPosition: 10
+  interpolationSpeedForRotation: 10
 --- !u!114 &8243320061126478026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,3 +601,9 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!137 &1784317870509441241 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1581011571419598173, guid: 7f6862d8aee10a042821738d523fc6fa,
+    type: 3}
+  m_PrefabInstance: {fileID: 951326062856867204}
+  m_PrefabAsset: {fileID: 0}

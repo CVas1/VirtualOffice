@@ -132,9 +132,6 @@ namespace Assets.Scripts
             // Remove old states
             while (stateBuffer.Count > 2 && stateBuffer.Peek().timestamp < Time.time - 1f)
                 stateBuffer.Dequeue();
-
-            SetColor(updatedData.Color);
-            SetName(updatedData.Username);
         }
 
         private void SetColor(string hexColor)

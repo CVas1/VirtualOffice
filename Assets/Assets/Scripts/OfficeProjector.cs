@@ -156,7 +156,7 @@ public class OfficeProjector : MonoBehaviour
         if (projectorImageRenderer != null)
         {
             SetImageRaw(textureDTO);
-            STDBBackendManager.Instance.imageManager.SendImage(GetProjectorId(), texture.EncodeToJPG(50), width,
+            STDBBackendManager.Instance.imageManager.SendImage(GetProjectorId(), texture.EncodeToJPG(30), width,
                 height);
         }
         else
