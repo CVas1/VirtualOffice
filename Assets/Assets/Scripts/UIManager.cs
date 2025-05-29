@@ -35,6 +35,9 @@ namespace Assets.Scripts
         [SerializeField] private Transform StatsContentParent;
         [SerializeField] private GameObject StatsUserEntryPrefab;
 
+        [Header("Mouse Visibility")]
+        private float lastClickTime = 0f;
+        [SerializeField]private float catchTime = 0.25f;
         private enum StatsRange
         {
             Last24h,
@@ -79,12 +82,26 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.M))
+            if (Input.GetMouseButtonDown(0)) // Left-click
+            {
+                float timeSinceLastClick = Time.time - lastClickTime;
+
+                if (timeSinceLastClick <= catchTime)
+                {
+                    // Double-click detected: toggle cursor visibility
+                    Cursor.visible = !Cursor.visible;
+                    Cursor.lockState = Cursor.visible ? CursorLockMode.None : CursorLockMode.Locked;
+                }
+
+                lastClickTime = Time.time;
+            }
+            
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.M))
             {
                 MailBoxOpenClose();
             }
 
-            if (Input.GetKeyDown(KeyCode.N))
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.N))
             {
                 OpenStatsPanel();
             }
