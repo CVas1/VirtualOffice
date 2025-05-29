@@ -29,6 +29,7 @@ namespace SpacetimeDB.Types
             AddTable(PlayerCount = new(conn));
             AddTable(PlayerRoomPosition = new(conn));
             AddTable(RoomEntity = new(conn));
+            AddTable(RoomSessionHistory = new(conn));
             AddTable(UserAccount = new(conn));
             AddTable(UserSession = new(conn));
             AddTable(VoiceClip = new(conn));
@@ -444,6 +445,7 @@ namespace SpacetimeDB.Types
                 "CreateOnlinePlayer" => BSATNHelpers.Decode<Reducer.CreateOnlinePlayer>(encodedArgs),
                 "CreateRoom" => BSATNHelpers.Decode<Reducer.CreateRoom>(encodedArgs),
                 "Disconnect" => BSATNHelpers.Decode<Reducer.Disconnect>(encodedArgs),
+                "GetCurrentTime" => BSATNHelpers.Decode<Reducer.GetCurrentTime>(encodedArgs),
                 "JoinRoom" => BSATNHelpers.Decode<Reducer.JoinRoom>(encodedArgs),
                 "LeaveRoom" => BSATNHelpers.Decode<Reducer.LeaveRoom>(encodedArgs),
                 "LockImageBroadcast" => BSATNHelpers.Decode<Reducer.LockImageBroadcast>(encodedArgs),
@@ -484,6 +486,7 @@ namespace SpacetimeDB.Types
                 Reducer.CreateOnlinePlayer args => Reducers.InvokeCreateOnlinePlayer(eventContext, args),
                 Reducer.CreateRoom args => Reducers.InvokeCreateRoom(eventContext, args),
                 Reducer.Disconnect args => Reducers.InvokeDisconnect(eventContext, args),
+                Reducer.GetCurrentTime args => Reducers.InvokeGetCurrentTime(eventContext, args),
                 Reducer.JoinRoom args => Reducers.InvokeJoinRoom(eventContext, args),
                 Reducer.LeaveRoom args => Reducers.InvokeLeaveRoom(eventContext, args),
                 Reducer.LockImageBroadcast args => Reducers.InvokeLockImageBroadcast(eventContext, args),

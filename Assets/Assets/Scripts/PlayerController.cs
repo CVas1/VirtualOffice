@@ -57,11 +57,6 @@ namespace Assets.Scripts
 
             if (isLocalPlayer && Time.time - lastUpdateTime >= updateInterval)
             {
-                if (lastSyncedState != animController.CurrentAnimState)
-                {
-                    Debug.Log(animController.CurrentAnimState);
-                }
-
                 if (Vector3.Distance(transform.position, lastSyncedPosition) > 0.3f ||
                     Quaternion.Angle(transform.rotation, lastSyncedRotation) > 6f ||
                     lastSyncedState != animController.CurrentAnimState)

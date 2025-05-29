@@ -19,6 +19,8 @@ namespace SpacetimeDB.Types
         public string Name;
         [DataMember(Name = "created_by_user_id")]
         public uint CreatedByUserId;
+        [DataMember(Name = "creator_identity")]
+        public SpacetimeDB.Identity CreatorIdentity;
         [DataMember(Name = "created_at")]
         public ulong CreatedAt;
         [DataMember(Name = "password")]
@@ -28,6 +30,7 @@ namespace SpacetimeDB.Types
             uint RoomId,
             string Name,
             uint CreatedByUserId,
+            SpacetimeDB.Identity CreatorIdentity,
             ulong CreatedAt,
             string Password
         )
@@ -35,6 +38,7 @@ namespace SpacetimeDB.Types
             this.RoomId = RoomId;
             this.Name = Name;
             this.CreatedByUserId = CreatedByUserId;
+            this.CreatorIdentity = CreatorIdentity;
             this.CreatedAt = CreatedAt;
             this.Password = Password;
         }

@@ -91,6 +91,7 @@ namespace Assets.Scripts.Networking
 
         private void OnRegister(ReducerEventContext ctx, string mail, string username, string password)
         {
+            STDBBackendManager.CacheServerTime(ctx.Event.Timestamp);
             if (ctx.Event.Status is Status.Failed fail)
             {
                 string message = ExtractErrorMessage(fail);
@@ -106,6 +107,7 @@ namespace Assets.Scripts.Networking
 
         private void OnLogin(ReducerEventContext ctx, string mail, string password)
         {
+            STDBBackendManager.CacheServerTime(ctx.Event.Timestamp);
             if (ctx.Event.Status is Status.Failed fail)
             {
                 string message = ExtractErrorMessage(fail);
@@ -137,6 +139,7 @@ namespace Assets.Scripts.Networking
 
         private void OnLogout(ReducerEventContext ctx)
         {
+            STDBBackendManager.CacheServerTime(ctx.Event.Timestamp);
             if (ctx.Event.Status is Status.Failed fail)
             {
                 string message = ExtractErrorMessage(fail);
@@ -154,6 +157,7 @@ namespace Assets.Scripts.Networking
 
         private void OnCreateOnlinePlayer(ReducerEventContext ctx)
         {
+            STDBBackendManager.CacheServerTime(ctx.Event.Timestamp);
             if (ctx.Event.Status is Status.Failed fail)
             {
                 string message = ExtractErrorMessage(fail);

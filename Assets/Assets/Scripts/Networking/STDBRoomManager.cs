@@ -24,6 +24,7 @@ namespace Assets.Scripts.Networking
         private SubscriptionHandle chatSub;
         private SubscriptionHandle voiceSub;
         private SubscriptionHandle imageSub;
+        private SubscriptionHandle statsSub;
 
         private Timestamp joinTimestamp;
 
@@ -40,6 +41,7 @@ namespace Assets.Scripts.Networking
 
         private void OnJoinRoomCallback(ReducerEventContext ctx, string roomName, string password)
         {
+            STDBBackendManager.CacheServerTime(ctx.Event.Timestamp);
             if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity)
             {
                 Debug.LogWarning("Received join room event from another user, ignoring.");
@@ -98,6 +100,7 @@ namespace Assets.Scripts.Networking
 
         private void OnCreateRoomCallback(ReducerEventContext ctx, string roomName, string password)
         {
+            STDBBackendManager.CacheServerTime(ctx.Event.Timestamp);
             if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity)
             {
                 Debug.LogWarning("Received create room event from another user, ignoring.");
@@ -118,6 +121,7 @@ namespace Assets.Scripts.Networking
 
         private void OnLeaveRoomCallback(ReducerEventContext ctx)
         {
+            STDBBackendManager.CacheServerTime(ctx.Event.Timestamp);
             if (ctx.Event.CallerIdentity != STDBBackendManager.LocalIdentity)
             {
                 Debug.LogWarning("Received join room event from another user, ignoring.");
@@ -226,6 +230,13 @@ namespace Assets.Scripts.Networking
                 .Subscribe(new[] { sqlImage, sqlBroadcastLock });
         }
 
+        private void SubscribeToStats(uint roomId)
+        {
+            string sql = $"SELECT * FROM room_session_history WHERE room_id = {roomId}";
+            statsSub = conn.SubscriptionBuilder()
+                .Subscribe(new[] { sql });
+        }
+
         private void SubscribeToAll(Timestamp timestamp)
         {
             if (CurrentRoomId == 0) return;
@@ -238,6 +249,7 @@ namespace Assets.Scripts.Networking
             SubscribeToChat(CurrentRoomId, ts);
             SubscribeToVoice(CurrentRoomId, ts);
             SubscribeToImages(CurrentRoomId, ts);
+            SubscribeToStats(CurrentRoomId);
         }
 
         private void UnsubscribeFromAll()
@@ -256,6 +268,9 @@ namespace Assets.Scripts.Networking
 
             if (imageSub != null && imageSub.IsActive)
                 imageSub?.Unsubscribe();
+
+            if (statsSub != null && statsSub.IsActive)
+                statsSub?.Unsubscribe();
         }
     }
 }
