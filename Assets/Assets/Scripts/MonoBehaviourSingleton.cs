@@ -1,17 +1,39 @@
 using UnityEngine;
 
-public class MonoBehaviourSingleton<T> : MonoBehaviour
+public class MonoBehaviourSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    public static T Instance;
-    private void Awake()
+    private static T _instance;
+    
+    public static T Instance
     {
-        if (Instance == null)
+        get
         {
-            Instance = (T)(object)this;
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<T>();
+            }
+            return _instance;
         }
-        else
+    }
+    
+    protected virtual void Awake()
+    {
+        if (_instance == null)
         {
-            Destroy(this);
+            _instance = (T)(object)this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+    
+    protected virtual void OnDestroy()
+    {
+        if (_instance == this)
+        {
+            _instance = null;
         }
     }
 }

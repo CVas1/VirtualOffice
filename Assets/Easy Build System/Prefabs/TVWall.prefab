@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 542726660183632830}
   - component: {fileID: 8032393748835018316}
   - component: {fileID: 6455781054920554237}
+  - component: {fileID: 7555134100266204411}
+  - component: {fileID: 9066723926594013117}
   m_Layer: 0
   m_Name: TVWall
   m_TagString: Untagged
@@ -128,6 +130,39 @@ MonoBehaviour:
   m_RequireSocket: 0
   m_IgnoreSocket: 0
   m_ShowDebugs: 0
+--- !u!114 &7555134100266204411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257710569076566308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3720bbe100e6564438ceb1433cdff3bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_Tolerance: 0.58
+  m_IgnoreBuildingSurface: 1
+  m_BuildingSurfaceTags: []
+  m_ShowDebugs: 0
+  m_ShowGizmos: 1
+--- !u!114 &9066723926594013117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257710569076566308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b401330b7cdc4e4db984c233cb403ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectorImageRenderer: {fileID: 703924097088999384}
 --- !u!1001 &802947534377806202
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -136,6 +171,81 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 542726660183632830}
     m_Modifications:
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: rmsCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: glowWidth
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: innerGlow
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: glowQuality
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: outlineWidth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: glowDithering
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: outlineColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: outlineColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: outlineColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: overlayColor.b
+      value: 0.015686274
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: overlayColor.g
+      value: 0.11478313
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: outlineDownsampling
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: targetFXGroundMaxDistance
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: seeThroughOccluderThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -6438998064983524134, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: targetFXScaleToRenderBounds
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7373410936928368563, guid: 4131a46d5539a4e03b22a1f814b23c86,
         type: 3}
       propertyPath: m_Name
@@ -230,6 +340,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImageQuad (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1050679090594331061, guid: 5dda274a7e859a249af586f59558c357,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -300,6 +415,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5dda274a7e859a249af586f59558c357, type: 3}
+--- !u!23 &703924097088999384 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5416283682859968517, guid: 5dda274a7e859a249af586f59558c357,
+    type: 3}
+  m_PrefabInstance: {fileID: 4822887275170834397}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1498564682317065719 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,

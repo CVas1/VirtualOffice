@@ -7,7 +7,6 @@ using System.Linq;
 public class PngDropHandler : MonoBehaviour
 {
     private UniWindowController windowController;
-    public LayerMask targetLayerMask; // Layer mask to filter the target objects
 
     void Start()
     {
@@ -32,19 +31,21 @@ public class PngDropHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, targetLayerMask))
+        if (Physics.Raycast(ray, out hit))
         {
-            GameObject targetObject = hit.collider.gameObject;
-            Renderer renderer = targetObject.GetComponentInChildren<Renderer>();
-
-            if (renderer == null || !IsSupportedImageFile(filePaths[0]))
+            if (!IsSupportedImageFile(filePaths[0]))
             {
                 Debug.LogError("The target object does not have a RawImage or SpriteRenderer component.");
                 return;
             }
-
-            Texture2D newTexture = LoadPNG(filePaths[0]);
-            renderer.material.mainTexture = newTexture;
+            
+            GameObject targetObject = hit.collider.gameObject;
+            
+            OfficeProjector officeProjector = targetObject.GetComponentInParent<OfficeProjector>();
+            if (officeProjector != null && officeProjector.CompareTag("Chart"))
+            {
+                officeProjector.ChangeOnce(LoadPNG(filePaths[0]));
+            }
         }
     }
 

@@ -41,10 +41,13 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
     private float captureInterval;
     private Coroutine captureRoutine;
 
-    [NonSerialized] public bool isCapturing = false;
-
-    // public UnityEvent<Texture2D> OnTextureChanged;
+    [NonSerialized] public bool isCapturing = false;    // public UnityEvent<Texture2D> OnTextureChanged;
     public Dictionary<int, Action<ScreenCaptureDTO>> OnTextureChanged = new Dictionary<int, Action<ScreenCaptureDTO>>();
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
     private void Start()
     {
@@ -90,10 +93,14 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
             Debug.LogError("Screen capture failed!");
             return null;
         }
-    }
-
-    public void StartCapture()
+    }    public void StartCapture()
     {
+        if (this == null || gameObject == null)
+        {
+            Debug.LogWarning("NativeScreenCapture instance is destroyed, cannot start capture.");
+            return;
+        }
+        
         if (!isCapturing)
         {
             isCapturing = true;
@@ -145,13 +152,15 @@ public class NativeScreenCapture : MonoBehaviourSingleton<NativeScreenCapture>
 
             yield return wait;
         }
-    }
-
-    private void OnDestroy()
+    }    protected override void OnDestroy()
     {
+        StopCapture(); // Stop any ongoing capture
+        
         if (handle.IsAllocated)
             handle.Free();
 
         ReleaseScreenCaptureResources();
+        
+        base.OnDestroy(); // Call base class cleanup
     }
 }

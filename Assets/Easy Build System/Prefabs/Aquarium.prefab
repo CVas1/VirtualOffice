@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5630532034302074479}
   - component: {fileID: 4659781735166917646}
   - component: {fileID: 8994411039407883260}
+  - component: {fileID: -1373324584901865718}
   m_Layer: 0
   m_Name: Aquarium
   m_TagString: Untagged
@@ -128,6 +129,26 @@ MonoBehaviour:
   m_RequireSocket: 0
   m_IgnoreSocket: 0
   m_ShowDebugs: 0
+--- !u!114 &-1373324584901865718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2357984446123590914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3720bbe100e6564438ceb1433cdff3bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_Tolerance: 0.9
+  m_IgnoreBuildingSurface: 1
+  m_BuildingSurfaceTags: []
+  m_ShowDebugs: 0
+  m_ShowGizmos: 1
 --- !u!1001 &835536620289966264
 PrefabInstance:
   m_ObjectHideFlags: 0

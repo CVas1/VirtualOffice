@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 3158596166715293444}
   - component: {fileID: 7808873325248601952}
   - component: {fileID: 5302613435107888352}
-  m_Layer: 7
+  - component: {fileID: -4582346006466045648}
+  m_Layer: 0
   m_Name: Projector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,6 +344,26 @@ MonoBehaviour:
   hitFxFadeOutDuration: 0.25
   hitFxColor: {r: 1, g: 1, b: 1, a: 1}
   hitFxRadius: 0.5
+--- !u!114 &-4582346006466045648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5949278264897328776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3720bbe100e6564438ceb1433cdff3bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_Tolerance: 0.9
+  m_IgnoreBuildingSurface: 1
+  m_BuildingSurfaceTags: []
+  m_ShowDebugs: 0
+  m_ShowGizmos: 1
 --- !u!1 &9193544085592749609
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,7 +376,7 @@ GameObject:
   - component: {fileID: 1604491582156449544}
   - component: {fileID: 110861078966003836}
   - component: {fileID: 7726971874165878770}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: BlackScreen
   m_TagString: Projector
   m_Icon: {fileID: 0}
@@ -468,7 +489,7 @@ PrefabInstance:
     - target: {fileID: 1050679090594331061, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1050679090594331061, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
@@ -643,7 +664,7 @@ PrefabInstance:
     - target: {fileID: 1857166883338410442, guid: 19c1c8c281a23443580dbdee291582a7,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1857166883338410442, guid: 19c1c8c281a23443580dbdee291582a7,
         type: 3}

@@ -52,10 +52,14 @@ public class OfficeProjector : MonoBehaviour
         }
 
         return null;
-    }
-
-    public void ChangeOnce()
+    }    public void ChangeOnce()
     {
+        if (NativeScreenCapture.Instance == null)
+        {
+            Debug.LogError("NativeScreenCapture instance is null, cannot capture screen.");
+            return;
+        }
+        
         NativeScreenCapture.ScreenCaptureDTO textureDTO = NativeScreenCapture.Instance.GetScreenImage();
         SetImageRaw(textureDTO);
 
@@ -66,6 +70,40 @@ public class OfficeProjector : MonoBehaviour
         }
 
         STDBBackendManager.Instance.imageManager.SendImage(GetProjectorId(), texture.EncodeToJPG(50), width, height);
+    }    public void ChangeOnce(Texture2D inputTexture)
+    {
+        if (inputTexture == null)
+        {
+            Debug.LogError("Input texture is null.");
+            return;
+        }
+
+        // Create a readable copy of the texture in RGBA32 format
+        Texture2D readableTexture = new Texture2D(inputTexture.width, inputTexture.height, TextureFormat.RGBA32, false);
+        
+        // Use Graphics.CopyTexture or RenderTexture to ensure we can read the texture
+        RenderTexture renderTexture = RenderTexture.GetTemporary(inputTexture.width, inputTexture.height, 0, RenderTextureFormat.ARGB32);
+        Graphics.Blit(inputTexture, renderTexture);
+        
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = renderTexture;
+        readableTexture.ReadPixels(new Rect(0, 0, inputTexture.width, inputTexture.height), 0, 0);
+        readableTexture.Apply();
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(renderTexture);
+
+        SetImageRaw(new NativeScreenCapture.ScreenCaptureDTO(readableTexture.width, readableTexture.height, readableTexture.GetRawTextureData()));
+
+        if (GetProjectorId() == null)
+        {
+            Debug.LogError("Projector ID is null.");
+            return;
+        }
+
+        STDBBackendManager.Instance.imageManager.SendImage(GetProjectorId(), readableTexture.EncodeToJPG(50), readableTexture.width, readableTexture.height);
+        
+        // Clean up the temporary texture
+        DestroyImmediate(readableTexture);
     }
 
     public void Broadcast()
@@ -95,6 +133,21 @@ public class OfficeProjector : MonoBehaviour
     {
         if (projectorImageRenderer != null)
         {
+            // Calculate expected data size for RGBA32 format (4 bytes per pixel)
+            int expectedDataSize = textureDTO.Width * textureDTO.Height * 4;
+            
+            if (textureDTO.ImageData == null)
+            {
+                Debug.LogError("Image data is null.");
+                return;
+            }
+            
+            if (textureDTO.ImageData.Length != expectedDataSize)
+            {
+                Debug.LogError($"Image data size mismatch. Expected: {expectedDataSize}, Actual: {textureDTO.ImageData.Length}");
+                return;
+            }
+            
             texture = new Texture2D(textureDTO.Width, textureDTO.Height, TextureFormat.RGBA32, false);
             width = textureDTO.Width;
             height = textureDTO.Height;
@@ -132,10 +185,14 @@ public class OfficeProjector : MonoBehaviour
             Debug.LogError("Projector image renderer is not set.");
         }
     }
-
-
     private void StartProjection()
     {
+        if (NativeScreenCapture.Instance == null)
+        {
+            Debug.LogError("NativeScreenCapture instance is null, cannot start projection.");
+            return;
+        }
+        
         STDBBackendManager.Instance.imageManager.SendLockImageBroadcast(GetProjectorId());
         NativeScreenCapture.Instance.OnTextureChanged.TryAdd(this.GetHashCode(), OnTextureChanged);
         NativeScreenCapture.Instance.StartCapture();
@@ -143,16 +200,25 @@ public class OfficeProjector : MonoBehaviour
 
     private void StopProjection()
     {
-        NativeScreenCapture.Instance.OnTextureChanged.Remove(this.GetHashCode());
+        if (NativeScreenCapture.Instance != null)
+        {
+            NativeScreenCapture.Instance.OnTextureChanged.Remove(this.GetHashCode());
+        }
     }
 
     private void OnDestroy()
     {
-        NativeScreenCapture.Instance.OnTextureChanged.Remove(this.GetHashCode());
-    }
-
-    private void OnTextureChanged(NativeScreenCapture.ScreenCaptureDTO textureDTO)
+        if (NativeScreenCapture.Instance != null)
+        {
+            NativeScreenCapture.Instance.OnTextureChanged.Remove(this.GetHashCode());
+        }
+    }    private void OnTextureChanged(NativeScreenCapture.ScreenCaptureDTO textureDTO)
     {
+        if (this == null || gameObject == null)
+        {
+            return; // Object has been destroyed
+        }
+        
         if (projectorImageRenderer != null)
         {
             SetImageRaw(textureDTO);

@@ -16,6 +16,7 @@ TagManager:
   - Chair
   - Door
   - Projector
+  - Chart
   layers:
   - Default
   - TransparentFX
