@@ -120,6 +120,8 @@ GameObject:
   - component: {fileID: 4504928908190140173}
   - component: {fileID: 5472726714700330853}
   - component: {fileID: 2114673379957952309}
+  - component: {fileID: 6371689253008054036}
+  - component: {fileID: 3434027266517623305}
   m_Layer: 6
   m_Name: GlassDoor
   m_TagString: Untagged
@@ -237,6 +239,43 @@ MonoBehaviour:
   m_RequireSocket: 0
   m_IgnoreSocket: 0
   m_ShowDebugs: 0
+--- !u!114 &6371689253008054036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3059564476887412543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f0204f760c74bacb85ecc3cf83c7639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftDoor: {fileID: 1560807027609010134}
+  rightDoor: {fileID: 3094174196270998069}
+  slideDistance: 1
+  animationDuration: 0.5
+--- !u!65 &3434027266517623305
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3059564476887412543}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.08, y: 1.21, z: 1.76}
+  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!1 &5407552586238577747
 GameObject:
   m_ObjectHideFlags: 0

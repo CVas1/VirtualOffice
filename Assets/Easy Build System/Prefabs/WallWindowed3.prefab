@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 3534133412164671731}
   - component: {fileID: 5873206417970518581}
   - component: {fileID: 8418764780960269855}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 6461955360911003457}
   - component: {fileID: 8063919220424593598}
   - component: {fileID: 4905564029433937338}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
