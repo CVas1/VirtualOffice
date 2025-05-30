@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 4663575826640365031}
   - component: {fileID: 3334138656924902324}
   - component: {fileID: 548901326080478096}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 900448172995343755}
   - component: {fileID: 3173803421797716304}
   - component: {fileID: 8314076822798933528}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 7076384734604640748}
   - component: {fileID: 1221208127801679613}
   - component: {fileID: 3348332185659214434}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

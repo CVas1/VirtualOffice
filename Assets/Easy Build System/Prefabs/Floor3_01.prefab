@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 2653057259036323268}
   - component: {fileID: 2000518653911435552}
   - component: {fileID: 9005523174699124299}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 3825800884458536533}
   - component: {fileID: 7399187652181334170}
   - component: {fileID: 1759141117967976648}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 8608099434884688077}
   - component: {fileID: 5062963973279559344}
   - component: {fileID: 8555314154186921599}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 5922070127472471138}
   - component: {fileID: 3494727115962677512}
   - component: {fileID: 7258755318676469385}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: New Building Socket (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
