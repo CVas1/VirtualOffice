@@ -684,21 +684,16 @@ namespace EasyBuildSystem.Features.Runtime.Buildings.Part.Editor
         {
             try
             {
-                string path = EditorUtility.SaveFilePanelInProject(
-                           "Save As Thumbnail...",
-                           "New Thumbnail.png",
-                           "png",
-                           "");
-
-                if (path.Length != 0)
-                {
+                
+                
+                
                     Texture2D thumbnailTexture = AssetPreview.GetAssetPreview(Target.gameObject);
-                    File.WriteAllBytes(path, thumbnailTexture.EncodeToPNG());
+                    File.WriteAllBytes("Assets/"+Target.gameObject.name+".png", thumbnailTexture.EncodeToPNG());
 
                     AssetDatabase.Refresh();
 
-                    Target.GetGeneralSettings.Thumbnail = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-                }
+                    Target.GetGeneralSettings.Thumbnail = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/"+Target.gameObject.name+".png");
+                
             }
             catch
             { }
