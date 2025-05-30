@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6189201642505445305}
   - component: {fileID: 9076062497685571942}
   - component: {fileID: 6587075633628643936}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlassPartition_01_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 4504928908190140173}
   - component: {fileID: 5472726714700330853}
   - component: {fileID: 2114673379957952309}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlassDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 2382765329790374996}
   - component: {fileID: 5053652905226589297}
   - component: {fileID: 1251808852383207631}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlassPartition_01_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -358,7 +358,7 @@ GameObject:
   - component: {fileID: 925627169577038200}
   - component: {fileID: 4729104058048854683}
   - component: {fileID: 8260560855408892489}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlassPartition_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

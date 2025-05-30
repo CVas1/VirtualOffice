@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 384152234174206442}
   - component: {fileID: 951870286750972695}
   - component: {fileID: 2972074132921046625}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 2550214715944188720}
   - component: {fileID: 4596040746279986635}
   - component: {fileID: 3867879527338102865}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall2_12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 9058589857825887090}
   - component: {fileID: 5268832914075123192}
   - component: {fileID: 8768805076625568005}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -340,6 +340,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wall2_12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126932029377454606, guid: a48763dda80104db5ac33d5e75f73bb6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

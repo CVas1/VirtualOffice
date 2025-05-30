@@ -7,14 +7,21 @@ namespace Assets.Scripts.Networking
 {
     public class STDBPlayerManager
     {
+        public static STDBPlayerManager Instance { get; private set; }
         public Dictionary<uint, PlayerController> Players = new Dictionary<uint, PlayerController>();
 
         private DbConnection conn;
         private GameObject localPlayerPrefab;
         private GameObject remotePlayerPrefab;
 
+        public STDBPlayerManager()
+        {
+            Instance = this;
+        }
+
         public void Init(DbConnection connection, GameObject localPrefab, GameObject remotePrefab)
         {
+            Instance = this;
             conn = connection;
             localPlayerPrefab = localPrefab;
             remotePlayerPrefab = remotePrefab;
@@ -126,3 +133,4 @@ namespace Assets.Scripts.Networking
         }
     }
 }
+

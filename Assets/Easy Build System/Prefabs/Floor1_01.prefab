@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8062742000049984207}
   - component: {fileID: 4841121508168505829}
   - component: {fileID: 803216667357609612}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 1421549157285051937}
   - component: {fileID: 7190584278681810046}
   - component: {fileID: 1978836611829551635}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor1_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 2997639733480523610}
   - component: {fileID: 7642960649567370194}
   - component: {fileID: 1312102747080613300}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 877553351943241299}
   - component: {fileID: 7771160275867394947}
   - component: {fileID: 1652550724814494600}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 7866355516346014456}
   - component: {fileID: 1373036180196512182}
   - component: {fileID: 2488966326653821404}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -464,6 +464,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Floor1_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3772282326961407001, guid: f5bdb5d9370c84165990312a9de47149,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4544702011839651491, guid: f5bdb5d9370c84165990312a9de47149,
         type: 3}

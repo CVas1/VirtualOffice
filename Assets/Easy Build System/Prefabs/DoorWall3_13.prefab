@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4221686440183191463}
   - component: {fileID: 3749835013798921502}
   - component: {fileID: 5934173097638101502}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 3244586557289286672}
   - component: {fileID: 701533355739704404}
   - component: {fileID: 6292398482043673890}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DoorWall3_13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 667141697293900926}
   - component: {fileID: 8204303207748986507}
   - component: {fileID: 1111651521065890452}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 4818513756954146473}
   - component: {fileID: 5958649030177252302}
   - component: {fileID: 3782826324210390183}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,6 +365,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wall3_13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1257340381155403887, guid: 0d7aeb0bab9cf4de4b26111b3a9c306c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1889586352315822805, guid: 0d7aeb0bab9cf4de4b26111b3a9c306c,
         type: 3}

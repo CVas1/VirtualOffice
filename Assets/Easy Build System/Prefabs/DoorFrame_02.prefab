@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1827034346465734573}
   - component: {fileID: 8965193184437370670}
   - component: {fileID: 2432937967884630470}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DoorFrame_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,6 +176,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2110346043027750192, guid: 7440c781a4840445b824aa0c0d79c515,
         type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2110346043027750192, guid: 7440c781a4840445b824aa0c0d79c515,
+        type: 3}
       propertyPath: m_TagString
       value: Door
       objectReference: {fileID: 0}
@@ -183,6 +188,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DoorFrame_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763007810570583102, guid: 7440c781a4840445b824aa0c0d79c515,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3248217221587019396, guid: 7440c781a4840445b824aa0c0d79c515,
         type: 3}
@@ -233,6 +243,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8425807107084785017, guid: 7440c781a4840445b824aa0c0d79c515,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

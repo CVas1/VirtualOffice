@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2131388706359960323}
   - component: {fileID: 166435618210037283}
   - component: {fileID: 2412885850627174578}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 5586046172309923179}
   - component: {fileID: 8738071166391119768}
   - component: {fileID: 1714948490592979711}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 5478846837752003276}
   - component: {fileID: 5844135944838147352}
   - component: {fileID: 2997390503811837357}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: New Building Socket (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 7417964603817520162}
   - component: {fileID: 1710786860682624608}
   - component: {fileID: 306387311693589236}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WallWindowed4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,6 +420,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wall4_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 596724838462552839, guid: 364dc13ec79cd4703a3455098ee12983,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

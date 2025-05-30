@@ -27,6 +27,7 @@ namespace Assets.Scripts
 
         private float lastUpdateTime;
         private const float updateInterval = 0.2f;
+        public AudioSource audioSource;
 
         private class State
         {

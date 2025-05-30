@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3376357466118343322}
   - component: {fileID: 6512664468568074729}
   - component: {fileID: 5362316026430618284}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DoorFrame_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,6 +188,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2976070737419006379}
     m_Modifications:
+    - target: {fileID: 138956430059879255, guid: 9c6a9bc12066e47b59f1d85723f71a72,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1523097825531284343, guid: 9c6a9bc12066e47b59f1d85723f71a72,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -242,6 +247,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DoorFrame_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 2191267075216249293, guid: 9c6a9bc12066e47b59f1d85723f71a72,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8820479294917944024, guid: 9c6a9bc12066e47b59f1d85723f71a72,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8820479294917944024, guid: 9c6a9bc12066e47b59f1d85723f71a72,
         type: 3}

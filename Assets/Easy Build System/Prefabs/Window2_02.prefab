@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2230183922946754317}
   - component: {fileID: 6729393096928591469}
   - component: {fileID: 3401114452706802263}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 4343393827411858952}
   - component: {fileID: 343317534193396290}
   - component: {fileID: 8945268725812793689}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Window2_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 7342022890774758264}
   - component: {fileID: 5544088833714213572}
   - component: {fileID: 7334313731285621240}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Window2_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

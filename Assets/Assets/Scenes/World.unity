@@ -55955,6 +55955,9 @@ MonoBehaviour:
   sampleRate: 8000
   channels: 1
   maxParallelSources: 10
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1706285131856900318
 GameObject:
   m_ObjectHideFlags: 0
@@ -56934,6 +56937,7 @@ MonoBehaviour:
   StatsContentParent: {fileID: 1762501427002594910}
   StatsUserEntryPrefab: {fileID: 5721640154784690638, guid: 6b46c07d0194d3d4cb0b99c2a7d52b81,
     type: 3}
+  catchTime: 0.25
 --- !u!1 &2919142610343740237
 GameObject:
   m_ObjectHideFlags: 0

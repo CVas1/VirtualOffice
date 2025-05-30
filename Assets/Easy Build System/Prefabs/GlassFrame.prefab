@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1414598138147194479}
   - component: {fileID: 1372103125216043201}
   - component: {fileID: 6001017114583614332}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlassPartition_02 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 4215712249967231369}
   - component: {fileID: 1481535318176108936}
   - component: {fileID: 655466888003793930}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlassFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
