@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: Plant_01
     m_Type: Foundation
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: 67dd3545cc68da44b8963dea4a76e91b, type: 3}
     m_Identifier: 5bf649c4e06a48d18d8cdd034cd021a1
   m_ModelSettings:
     m_Models:

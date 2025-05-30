@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GeneralSettings:
     m_Name: Sofa2_C2
     m_Type: Foundation
-    m_Thumbnail: {fileID: 0}
+    m_Thumbnail: {fileID: 2800000, guid: 8ce7d52e35dcd3f4e81b082e8a571cc2, type: 3}
     m_Identifier: d8208c414cfa403c85a18c2f744cf481
   m_ModelSettings:
     m_Models:
