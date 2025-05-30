@@ -7,7 +7,8 @@ namespace Assets.Scripts.Networking
 {
     public class STDBConnectionManager
     {
-        const string SERVER_URL = "http://127.0.0.1:3000";
+        // const string SERVER_URL = "http://127.0.0.1:3000";
+        const string SERVER_URL = "78.47.176.43:9000";
         const string MODULE_NAME = "stdboffice";
 
         public void Connect(
@@ -16,9 +17,9 @@ namespace Assets.Scripts.Networking
             Action<Exception> onError)
         {
             // delete player pref
-            // PlayerPrefs.DeleteKey("spacetimedb.identity_token");
-            // var key = $"spacetimedb.identity_token - {Application.dataPath}";
-            // PlayerPrefs.DeleteKey(key);
+            PlayerPrefs.DeleteKey("spacetimedb.identity_token");
+            var key = $"spacetimedb.identity_token - {Application.dataPath}";
+            PlayerPrefs.DeleteKey(key);
 
             var builder = DbConnection.Builder()
                 .WithUri(SERVER_URL)
