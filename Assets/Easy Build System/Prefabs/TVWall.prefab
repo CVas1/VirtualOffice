@@ -145,7 +145,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 1
-  m_Tolerance: 0.58
+  m_Tolerance: 0.3
   m_IgnoreBuildingSurface: 1
   m_BuildingSurfaceTags: []
   m_ShowDebugs: 0
@@ -251,6 +251,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TV_03
       objectReference: {fileID: 0}
+    - target: {fileID: 7373410936928368563, guid: 4131a46d5539a4e03b22a1f814b23c86,
+        type: 3}
+      propertyPath: m_TagString
+      value: Projector
+      objectReference: {fileID: 0}
     - target: {fileID: 7861119473118883081, guid: 4131a46d5539a4e03b22a1f814b23c86,
         type: 3}
       propertyPath: m_RootOrder
@@ -344,6 +349,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1050679090594331061, guid: 5dda274a7e859a249af586f59558c357,
+        type: 3}
+      propertyPath: m_TagString
+      value: Projector
       objectReference: {fileID: 0}
     - target: {fileID: 6207559865586108970, guid: 5dda274a7e859a249af586f59558c357,
         type: 3}
