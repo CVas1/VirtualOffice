@@ -71,7 +71,18 @@ public class InteractManager : MonoBehaviour
                     previousHighlightEffect.highlighted = true;
                 }
             }
-
+            if (Input.GetMouseButtonDown(0))
+            {
+                var playerController = currentHitObject.GetComponentInParent<Assets.Scripts.PlayerController>();
+                if (playerController != null && playerController.audioSource != null)
+                {
+                    if (currentHitObject.CompareTag(Tags.Player))
+                    {
+                        print("playerrrrr");
+                        playerController.audioSource.enabled = !playerController.audioSource.enabled;
+                    }
+                }
+            }
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (currentHitObject.CompareTag(Tags.Chair))
@@ -104,6 +115,7 @@ public class InteractManager : MonoBehaviour
                         }
                     }
                 }
+                
             }
         }
     }

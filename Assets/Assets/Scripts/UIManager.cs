@@ -62,6 +62,7 @@ namespace Assets.Scripts
 
         private void Start()
         {
+            QuitButton.SetActive(false);
             buildMenu.SetActive(false);
             SetCursorVisibilty(false);
 
@@ -99,6 +100,24 @@ namespace Assets.Scripts
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.M))
             {
                 MailBoxOpenClose();
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                //setactive quitroom and stats buttons
+                if (ShadowPanel.activeSelf)
+                {
+                    ShadowPanel.SetActive(false);
+                    QuitButton.SetActive(false);
+                    ShowStatsButton.SetActive(false);
+                    SetCursorVisibilty(false);
+                }
+                else
+                {
+                    ShadowPanel.SetActive(true);
+                    QuitButton.SetActive(true);
+                    ShowStatsButton.SetActive(STDBBackendManager.Instance.roomStatsManager.Stats.Count > 0);
+                    SetCursorVisibilty(true);
+                }
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.N))

@@ -88,7 +88,7 @@ namespace Assets.Scripts.VoiceRecorder
                     }
 
                     AudioSource source = playerController.audioSource;
-                    if (source == null) return;
+                    if (source == null || !source.enabled) return;
 
                     AudioClip clip = AudioClip.Create($"VoiceClip_{identity}",
                         audioSamples.Length / channels,
