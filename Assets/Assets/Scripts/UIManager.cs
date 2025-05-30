@@ -35,9 +35,9 @@ namespace Assets.Scripts
         [SerializeField] private Transform StatsContentParent;
         [SerializeField] private GameObject StatsUserEntryPrefab;
 
-        [Header("Mouse Visibility")]
-        private float lastClickTime = 0f;
-        [SerializeField]private float catchTime = 0.25f;
+        [Header("Mouse Visibility")] private float lastClickTime = 0f;
+        [SerializeField] private float catchTime = 0.25f;
+
         private enum StatsRange
         {
             Last24h,
@@ -95,7 +95,7 @@ namespace Assets.Scripts
 
                 lastClickTime = Time.time;
             }
-            
+
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.M))
             {
                 MailBoxOpenClose();
@@ -167,6 +167,8 @@ namespace Assets.Scripts
 
         public void OpenStatsPanel()
         {
+            if (STDBBackendManager.Instance.roomStatsManager.Stats.Count == 0) return;
+
             if (StatsPanel.activeSelf)
             {
                 StatsPanel.SetActive(false);
